@@ -1,2 +1,3 @@
-# fixo-fn
-Frrontend repository for FIXO well known as Serve People
+# Fixo
+
+We are here to serve people.
