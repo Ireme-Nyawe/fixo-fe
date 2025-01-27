@@ -1,40 +1,41 @@
-import React from 'react';
-import { FaStar } from 'react-icons/fa'; // Import the star icon from react-icons
+import { FaStar } from 'react-icons/fa';
+import Avatar from '/avatar.svg';
 
 const TestimonialsSection = ({ lang }: any) => {
   const testimonials = [
     {
       id: 1,
-      image:
-        'https://res.cloudinary.com/dpu6ljn5c/image/upload/v1737899203/pexels-pavel-danilyuk-7658385_1_tpzzsv.png',
-      name: lang === 'en' ? "Client's Name 1" : "Umuzwiririwa Wa 'Client' 1",
+      image: Avatar,
+      name:
+        lang === 'en' ? 'Jean Claude Nshimiyimana' : 'Jean Claude Nshimiyimana',
+      location: lang === 'en' ? 'Kigali, Rwanda' : 'Kigali, Rwanda',
       feedback:
         lang === 'en'
-          ? 'What they say about our services.'
-          : 'Icyo abivugaho kuri serivisi zacu.',
-      rating: 4.5,
+          ? 'The service was outstanding! I would recommend it to anyone looking for professionalism and excellence.'
+          : 'Serivisi za hano ni nziza cyane! Ndagira inama buri wese kubegera kubera ubunyamwuga n’ubuhanga bagira.',
+      rating: 5,
     },
     {
       id: 2,
-      image:
-        'https://res.cloudinary.com/dpu6ljn5c/image/upload/v1737899203/pexels-pavel-danilyuk-7658385_1_tpzzsv.png',
-      name: lang === 'en' ? "Client's Name 2" : "Umuzwiririwa Wa 'Client' 2",
+      image: Avatar,
+      name: lang === 'en' ? 'Aline Uwase' : 'Aline Uwase',
+      location: lang === 'en' ? 'Musanze, Rwanda' : 'Musanze, Rwanda',
       feedback:
         lang === 'en'
-          ? 'What they say about our services.'
-          : 'Icyo abivugaho kuri serivisi zacu.',
-      rating: 3,
+          ? 'Very responsive and reliable services. I appreciate their dedication to customer satisfaction.'
+          : 'Serivisi nziza, by’umwihariko batanga ibisubizo ku gihe. Nishimira uburyo bafata abakiriya neza.',
+      rating: 4,
     },
     {
       id: 3,
-      image:
-        'https://res.cloudinary.com/dpu6ljn5c/image/upload/v1737899203/pexels-pavel-danilyuk-7658385_1_tpzzsv.png',
-      name: lang === 'en' ? "Client's Name 3" : "Umuzwiririwa Wa 'Client' 3",
+      image: Avatar,
+      name: lang === 'en' ? 'Eric Habimana' : 'Eric Habimana',
+      location: lang === 'en' ? 'Huye, Rwanda' : 'Huye, Rwanda',
       feedback:
         lang === 'en'
-          ? 'What they say about our services.'
-          : 'Icyo abivugaho kuri serivisi zacu.',
-      rating: 5,
+          ? 'Great experience! The team was very helpful, and their services exceeded my expectations.'
+          : 'Ubunararibonye bwiza! Ikipe yabahanga cyane, kandi serivisi zabo zarandutunguye rwose.',
+      rating: 4.5,
     },
   ];
 
@@ -57,7 +58,6 @@ const TestimonialsSection = ({ lang }: any) => {
     <div className="container mx-auto px-4 py-16">
       <div className="text-left mb-12">
         <h1 className="text-4xl font-extrabold text-gray-900 mb-4">
-          {' '}
           {lang === 'en' ? 'Clients Testimonials' : "Ubuhamya bw'abakiriya"}
         </h1>
         <p className="text-gray-600 max-w-xl leading-relaxed">
@@ -81,9 +81,10 @@ const TestimonialsSection = ({ lang }: any) => {
               />
             </div>
 
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+            <h3 className="text-xl font-semibold text-gray-900 mb-1">
               {testimonial.name}
             </h3>
+            <p className="text-sm text-gray-500 mb-2">{testimonial.location}</p>
 
             <p className="text-gray-600 mb-4">{testimonial.feedback}</p>
 

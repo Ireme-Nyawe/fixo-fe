@@ -30,7 +30,7 @@ const Footer = ({ lang }: any) => {
             <p className="mt-6 text-sm leading-relaxed">
               {lang === 'en'
                 ? 'Your one-stop destination for expert technical support.'
-                : 'Aho wakora ibibazo byawe bya tekinike.'}
+                : "Abanyamwuga bonyine bagufasha gukemura ibibazo byose by'ikoranabuhanga"}
             </p>
           </div>
 

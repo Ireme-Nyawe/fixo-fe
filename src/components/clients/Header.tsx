@@ -3,10 +3,19 @@ import { useState } from 'react';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const lang = localStorage.getItem('lang');
+  const lang = localStorage.getItem('lang') || 'en'; // Default to English if no language is set
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const handleLanguageSwitch = () => {
+    // Toggle the language and save it to localStorage
+    const newLang = lang === 'en' ? 'rw' : 'en';
+    localStorage.setItem('lang', newLang);
+
+    // Refresh the page to apply the language switch
+    window.location.reload();
   };
 
   return (
@@ -85,6 +94,23 @@ const Header = () => {
           <div className="bg-primary p-2 px-4 rounded text-white hover:bg-primary-dark transition duration-300">
             <button>{lang === 'en' ? 'Call now' : 'Saba ubufasha'}</button>
           </div>
+
+          {/* Language Switcher Button */}
+          <button
+            onClick={handleLanguageSwitch}
+            className="flex items-center gap-2 p-2 bg-gray-200 rounded hover:bg-gray-300 transition duration-300"
+          >
+            <img
+              src={
+                lang === 'en'
+                  ? 'https://flagcdn.com/rw.svg'
+                  : 'https://flagcdn.com/us.svg'
+              }
+              alt={lang === 'en' ? 'Kinyarwanda flag' : 'English flag'}
+              className="w-6 h-4"
+            />
+            <span>{lang === 'en' ? 'Kinyarwanda' : 'English'}</span>
+          </button>
         </div>
 
         {isMenuOpen && (
@@ -96,7 +122,7 @@ const Header = () => {
                   className="text-gray-700 hover:text-primary transition duration-300"
                   onClick={toggleMenu}
                 >
-                  Home
+                  {lang === 'en' ? 'Home' : 'Ahabanza'}
                 </Link>
               </li>
               <li>
@@ -105,7 +131,7 @@ const Header = () => {
                   className="text-gray-700 hover:text-primary transition duration-300"
                   onClick={toggleMenu}
                 >
-                  Services
+                  {lang === 'en' ? 'Services' : 'Serivise'}
                 </Link>
               </li>
               <li>
@@ -114,13 +140,32 @@ const Header = () => {
                   className="text-gray-700 hover:text-primary transition duration-300"
                   onClick={toggleMenu}
                 >
-                  Products
+                  {lang === 'en' ? 'Products' : 'Ibicuruzwa'}
                 </Link>
               </li>
               <li>
                 <div className="bg-primary p-2 px-4 rounded text-white hover:bg-primary-dark transition duration-300">
-                  <button>Call now</button>
+                  <button>
+                    {lang === 'en' ? 'Call now' : 'Saba ubufasha'}
+                  </button>
                 </div>
+              </li>
+              <li>
+                <button
+                  onClick={handleLanguageSwitch}
+                  className="flex items-center gap-2 p-2 bg-gray-200 rounded hover:bg-gray-300 transition duration-300"
+                >
+                  <img
+                    src={
+                      lang === 'en'
+                        ? 'https://flagcdn.com/rw.svg'
+                        : 'https://flagcdn.com/us.svg'
+                    }
+                    alt={lang === 'en' ? 'Kinyarwanda flag' : 'English flag'}
+                    className="w-6 h-4"
+                  />
+                  <span>{lang === 'en' ? 'Kinyarwanda' : 'English'}</span>
+                </button>
               </li>
             </ul>
           </div>
