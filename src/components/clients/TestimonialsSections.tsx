@@ -39,7 +39,7 @@ const TestimonialsSection = ({ lang }: any) => {
     },
   ];
 
-  const renderStars = (rating) => {
+  const renderStars = (rating: any) => {
     const stars = [];
     for (let i = 1; i <= 5; i++) {
       stars.push(

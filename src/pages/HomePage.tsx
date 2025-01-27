@@ -1,11 +1,8 @@
-import { useEffect, useState } from 'react';
 import Header from '../components/clients/Header';
 import LanguageSelector from '../components/clients/LanguageSelector';
 import HeroSection from '../components/clients/HeroSection';
 import ServicesSection from '../components/clients/ServicesSection';
-import { FaStar } from 'react-icons/fa';
 import TestimonialsSection from '../components/clients/TestimonialsSections';
-import { Link } from 'react-router-dom';
 import Footer from '../components/clients/Footer';
 
 const HomePage = () => {
