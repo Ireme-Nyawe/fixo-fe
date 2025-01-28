@@ -5,16 +5,13 @@ const LoginForm = () => {
   return (
     <div className="bg-primary min-h-screen flex items-center justify-center text-white">
       <div className="w-11/12 max-w-4xl bg-superior shadow-lg rounded-2xl overflow-hidden grid grid-cols-1 md:grid-cols-2">
-        {/* Left Section - Form */}
         <div className="p-8 flex flex-col justify-center">
-          {/* Logo */}
           <Link
             className="text-2xl font-bold text-white mb-6 hover:text-white"
             to="/"
           >
             Fixo
           </Link>
-          {/* Login Form */}
           <form action="" method="post" className="space-y-6">
             <h1 className="text-3xl font-bold mb-4 text-secondary">Log into your account</h1>
             <div className="space-y-2">
