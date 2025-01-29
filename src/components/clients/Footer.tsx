@@ -7,6 +7,7 @@ const Footer = ({ lang }: any) => {
     { path: '/services', label: { en: 'Services', rw: 'Serivisi' } },
     { path: '/products', label: { en: 'Products', rw: 'Ibicuruzwa' } },
     { path: '/contact', label: { en: 'Contact Us', rw: 'Twandikire' } },
+    { path: '/login', label: { en: 'Signin', rw: 'Injira' } },
   ];
 
   const socialMediaLinks = [
