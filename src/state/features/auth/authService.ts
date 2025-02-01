@@ -46,10 +46,20 @@ const getProfile = async () => {
   }
 }
 
+const updateProfile = async (data: IUser) => {
+  try {
+    const response = await axiosInstance.put("/api/auth/update-profile", data);
+    return response.data;
+  } catch (error) {
+    return handleError(error);
+  }
+}
+
 const authService = {
   login,
   verifyOTP,
-  getProfile
+  getProfile,
+  updateProfile
 };
 
 export default authService;

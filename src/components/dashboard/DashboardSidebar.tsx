@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { FaHome, FaBox, FaUsers, FaTools } from 'react-icons/fa';
+import { FaHome, FaBox, FaUsers, FaTools, FaUser } from 'react-icons/fa';
 
 interface DashboardSidebarProps {
   isSidebarOpen: boolean;
@@ -22,7 +22,12 @@ const DashboardSidebar = ({
     }
   }, []);
 
-  const commonLinks = [];
+  const commonLinks = [
+    {
+      name: 'Profile',
+      icon: <FaUser />,
+    },
+  ];
   const adminLinks = [
     { name: 'Dashboard', icon: <FaHome /> },
     { name: 'Manage Users', icon: <FaUsers /> },
@@ -45,6 +50,7 @@ const DashboardSidebar = ({
   } else if (userRole === 'technician') {
     visibleLinks = [...visibleLinks, ...technicianLinks];
   }
+  visibleLinks = [...visibleLinks, ...commonLinks];
 
   return (
     <>
