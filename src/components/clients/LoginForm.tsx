@@ -30,15 +30,15 @@ const LoginForm = () => {
     onSubmit: async (values, { setSubmitting }) => {
       try {
         const response = await authService.login(values);
-
+        console.log(response);
         if (response.status === 200) {
           if (response.message === 'OTP sent successfully') {
             toast.success('OTP sent successfully, check your email inbox!');
-            localStorage.setItem('otpUserId', response.data.session.userId);
+            localStorage.setItem('otpUserId', response?.data?.session?.userId);
             setShowOTPForm(true);
           } else {
             toast.success('Logged in successfully!');
-            saveToken(response?.data?.session?.content);
+            saveToken(response?.data?.content);
             navigate('/dashboard');
           }
         } else toast.error(response.message || 'Incorrect email or password');
@@ -83,7 +83,7 @@ const LoginForm = () => {
             >
               Fixo
             </Link>
-            {!showOTPForm ? (
+            {showOTPForm ? (
               <form onSubmit={handleVerifyOTP} className="space-y-6">
                 <h1 className="text-3xl font-bold mb-4 text-secondary">
                   OTP Verification
@@ -122,7 +122,6 @@ const LoginForm = () => {
                   <input
                     type="email"
                     id="email"
-                    name="email"
                     {...formik.getFieldProps('email')}
                     placeholder="you@example.com"
                     className="w-full p-3 rounded-md bg-primary border border-secondary focus:outline-none focus:ring-2 focus:ring-secondary"
@@ -144,7 +143,6 @@ const LoginForm = () => {
                   <input
                     type="password"
                     id="password"
-                    name="password"
                     {...formik.getFieldProps('password')}
                     placeholder="Your password"
                     className="w-full p-3 rounded-md bg-primary border border-secondary focus:outline-none focus:ring-2 focus:ring-secondary"
