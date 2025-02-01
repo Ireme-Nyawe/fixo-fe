@@ -1,3 +1,6 @@
+import { FaUserAlt } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
+
 const DashboardHeader = ({ sideBarToggle }: { sideBarToggle: () => void }) => {
   return (
     <header className="bg-primary text-white shadow-lg px-4 py-3 sm:p-4 flex items-center justify-between z-10">
@@ -58,9 +61,14 @@ const DashboardHeader = ({ sideBarToggle }: { sideBarToggle: () => void }) => {
           </svg>
         </button>
 
-        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-secondary flex items-center justify-center">
-          <span className="text-xs sm:text-sm">JD</span>
-        </div>
+        <Link
+          to={'/dashboard/profile'}
+          className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-secondary flex items-center justify-center"
+        >
+          <span className="text-xs sm:text-sm">
+            <FaUserAlt />
+          </span>
+        </Link>
       </div>
     </header>
   );
