@@ -24,6 +24,32 @@ const LoginForm = () => {
     }
   };
 
+  const fetchProfile = async () => {
+    try {
+      const response = await authService.getProfile();
+      console.log(response);
+
+      if (response.status === 200) {
+        const { password, _id, ...profileWithoutSensitiveData } = response.data;
+
+        localStorage.setItem(
+          'profile',
+          JSON.stringify(profileWithoutSensitiveData)
+        );
+        if (response.data.role === 'admin') {
+          navigate('/dashboard');
+        } else {
+          navigate('/dashboard/tech');
+        }
+      } else {
+        toast.error(response.message || 'Failed to fetch profile');
+      }
+    } catch (error: any) {
+      console.error('Failed to get profile:', error);
+      toast.error(error.message);
+    }
+  };
+
   const formik = useFormik({
     initialValues: { email: '', password: '' },
     validationSchema: LoginSchema,
@@ -39,7 +65,7 @@ const LoginForm = () => {
           } else {
             toast.success('Logged in successfully!');
             saveToken(response?.data?.content);
-            navigate('/dashboard');
+            await fetchProfile();
           }
         } else toast.error(response.message || 'Incorrect email or password');
       } catch (error) {
@@ -61,7 +87,7 @@ const LoginForm = () => {
         toast.success('OTP verified successfully! Logging in...');
         saveToken(response?.data?.content);
         localStorage.removeItem('otpUserId');
-        navigate('/dashboard');
+        await fetchProfile();
       } else {
         toast.error(response.message || 'Invalid OTP, please try again.');
       }

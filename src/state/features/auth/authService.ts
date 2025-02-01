@@ -30,8 +30,16 @@ const login = async (userData: IUser) => {
 
 const verifyOTP = async (data: any) => {
   try {
-    console.log(data)
     const response = await axiosInstance.post("/api/auth/verify-otp", data);
+    return response.data;
+  } catch (error) {
+    return handleError(error);
+  }
+}
+
+const getProfile = async () => {
+  try {
+    const response = await axiosInstance.get("/api/auth/view-profile")
     return response.data;
   } catch (error) {
     return handleError(error);
@@ -40,7 +48,8 @@ const verifyOTP = async (data: any) => {
 
 const authService = {
   login,
-  verifyOTP
+  verifyOTP,
+  getProfile
 };
 
 export default authService;
