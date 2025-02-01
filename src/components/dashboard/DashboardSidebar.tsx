@@ -1,15 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import {
-  FaHome,
-  FaExchangeAlt,
-  FaTools,
-  FaUsers,
-  FaChartBar,
-  FaCog,
-  FaProductHunt,
-  FaBox,
-} from 'react-icons/fa';
+import { FaHome, FaBox } from 'react-icons/fa';
 
 interface DashboardSidebarProps {
   isSidebarOpen: boolean;

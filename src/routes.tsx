@@ -6,8 +6,12 @@ import Products from './pages/Products';
 import SingleProduct from './pages/SingleProduct';
 import DashboardLayout from './pages/dashboard/DashboardLayout';
 import Products from './pages/dashboard/Products';
-import Categories from './pages/dashboard/Categories';
+import Categories from './pages/dashboard/ProductsCategories';
 import NewProductCategory from './pages/dashboard/NewProductCategory';
+import ProtectedRoute from './components/dashboard/ProtectedRoute';
+import NewProduct from './pages/dashboard/NewProduct';
+import EditProductCategory from './pages/dashboard/EditProductCategory';
+import EditProduct from './pages/dashboard/EditProduct';
 
 const AppRouter = () => {
   return (
@@ -16,12 +20,18 @@ const AppRouter = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/products" element={<Products />} />
       <Route path="/product/:id" element={<SingleProduct />} />
-      <Route path="/dashboard" element={<DashboardLayout />}>
-        <Route index={true} element={<Dashboard />} />
-        <Route path="products" element={<Products />} />
-        <Route path="categories" element={<Categories />} />
-        <Route path="categories/new" element={<NewProductCategory />} />
-        <Route path="*" element={<h1>Page Not Found</h1>} />
+
+      <Route element={<ProtectedRoute />}>
+        <Route path="/dashboard" element={<DashboardLayout />}>
+          <Route index={true} element={<Dashboard />} />
+          <Route path="products" element={<Products />} />
+          <Route path="products/new" element={<NewProduct />} />
+          <Route path="products/edit/:id" element={<EditProduct />} />
+          <Route path="categories" element={<Categories />} />
+          <Route path="categories/new" element={<NewProductCategory />} />
+          <Route path="categories/edit/:id" element={<EditProductCategory />} />
+          <Route path="*" element={<h1>Page Not Found</h1>} />
+        </Route>
       </Route>
     </Routes>
   );

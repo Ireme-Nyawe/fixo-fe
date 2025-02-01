@@ -1,6 +1,6 @@
 const DashboardHeader = ({ sideBarToggle }: { sideBarToggle: () => void }) => {
   return (
-    <header className="bg-primary text-white shadow-lg px-4 py-3 sm:p-4 flex items-center justify-between ">
+    <header className="bg-primary text-white shadow-lg px-4 py-3 sm:p-4 flex items-center justify-between z-10">
       <div className="flex items-center gap-2 sm:gap-4">
         <button
           onClick={sideBarToggle}

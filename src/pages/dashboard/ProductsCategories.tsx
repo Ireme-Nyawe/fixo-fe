@@ -3,16 +3,17 @@ import ProductsNavBar from '../../components/dashboard/ProductsNavBar';
 import { FaCheck, FaEdit, FaTrash } from 'react-icons/fa';
 import { toast } from 'sonner';
 import {
-  deleteProduct,
-  getAllProducts,
+  deleteProductCategory,
+  getProductCategories,
 } from '../../state/features/product/productService';
-import { IProduct, IProductCategory } from '../../types/store';
+import { IProductCategory } from '../../types/store';
 import Pagination from '../../components/dashboard/Pagination';
-import SkeletonLoader from '../../components/dashboard/SkeletonLoader';
 import { Link } from 'react-router-dom';
+import SkeletonLoader from '../../components/dashboard/SkeletonLoader';
 
-const Products = () => {
+const Categories = () => {
   const [loading, setLoading] = useState(false);
+
   const [data, setData] = useState([]);
   const [search, setSearch] = useState('');
   const [sortOrder, setSortOrder] = useState('asc');
@@ -20,47 +21,41 @@ const Products = () => {
   const perPage = 10;
 
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const [deleteProductId, setDeleteProductId] = useState<any>('');
-  const handleDeleteProduct = async (productId: string) => {
+
+  const [deleteCategoryId, setDeleteCategoryId] = useState<any>('');
+
+  const handleDeleteCategory = async (id: any) => {
     try {
-      const response = await deleteProduct(productId);
+      const response = await deleteProductCategory(id);
       if (response.status === 200) {
-        toast.success('Product deleted successfully');
-        fetchProducts();
+        toast.success('Category deleted successfully');
+        fetchProductCategories();
       } else {
         toast.error(response.message);
       }
     } catch (error: any) {
-      console.error('Error deleting product', error);
+      console.error('Error deleting category', error);
       toast.error(error.message || 'An unexpected error occurred');
     } finally {
       setIsDeleteOpen(!isDeleteOpen);
-      setDeleteProductId('');
+      setDeleteCategoryId('');
     }
   };
-  const fetchProducts = async () => {
+  const fetchProductCategories = async () => {
     setLoading(true);
     try {
-      const response = await getAllProducts();
-      if (response.status === 200) {
-        setData(response.data);
-      } else {
-        toast.error(
-          response.message || 'An unexpected error occurred fetching products'
-        );
-      }
+      const response = await getProductCategories();
+      setData(response.data);
     } catch (error: any) {
-      console.error('Error fetching products', error);
-      toast.error(
-        error.message || 'An unexpected error occurred fetching products'
-      );
+      console.error('Error fetching product categories', error);
+      toast.error(error.message || 'An unexpected error occurred');
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchProducts();
+    fetchProductCategories();
   }, []);
 
   const handleSearch = (e: any) => {
@@ -94,15 +89,15 @@ const Products = () => {
         <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
           <div>
             <h1 className="text-2xl font-semibold text-gray-800">
-              Products Management
+              Category Management
             </h1>
             <p className="text-gray-500 mt-1 text-sm">
-              Manage your products easily here.
+              Manage your product categories
             </p>
           </div>
           <input
             type="text"
-            placeholder="Search products..."
+            placeholder="Search categories..."
             value={search}
             onChange={handleSearch}
             className="border rounded-lg px-3 py-2 text-sm outline-none"
@@ -113,23 +108,11 @@ const Products = () => {
           <table className="w-full">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider cursor-pointer">
-                  Image
-                </th>
                 <th
                   className="px-6 py-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider cursor-pointer"
                   onClick={handleSort}
                 >
-                  Name {sortOrder === 'asc' ? '🔼' : '🔽'}
-                </th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider cursor-pointer">
-                  Price
-                </th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider cursor-pointer">
-                  Category
-                </th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider cursor-pointer">
-                  Stock
+                  Category Name {sortOrder === 'asc' ? '🔼' : '🔽'}
                 </th>
                 <th className="px-6 py-4 text-right text-sm font-semibold text-gray-600 uppercase tracking-wider">
                   Actions
@@ -137,60 +120,27 @@ const Products = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {loading && <SkeletonLoader rows={perPage} cols={6} />}
+              {loading && <SkeletonLoader rows={perPage} cols={2} />}
               {!loading && paginatedData.length > 0
-                ? paginatedData.map((item: IProduct) => (
+                ? paginatedData.map((item: IProductCategory) => (
                     <tr
                       key={item._id}
                       className="hover:bg-gray-50 transition-colors"
                     >
-                      <td className="px-6 whitespace-nowrap text-sm font-medium text-gray-800 relative">
-                        <div className="relative w-24 h-20 flex items-center justify-center">
-                          {item.images
-                            .slice(0, 4)
-                            .map((image: any, index: number) => {
-                              const angle = (index / 4) * 360;
-                              const radius = 10;
-                              return (
-                                <img
-                                  key={index}
-                                  src={image}
-                                  alt={`${item.name} ${index + 1}`}
-                                  className="w-20 h-10 rounded-lg absolute transition-all"
-                                  style={{
-                                    transform: `translate(${
-                                      radius * Math.cos(angle)
-                                    }px, ${radius * Math.sin(angle)}px)`,
-                                  }}
-                                />
-                              );
-                            })}
-                        </div>
-                      </td>
-
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">
-                        {item.name}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">
-                        {item.price}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">
-                        {item.name}
-                      </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">
                         {item.name}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm space-x-2">
                         <Link
-                          to={`/dashboard/products/edit/${item._id}`}
                           className="inline-flex items-center px-3 py-1.5 border border-transparent rounded-lg text-primary hover:bg-primary/10 transition-colors"
+                          to={`/dashboard/categories/edit/${item._id}`}
                         >
                           <FaEdit className="w-4 h-4 mr-1.5" />
                         </Link>
                         <button
                           className="inline-flex items-center px-3 py-1.5 border border-transparent rounded-lg text-red-600 hover:bg-red-50 transition-colors"
                           onClick={() => {
-                            setDeleteProductId(item._id);
+                            setDeleteCategoryId(item._id);
                             setIsDeleteOpen(true);
                           }}
                         >
@@ -205,7 +155,7 @@ const Products = () => {
                         colSpan={2}
                         className="p-12 text-center text-gray-400"
                       >
-                        📭 No products found
+                        📭 No categories found
                       </td>
                     </tr>
                   )}
@@ -230,12 +180,12 @@ const Products = () => {
                 Are you sure?
               </h3>
               <p className="text-gray-600 mb-6">
-                You want to delete this product? This action is irreversible.
+                You want to delete this category? This action is irreversible.
               </p>
               <div className="flex gap-4 justify-center">
                 <button
                   onClick={() => {
-                    handleDeleteProduct(deleteProductId);
+                    handleDeleteCategory(deleteCategoryId);
                   }}
                   className="px-6 py-2 bg-primary hover:bg-primary/90 text-white rounded-lg"
                 >
@@ -256,4 +206,4 @@ const Products = () => {
   );
 };
 
-export default Products;
+export default Categories;
