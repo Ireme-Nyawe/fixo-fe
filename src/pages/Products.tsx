@@ -1,12 +1,14 @@
-import Footer from "../components/clients/Footer";
-import Header from "../components/clients/Header";
-import ProductsContent from "../components/clients/ProductsContent";
+import Footer from '../components/clients/Footer';
+import Header from '../components/clients/Header';
+import ProductsContent from '../components/clients/ProductsContent';
 
 const Products = () => {
+  const lang = localStorage.getItem('lang');
+
   return (
     <div>
       <Header />
-      <ProductsContent />
+      <ProductsContent lang={lang} />
       <Footer />
     </div>
   );

@@ -9,7 +9,8 @@ export default {
       colors: {
         primary: '#295D42',
         secondary: "#1DCE5F",
-        superior: "#329964"
+        superior: "#329964",
+        immediate:"#C2E0D1"
       },
     },
   },

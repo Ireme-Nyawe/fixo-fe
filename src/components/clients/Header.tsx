@@ -3,18 +3,16 @@ import { useState } from 'react';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const lang = localStorage.getItem('lang') || 'en'; // Default to English if no language is set
+  const lang = localStorage.getItem('lang') || 'en'; 
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
   const handleLanguageSwitch = () => {
-    // Toggle the language and save it to localStorage
     const newLang = lang === 'en' ? 'rw' : 'en';
     localStorage.setItem('lang', newLang);
 
-    // Refresh the page to apply the language switch
     window.location.reload();
   };
 
