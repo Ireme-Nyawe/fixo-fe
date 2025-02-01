@@ -16,6 +16,7 @@
     "formik": "^2.4.6",
     "helmet": "^8.0.0",
     "http-status": "^2.1.0",
+    "lucide-react": "^0.474.0",
     "mongoose": "^8.8.0",
     "node-sass": "^9.0.0",
     "quill": "^2.0.3",
