@@ -6,17 +6,6 @@ export interface IUser {
   lastName?: string;
 }
 
-export interface IProduct {
-  _id: mongoose.Types.ObjectId | string;
-  name: string;
-  description?: string;
-  price: number;
-  category: ObjectId;
-  stock: number;
-  images: string[];
-  createdAt: Date;
-  updatedAt: Date;
-}
 
 export interface ICategory {
   _id: mongoose.Types.ObjectId | string;
@@ -28,17 +17,21 @@ export interface ICategory {
 
 
 export interface IProductCategory {
-    _id?: string;
-    name: string;
-    description: string;
+  _id?: mongoose.Types.ObjectId | string;
+  name: string;
+  description?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface IProduct {
-    _id?: string;
-    name: string;
-    description: string;
-    price: number;
-    category: string;
-    stock: number;
-    images: Array;
+  _id?: mongoose.Types.ObjectId | string;
+  name: string;
+  description?: string;
+  price: number;
+  category: ObjectId;
+  stock: number;
+  images: string[];
+  createdAt?: Date;
+  updatedAt?: Date;
 }

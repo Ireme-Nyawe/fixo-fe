@@ -5,7 +5,7 @@ import Dashboard from './pages/dashboard/Dashboard';
 import Products from './pages/Products';
 import SingleProduct from './pages/SingleProduct';
 import DashboardLayout from './pages/dashboard/DashboardLayout';
-import Products from './pages/dashboard/Products';
+import DashboardProducts from './pages/dashboard/Products';
 import Categories from './pages/dashboard/ProductsCategories';
 import NewProductCategory from './pages/dashboard/NewProductCategory';
 import ProtectedRoute from './components/dashboard/ProtectedRoute';
@@ -24,7 +24,7 @@ const AppRouter = () => {
       <Route element={<ProtectedRoute />}>
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index={true} element={<Dashboard />} />
-          <Route path="products" element={<Products />} />
+          <Route path="products" element={<DashboardProducts />} />
           <Route path="products/new" element={<NewProduct />} />
           <Route path="products/edit/:id" element={<EditProduct />} />
           <Route path="categories" element={<Categories />} />

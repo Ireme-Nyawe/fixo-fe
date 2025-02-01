@@ -200,7 +200,7 @@ const EditProduct = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-8">
-          {fetchingProduct ? (
+          {fetchingProduct || isLoading ? (
             <div className="space-y-8">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-6">
