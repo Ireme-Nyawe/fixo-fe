@@ -10,6 +10,8 @@ const ProductsContent = () => {
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 12;
 
   const fetchProductData = async () => {
     try {
@@ -40,6 +42,7 @@ const ProductsContent = () => {
     try {
       setLoading(true);
       setSelectedCategory(categoryId);
+      setCurrentPage(1);
       const response = await productService.getProductsByCategory(categoryId);
       setProducts(response.data || []);
     } catch (error) {
@@ -58,13 +61,17 @@ const ProductsContent = () => {
       fetchProductData();
     }
   };
-  console.log(products);
-  
 
   useEffect(() => {
     fetchProductData();
     fetchCategoryData();
   }, []);
+
+  const totalPages = Math.ceil(products.length / itemsPerPage);
+  const paginatedProducts = products.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   return (
     <div>
@@ -103,6 +110,7 @@ const ProductsContent = () => {
             </select>
           </div>
         </div>
+
         {loading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {Array.from({ length: 6 }).map((_, index) => (
@@ -117,30 +125,66 @@ const ProductsContent = () => {
               </div>
             ))}
           </div>
-        ) : products.length > 0 ? (
+        ) : paginatedProducts.length > 0 ? (
+          <>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {products.map((product) => (
-              <Link to={`/product/${product._id}`}>
-              <div
-                key={product._id}
-                className="bg-white shadow-md rounded-lg p-4 border border-gray-200"
-              >
-                <img
-                  src={product.images[0]}
-                  alt={product.name}
-                  className="w-full h-48 object-cover rounded-md"
-                />
-                <h3 className="text-lg font-bold text-[#295D42] mt-2">
-                  {product.name}
-                </h3>
-                <p className="text-gray-600">{product.description}</p>
-                <p className="text-[#329964] font-semibold mt-1">
-                  ${product.price}
-                </p>
+              {paginatedProducts.map((product) => (
+                <Link to={`/product/${product._id}`} key={product._id}>
+                  <div className="bg-white shadow-md rounded-lg p-4 border border-gray-200">
+                    <img
+                      src={product.images[0]}
+                      alt={product.name}
+                      className="w-full h-48 object-cover rounded-md"
+                    />
+                    <h3 className="text-lg font-bold text-[#295D42] mt-2">
+                      {product.name}
+                    </h3>
+                    <p className="text-gray-600 truncate">{product.description}</p>
+                    <div className="flex justify-between items-center mt-2">
+                      <p className="text-[#329964] font-semibold">
+                        ${product.price}
+                      </p>
+                      <span className="text-gray-500 text-sm">
+                        {product.stock} in stock
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+
+            {totalPages > 1 && (
+              <div className="flex justify-center items-center mt-6 gap-4">
+                <button
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                  className={`px-4 py-2 border rounded-md ${
+                    currentPage === 1
+                      ? "bg-gray-300 cursor-not-allowed"
+                      : "bg-[#1DCE5F] text-white hover:bg-[#329964]"
+                  }`}
+                >
+                  Previous
+                </button>
+                <span className="text-gray-700">
+                  Page {currentPage} of {totalPages}
+                </span>
+                <button
+                  disabled={currentPage === totalPages}
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                  }
+                  className={`px-4 py-2 border rounded-md ${
+                    currentPage === totalPages
+                      ? "bg-gray-300 cursor-not-allowed"
+                      : "bg-[#1DCE5F] text-white hover:bg-[#329964]"
+                  }`}
+                >
+                  Next
+                </button>
               </div>
-            </Link>
-            ))}
-          </div>
+            )}
+          </>
         ) : (
           <div className="text-center mt-6">
             <p className="text-gray-600 text-lg">No related products available.</p>

@@ -27,5 +27,14 @@ const getProductsByCategory = async (categoryId: string) => {
   }
 };
 
-const productService = { getAlllProducts, getProductsByCategory,getAllCategories };
+const getProductById = async (id: string) => {
+  try {
+    const response = await axiosInstance.get(`/api/product/view/${id}`);
+    return response.data;
+  } catch (error) {
+    return handleError(error);
+  }
+};
+
+const productService = { getAlllProducts, getProductsByCategory,getAllCategories, getProductById };
 export default productService;
