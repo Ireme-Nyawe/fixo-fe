@@ -9,9 +9,12 @@ import DashboardProducts from './pages/dashboard/Products';
 import Categories from './pages/dashboard/ProductsCategories';
 import NewProductCategory from './pages/dashboard/NewProductCategory';
 import ProtectedRoute from './components/dashboard/ProtectedRoute';
+import AdminRoute from './components/dashboard/AdminRoute';
+import TechnicianRoute from './components/dashboard/TechnicianRoute';
 import NewProduct from './pages/dashboard/NewProduct';
 import EditProductCategory from './pages/dashboard/EditProductCategory';
 import EditProduct from './pages/dashboard/EditProduct';
+import Profile from './pages/dashboard/Profile';
 
 const AppRouter = () => {
   return (
@@ -23,13 +26,26 @@ const AppRouter = () => {
 
       <Route element={<ProtectedRoute />}>
         <Route path="/dashboard" element={<DashboardLayout />}>
-          <Route index={true} element={<Dashboard />} />
-          <Route path="products" element={<DashboardProducts />} />
-          <Route path="products/new" element={<NewProduct />} />
-          <Route path="products/edit/:id" element={<EditProduct />} />
-          <Route path="categories" element={<Categories />} />
-          <Route path="categories/new" element={<NewProductCategory />} />
-          <Route path="categories/edit/:id" element={<EditProductCategory />} />
+          <Route element={<AdminRoute />}>
+            <Route index={true} element={<Dashboard />} />
+            <Route path="products" element={<DashboardProducts />} />
+            <Route path="products/new" element={<NewProduct />} />
+            <Route path="products/edit/:id" element={<EditProduct />} />
+            <Route path="categories" element={<Categories />} />
+            <Route path="categories/new" element={<NewProductCategory />} />
+            <Route
+              path="categories/edit/:id"
+              element={<EditProductCategory />}
+            />
+          </Route>
+
+          <Route element={<TechnicianRoute />}>
+            <Route
+              path="technician-tools"
+              element={<h1>Technician Tools Page</h1>}
+            />
+          </Route>
+          <Route path="profile" element={<Profile />} />
           <Route path="*" element={<h1>Page Not Found</h1>} />
         </Route>
       </Route>

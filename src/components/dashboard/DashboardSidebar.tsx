@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { FaHome, FaBox } from 'react-icons/fa';
+import { FaHome, FaBox, FaUsers, FaTools, FaUser } from 'react-icons/fa';
 
 interface DashboardSidebarProps {
   isSidebarOpen: boolean;
@@ -12,11 +12,45 @@ const DashboardSidebar = ({
   sideBarToggle,
 }: DashboardSidebarProps) => {
   const [activeLink, setActiveLink] = useState('Dashboard');
+  const [userRole, setUserRole] = useState<string | null>(null);
 
-  const links = [
+  useEffect(() => {
+    const storedProfile = localStorage.getItem('profile');
+    if (storedProfile) {
+      const parsedProfile = JSON.parse(storedProfile);
+      setUserRole(parsedProfile.role);
+    }
+  }, []);
+
+  const commonLinks = [
+    {
+      name: 'Profile',
+      icon: <FaUser />,
+    },
+  ];
+  const adminLinks = [
     { name: 'Dashboard', icon: <FaHome /> },
+    { name: 'Manage Users', icon: <FaUsers /> },
     { name: 'Products', icon: <FaBox /> },
   ];
+  const technicianLinks = [
+    {
+      name: 'Tech Dashboard',
+      icon: <FaHome />,
+    },
+    {
+      name: 'Tools',
+      icon: <FaTools />,
+    },
+  ];
+
+  let visibleLinks: any = [];
+  if (userRole === 'admin') {
+    visibleLinks = [...visibleLinks, ...adminLinks];
+  } else if (userRole === 'technician') {
+    visibleLinks = [...visibleLinks, ...technicianLinks];
+  }
+  visibleLinks = [...visibleLinks, ...commonLinks];
 
   return (
     <>
@@ -26,13 +60,15 @@ const DashboardSidebar = ({
         } md:translate-x-0 transition-transform duration-200 ease-in-out w-64 bg-primary h-full`}
       >
         <nav className="p-4 space-y-2">
-          {links.map((link) => (
+          {visibleLinks.map((link: any) => (
             <Link
               key={link.name}
               to={
                 link.name === 'Dashboard'
                   ? '/dashboard'
-                  : `/dashboard/${link.name.toLowerCase()}`
+                  : link.name === 'Tech Dashboard'
+                  ? '/dashboard/tech'
+                  : `/dashboard/${link.name.toLowerCase().replace(/\s/g, '-')}`
               }
               onClick={() => setActiveLink(link.name)}
               className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-colors ${
