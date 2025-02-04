@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import ProductsNavBar from '../../components/dashboard/ProductsNavBar';
 import { FaCheck, FaEdit, FaTrash } from 'react-icons/fa';
-import { toast } from 'sonner';
+import { toast, Toaster } from 'sonner';
 import {
   deleteProduct,
   getAllProducts,
@@ -89,6 +89,7 @@ const Products = () => {
 
   return (
     <div className="p-4 md:p-6 bg-gray-50 min-h-screen">
+      <Toaster richColors position="top-center" />
       <ProductsNavBar />
       <div className="mt-6 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
@@ -141,7 +142,7 @@ const Products = () => {
               {!loading && paginatedData.length > 0
                 ? paginatedData.map((item: IProduct) => (
                     <tr
-                      key={item._id}
+                      key={item?._id}
                       className="hover:bg-gray-50 transition-colors"
                     >
                       <td className="px-6 whitespace-nowrap text-sm font-medium text-gray-800 relative">
@@ -169,20 +170,20 @@ const Products = () => {
                       </td>
 
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">
-                        {item.name}
+                        {item?.name}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">
-                        {item.price}
+                        {item?.price}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">
-                        {item.name}
+                        {item?.category?.name}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">
-                        {item.name}
+                        {item?.name}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm space-x-2">
                         <Link
-                          to={`/dashboard/products/edit/${item._id}`}
+                          to={`/dashboard/products/edit/${item?._id}`}
                           className="inline-flex items-center px-3 py-1.5 border border-transparent rounded-lg text-primary hover:bg-primary/10 transition-colors"
                         >
                           <FaEdit className="w-4 h-4 mr-1.5" />

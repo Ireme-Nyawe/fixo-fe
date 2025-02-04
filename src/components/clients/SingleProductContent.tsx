@@ -11,18 +11,18 @@ const SingleProductContent = () => {
   const [mainImage, setMainImage] = useState<string | null>(null);
   const { id } = useParams<{ id: string }>();
 
+  const lang = localStorage.getItem('lang');
+
   useEffect(() => {
     const fetchProductData = async () => {
       if (!id) return;
       try {
         setLoading(true);
         const response = await productService.getProductById(id);
-        const product = response.data;
-        setProductData(product || null);
-        setMainImage(product?.images?.[0] || null);
+        setProductData(response.data || null);
+        setMainImage(response.data?.images?.[0] || null);
       } catch (error) {
         console.error('Fetching product failed:', error);
-        setProductData(null);
       } finally {
         setLoading(false);
       }
@@ -31,8 +31,7 @@ const SingleProductContent = () => {
     const fetchProductsData = async () => {
       try {
         const response = await productService.getAlllProducts();
-        const products = response.data;
-        setProductsData(products || []);
+        setProductsData(response.data || []);
       } catch (error) {
         console.error('Fetching products failed:', error);
       }
@@ -49,91 +48,86 @@ const SingleProductContent = () => {
   }
 
   const filteredProducts = products.filter((p) => p._id !== id).slice(0, 3);
-  const productImages = productData?.images?.slice(0, 8) || [];
+  const productImages = productData?.images?.slice(0, 5) || [];
 
   return (
-    <div className="max-w-6xl mx-auto p-4 md:p-6">
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+    <div className="max-w-6xl mx-auto p-6">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
+        {/* Thumbnail Images */}
         <div className="md:col-span-2 flex md:flex-col gap-2 overflow-x-auto md:overflow-visible">
-          {productImages.length >= 3 &&
-            productImages.map((img, index) => (
-              <img
-                key={index}
-                src={img}
-                alt={`Thumbnail ${index}`}
-                className={`w-20 h-20 md:w-full md:h-20 rounded-md cursor-pointer border-2 ${
-                  mainImage === img
-                    ? 'border-secondary shadow-md'
-                    : 'border-gray-300'
-                } transition duration-300`}
-                onClick={() => setMainImage(img)}
-              />
-            ))}
+          {productImages.map((img, index) => (
+            <img
+              key={index}
+              src={img}
+              alt={`Thumbnail ${index}`}
+              className={`w-20 h-20 md:w-full md:h-24 rounded-lg cursor-pointer border-2 transition duration-300 ${
+                mainImage === img
+                  ? 'border-blue-500 shadow-md'
+                  : 'border-gray-300'
+              }`}
+              onClick={() => setMainImage(img)}
+            />
+          ))}
         </div>
 
         <div className="md:col-span-5 flex justify-center items-center">
           {loading ? (
-            <div className="w-full max-w-md md:max-w-lg h-64 bg-gray-300 animate-pulse rounded-lg"></div>
+            <div className="w-full max-w-lg h-64 bg-gray-300 animate-pulse rounded-lg"></div>
           ) : (
             <img
               src={mainImage || ''}
-              alt="Main"
-              className="w-full max-w-md md:max-w-lg rounded-lg shadow-lg transition hover:scale-105 duration-300"
+              alt="Main Product"
+              className="w-full max-w-lg rounded-lg shadow-lg transition hover:scale-105 duration-300"
             />
           )}
         </div>
 
         <div className="md:col-span-5">
-          <h1 className="text-2xl font-bold text-primary">
-            {productData?.name} | {productData?.category.name}
+          <h1 className="text-3xl font-bold text-gray-800">
+            {productData?.name}
           </h1>
-          <div className="flex mt-5">
-            <div className="flex-1">
-              <p className="text-lg font-semibold text-white bg-superior p-1 rounded-lg inline cursor-pointer">
-                RWF{productData?.price.toFixed(2)}
-              </p>
-            </div>
-            <p className="text-secondary font-medium">
-              {productData?.stock} In Stock
-            </p>
-          </div>
-
+          <p className="text-xl font-semibold text-gray-600 mt-3">
+            RWF {productData?.price.toFixed(2)}
+          </p>
+          <p className="text-sm text-white bg-secondary inline p-1 rounded">
+            {productData?.category?.name}
+          </p>
           <hr className="my-4" />
-          <h2 className="text-lg font-semibold text-primary">
-            Product Description
-          </h2>
-          <p className="text-gray-600 my-2">{productData?.description}</p>
+          <p className="text-gray-700 text-lg">{productData?.description}</p>
 
-          <div className="flex gap-4 mt-4">
-            <button className="flex items-center p-2 bg-superior text-white rounded-lg w-full sm:w-auto transition hover:bg-opacity-80">
-              Call <PhoneCall className="ml-2" />
-            </button>
+          <div className="flex gap-4 mt-6">
+            <Link
+              className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg transition hover:bg-green-500"
+              to={'tel: +250781234567'}
+            >
+              <PhoneCall className="mr-2" /> Call Now
+            </Link>
           </div>
         </div>
       </div>
 
       <div className="mt-10">
-        <h2 className="text-xl font-bold text-primary mb-4">
-          Related Products
+        <h2 className="text-2xl font-bold text-gray-800 mb-4">
+          {lang === 'en' ? 'Related products' : 'Ibindi bijyanye'}
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {filteredProducts.map((product) => (
             <Link
               key={product._id}
               to={`/product/${product._id}`}
-              className="block bg-white shadow-md rounded-lg p-4 hover:shadow-lg transition transform hover:scale-105 duration-300"
+              className="block bg-white shadow-lg rounded-lg p-4 hover:shadow-xl transition transform hover:scale-105 duration-300"
             >
               <img
                 src={product.images[0] || ''}
                 alt={product.name}
-                className="w-full h-40 object-cover rounded-md mb-4"
+                className="w-full h-40 object-cover rounded-md mb-3"
               />
-              <h3 className="text-lg font-semibold text-primary">
+              <h3 className="text-lg font-semibold text-gray-800">
                 {product.name}
               </h3>
-              <p className="text-gray-600 flex justify-between">
-                RWF{product.price.toFixed(2)}
-                <span className="text-sm text-secondary">
+              <p className="text-gray-600 flex justify-between text-sm">
+                RWF {product.price.toFixed(2)}
+                <span className="text-xs text-gray-500">
                   {product.stock} In Stock
                 </span>
               </p>
@@ -143,9 +137,9 @@ const SingleProductContent = () => {
         <div className="text-center mt-6">
           <Link
             to="/products"
-            className="bg-superior text-white px-6 py-2 rounded-lg inline-block hover:bg-secondary transition"
+            className="bg-primary text-white px-6 py-2 rounded-lg inline-block hover:bg-secondary transition"
           >
-            View All Products
+            {lang === 'en' ? 'View All Products' : 'Reba ibicuruzwa byose'}
           </Link>
         </div>
       </div>
