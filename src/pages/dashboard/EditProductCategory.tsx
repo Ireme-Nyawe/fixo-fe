@@ -23,7 +23,6 @@ const EditProductCategory = () => {
     setFetchingProduct(true);
     try {
       const response = await getProductCategoryById(id);
-      console.log(response);
       setCategoryName(response.data.name);
       setDescription(response.data.description);
     } catch (error: any) {

@@ -31,7 +31,6 @@ const NewUser = () => {
       return;
     }
     try {
-      console.log('eij');
 
       const response = await adminCreateUser({
         firstName,
@@ -42,8 +41,6 @@ const NewUser = () => {
         role,
         phone,
       });
-
-      console.log('SS', response);
 
       if (response.status === 201) {
         toast.success('User created successfully');

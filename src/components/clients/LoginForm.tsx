@@ -27,7 +27,6 @@ const LoginForm = () => {
   const fetchProfile = async () => {
     try {
       const response = await authService.getProfile();
-      console.log(response);
 
       if (response.status === 200) {
         const { password, _id, ...profileWithoutSensitiveData } = response.data;
@@ -56,7 +55,6 @@ const LoginForm = () => {
     onSubmit: async (values, { setSubmitting }) => {
       try {
         const response = await authService.login(values);
-        console.log(response);
         if (response.status === 200) {
           if (response.message === 'OTP sent successfully') {
             toast.success('OTP sent successfully, check your email inbox!');

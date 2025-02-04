@@ -7,7 +7,7 @@ export interface IUser {
   role?: string;
   username?: string;
   status?: boolean;
-  phone: string
+  phone?: string
 }
 
 
@@ -33,7 +33,7 @@ export interface IProduct {
   name: string;
   description?: string;
   price: number;
-  category: ObjectId;
+  category: any;
   stock: number;
   images: string[];
   createdAt?: Date;

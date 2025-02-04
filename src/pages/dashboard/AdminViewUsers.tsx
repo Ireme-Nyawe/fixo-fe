@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { FaEdit, FaTrash } from 'react-icons/fa';
 import { toast } from 'sonner';
 import {
   adminToggleUserStatus,
@@ -8,7 +7,6 @@ import {
 import { IUser } from '../../types/store';
 import Pagination from '../../components/dashboard/Pagination';
 import SkeletonLoader from '../../components/dashboard/SkeletonLoader';
-import { Link } from 'react-router-dom';
 import ViewUsersNavbar from '../../components/dashboard/ViewUsersNavbar';
 import { Switch } from '@headlessui/react';
 
@@ -19,10 +17,6 @@ const AdminViewUsers = () => {
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const [currentPage, setCurrentPage] = useState(1);
   const perPage = 10;
-
-  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const [deleteUserId, setDeleteUserId] = useState<string | null>(null);
-
   const fetchAllUsers = async () => {
     setLoading(true);
     try {
@@ -42,7 +36,7 @@ const AdminViewUsers = () => {
     }
   };
 
-  const toggleUserStatus = async (id: string) => {
+  const toggleUserStatus = async (id: any) => {
     try {
       const response = await adminToggleUserStatus(id);
       if (response.status === 200) {
@@ -128,9 +122,6 @@ const AdminViewUsers = () => {
                 <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider cursor-pointer">
                   Status
                 </th>
-                <th className="px-6 py-4 text-right text-sm font-semibold text-gray-600 uppercase tracking-wider">
-                  Actions
-                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
@@ -155,8 +146,8 @@ const AdminViewUsers = () => {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">
                         <Switch
-                          checked={user.status} // Assuming 'isActive' is the user status
-                          onChange={() => toggleUserStatus(user._id)} // You can define this function
+                          checked={user.status}
+                          onChange={() => toggleUserStatus(user?._id)}
                           className={`${
                             user.status ? 'bg-green-500' : 'bg-gray-300'
                           } relative inline-flex h-6 w-11 items-center rounded-full transition`}
@@ -167,23 +158,6 @@ const AdminViewUsers = () => {
                             } inline-block h-4 w-4 transform rounded-full bg-white transition`}
                           />
                         </Switch>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm space-x-2">
-                        <Link
-                          to={`/dashboard/users/edit/${user._id}`}
-                          className="inline-flex items-center px-3 py-1.5 border border-transparent rounded-lg text-primary hover:bg-primary/10 transition-colors"
-                        >
-                          <FaEdit className="w-4 h-4 mr-1.5" />
-                        </Link>
-                        <button
-                          className="inline-flex items-center px-3 py-1.5 border border-transparent rounded-lg text-red-600 hover:bg-red-50 transition-colors"
-                          onClick={() => {
-                            // setDeleteUserId(user._id);
-                            // setIsDeleteOpen(true);
-                          }}
-                        >
-                          <FaTrash className="w-4 h-4 mr-1.5" />
-                        </button>
                       </td>
                     </tr>
                   ))

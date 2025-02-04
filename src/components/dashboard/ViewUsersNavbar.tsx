@@ -1,5 +1,5 @@
 import { User2 } from 'lucide-react';
-import { FaPlusSquare, FaList, FaFolderPlus } from 'react-icons/fa';
+import { FaPlusSquare } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
 const ViewUsersNavbar = () => {

@@ -85,7 +85,7 @@ const SingleProductContent = () => {
 
         <div className="md:col-span-5">
           <h1 className="text-2xl font-bold text-primary">
-            {productData?.name} | {productData?.category.name}
+            {productData?.name} | {productData?.category?.name}
           </h1>
           <div className="flex mt-5">
             <div className="flex-1">
