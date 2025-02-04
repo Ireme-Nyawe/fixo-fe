@@ -15,6 +15,8 @@ import NewProduct from './pages/dashboard/NewProduct';
 import EditProductCategory from './pages/dashboard/EditProductCategory';
 import EditProduct from './pages/dashboard/EditProduct';
 import Profile from './pages/dashboard/Profile';
+import AdminViewUsers from './pages/dashboard/AdminViewUsers';
+import NewUser from './pages/dashboard/NewUser';
 
 const AppRouter = () => {
   return (
@@ -37,6 +39,8 @@ const AppRouter = () => {
               path="categories/edit/:id"
               element={<EditProductCategory />}
             />
+            <Route path="manage-users" element={<AdminViewUsers />} />
+            <Route path="manage-users/new" element={<NewUser />} />
           </Route>
 
           <Route element={<TechnicianRoute />}>

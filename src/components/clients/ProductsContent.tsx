@@ -177,7 +177,7 @@ const ProductsContent = ({ lang }: ProductsCOntentsProps) => {
                     </p>
                     <div className="flex justify-between items-center mt-2">
                       <p className="text-[#329964] font-semibold">
-                        ${product.price}
+                        RWF{product.price}
                       </p>
                       <span className="text-gray-500 text-sm">
                         {product.stock} in stock

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import ProductsNavBar from '../../components/dashboard/ProductsNavBar';
 import { FaCheck, FaEdit, FaTrash } from 'react-icons/fa';
-import { toast } from 'sonner';
+import { toast, Toaster } from 'sonner';
 import {
   deleteProduct,
   getAllProducts,
@@ -89,6 +89,7 @@ const Products = () => {
 
   return (
     <div className="p-4 md:p-6 bg-gray-50 min-h-screen">
+      <Toaster richColors position="top-center" />
       <ProductsNavBar />
       <div className="mt-6 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
