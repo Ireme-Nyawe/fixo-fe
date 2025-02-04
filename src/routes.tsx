@@ -17,12 +17,14 @@ import EditProduct from './pages/dashboard/EditProduct';
 import Profile from './pages/dashboard/Profile';
 import AdminViewUsers from './pages/dashboard/AdminViewUsers';
 import NewUser from './pages/dashboard/NewUser';
+import Services from './pages/Services';
 
 const AppRouter = () => {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/services" element={<Services />} />
       <Route path="/products" element={<Products />} />
       <Route path="/product/:id" element={<SingleProduct />} />
 
