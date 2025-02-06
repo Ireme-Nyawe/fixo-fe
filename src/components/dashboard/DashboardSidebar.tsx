@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { FaHome, FaBox, FaUsers, FaTools, FaUser } from 'react-icons/fa';
+import { FaHome, FaBox, FaUsers, FaTools, FaUser, FaComments } from 'react-icons/fa';
+import { ChartArea } from 'lucide-react';
 
 interface DashboardSidebarProps {
   isSidebarOpen: boolean;
@@ -23,6 +24,10 @@ const DashboardSidebar = ({
   }, []);
 
   const commonLinks = [
+    {
+      name: 'Chat',
+      icon: <FaComments />,
+    },
     {
       name: 'Profile',
       icon: <FaUser />,
