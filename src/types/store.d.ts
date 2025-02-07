@@ -39,3 +39,13 @@ export interface IProduct {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+export interface IMessage {
+  _id?: mongoose.Types.ObjectId | string;
+  senderId?: mongoose.Types.ObjectId | string;
+  receiverId: mongoose.Types.ObjectId | string;
+  content: string;
+  isRead?: Boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+}

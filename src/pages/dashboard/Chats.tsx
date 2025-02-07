@@ -1,85 +1,105 @@
-import { useState } from 'react';
-import { Phone, Video, Send } from 'lucide-react';
-import Avatar from '/avatar.svg';
+import { useEffect, useState } from "react";
+import { Phone, Video, Send } from "lucide-react";
+import Avatar from "/avatar.svg";
+import { IMessage, IUser } from "../../types/store";
+import chatSlice from "../../state/features/chat/chatSlice";
+import { toast } from "sonner";
 
 interface Message {
   id: number;
   text: string;
-  sender: 'user' | 'other';
+  sender: "user" | "other";
   timestamp: string;
 }
-
-interface Chat {
-  id: number;
-  name: string;
-  lastMessage: string;
-  unread: number;
-  timestamp: string;
-}
-
 const Chats = () => {
-  const [selectedChat, setSelectedChat] = useState<number | null>(1);
-  const [newMessage, setNewMessage] = useState('');
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: 1,
-      text: 'Hello there, how are you doing?',
-      sender: 'other',
-      timestamp: '4:00 PM',
-    },
-    {
-      id: 2,
-      text: "I'm working on a project. Let's chat.",
-      sender: 'other',
-      timestamp: '3:30 PM',
-    },
-    {
-      id: 3,
-      text: "Hi! I'm doing great, thanks for asking!",
-      sender: 'user',
-      timestamp: '4:05 PM',
-    },
-  ]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [selectedChat, setSelectedChat] = useState<IUser | null>({});
+  const [newMessage, setNewMessage] = useState("");
+  const [messages, setMessages] = useState<IMessage[]>([]);
 
-  const [chats] = useState<Chat[]>([
-    {
-      id: 1,
-      name: 'John Doe',
-      lastMessage: 'Hello there, how are you doing?',
-      unread: 2,
-      timestamp: '4:00 PM',
-    },
-    {
-      id: 2,
-      name: 'Alice Smith',
-      lastMessage: 'Let me know about the updates',
-      unread: 0,
-      timestamp: '3:45 PM',
-    },
-    {
-      id: 3,
-      name: 'Bob Johnson',
-      lastMessage: 'See you tomorrow!',
-      unread: 1,
-      timestamp: '2:30 PM',
-    },
-  ]);
+  const [chats, setChats] = useState<IUser[]>([]);
 
-  const handleSendMessage = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newMessage.trim()) return;
-    const newMsg: Message = {
-      id: messages.length + 1,
-      text: newMessage,
-      sender: 'user',
-      timestamp: new Date().toLocaleTimeString([], {
-        hour: '2-digit',
-        minute: '2-digit',
-      }),
-    };
-    setMessages([...messages, newMsg]);
-    setNewMessage('');
+  const fetchUsersChat = async () => {
+    setLoading(true);
+    try {
+      const response = await chatSlice.getUsersForChat();
+      if (response.status === 200) {
+        setChats(response.data);
+      } else {
+        toast.error(
+          response.message || "An unexpected error occurred fetching products"
+        );
+      }
+    } catch (error: any) {
+      console.error("Error fetching products", error);
+      toast.error(
+        error.message || "An unexpected error occurred fetching products"
+      );
+    } finally {
+      setLoading(false);
+    }
   };
+
+  const fetchChatmessages = async (receiverId: string) => {
+    setLoading(true);
+    try {
+      const response = await chatSlice.getChatMessages(receiverId);
+      if (response.status === 200) {
+        setMessages(response.data);
+      } else {
+        toast.error(
+          response.message || "An unexpected error occurred fetching products"
+        );
+      }
+    } catch (error: any) {
+      console.error("Error fetching products", error);
+      toast.error(
+        error.message || "An unexpected error occurred fetching products"
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSendMessage = async(e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      if (!newMessage.trim()) return;
+    const newMsg: IMessage = {
+      content: newMessage,
+      receiverId: selectedChat?._id,
+    };
+    
+    const response = await chatSlice.sendMessage(newMsg);
+    if (response.status === 201) {
+      // messages.push(newMsg)
+      // toast.success('Product deleted successfully');
+      
+    } else {
+      toast.error(
+        response.message || "An unexpected error occurred fetching products"
+      );
+    }
+  } catch (error: any) {
+    console.error("Error fetching products", error);
+    toast.error(
+      error.message || "An unexpected error occurred fetching products"
+    );
+  } finally {
+      setNewMessage("");
+      setLoading(false);
+    }
+    
+  };
+
+  const handleSelectChat = async (chat: IUser) => {
+    setSelectedChat(chat);
+    fetchChatmessages(chat._id || "");
+  };
+  useEffect(() => {
+    fetchUsersChat();
+  }, []);
 
   return (
     <div className="max-w-7xl mx-auto p-4">
@@ -100,41 +120,40 @@ const Chats = () => {
             />
           </div>
           <div className="space-y-4">
-            {chats.map((chat) => (
-              <div
-                key={chat.id}
-                onClick={() => setSelectedChat(chat.id)}
-                className={`p-3 rounded-lg cursor-pointer transition-colors ${
-                  selectedChat === chat.id
-                    ? 'bg-[#C2E0D1]'
-                    : 'hover:bg-gray-100'
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <img
-                      src={Avatar}
-                      alt="Avatar"
-                      className="w-10 h-10 rounded-full"
-                    />
-                    <div>
-                      <h3 className="font-semibold">{chat.name}</h3>
-                      <p className="text-sm text-gray-600 truncate">
-                        {chat.lastMessage}
-                      </p>
+            {chats &&
+              chats.map((chat) => (
+                <div
+                  key={chat._id}
+                  onClick={() => handleSelectChat(chat)}
+                  className={`p-3 rounded-lg cursor-pointer transition-colors ${
+                    selectedChat === chat ? "bg-[#C2E0D1]" : "hover:bg-gray-100"
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <img
+                        src={Avatar}
+                        alt="Avatar"
+                        className="w-10 h-10 rounded-full"
+                      />
+                      <div>
+                        <h3 className="font-semibold">{chat.username}</h3>
+                        <p className="text-sm text-gray-600 truncate">
+                          {"click.."}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-xs text-gray-500">{"12:12"}</p>
+                      {1 > 0 && (
+                        <span className="bg-primary text-white rounded-full px-2 py-1 text-xs">
+                          {12}
+                        </span>
+                      )}
                     </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-xs text-gray-500">{chat.timestamp}</p>
-                    {chat.unread > 0 && (
-                      <span className="bg-primary text-white rounded-full px-2 py-1 text-xs">
-                        {chat.unread}
-                      </span>
-                    )}
-                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
         </div>
 
@@ -150,7 +169,9 @@ const Chats = () => {
                     alt="Avatar"
                     className="w-10 h-10 rounded-full"
                   />
-                  <h2 className="text-xl font-semibold">John Doe</h2>
+                  <h2 className="text-xl font-semibold">
+                    {selectedChat.username}
+                  </h2>
                 </div>
                 <div className="flex gap-2">
                   <button className="p-2 rounded-full bg-white hover:bg-gray-100 transition-colors">
@@ -166,29 +187,29 @@ const Chats = () => {
               <div className="flex-1 p-4 overflow-y-auto space-y-4">
                 {messages.map((message) => (
                   <div
-                    key={message.id}
+                    key={message._id}
                     className={`flex ${
-                      message.sender === 'user'
-                        ? 'justify-end'
-                        : 'justify-start'
+                      message.senderId._id !== selectedChat._id
+                        ? "justify-end"
+                        : "justify-start"
                     }`}
                   >
                     <div
                       className={`max-w-[70%] rounded-lg p-3 ${
-                        message.sender === 'user'
-                          ? 'bg-primary text-white'
-                          : 'bg-gray-100'
+                        message.senderId._id !== selectedChat._id
+                          ? "bg-primary text-white"
+                          : "bg-gray-100"
                       }`}
                     >
-                      <p>{message.text}</p>
+                      <p>{message.content}</p>
                       <p
                         className={`text-xs mt-1 ${
-                          message.sender === 'user'
-                            ? 'text-gray-200'
-                            : 'text-gray-500'
+                          message.senderId._id !== selectedChat._id
+                            ? "text-gray-200"
+                            : "text-gray-500"
                         }`}
                       >
-                        {message.timestamp}
+                        {"time"}
                       </p>
                     </div>
                   </div>
