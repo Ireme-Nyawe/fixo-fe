@@ -8,9 +8,12 @@ import { FaCommentAlt } from 'react-icons/fa';
 import { io } from 'socket.io-client';
 import { BACKEND_URL } from '../../utils/axios';
 import { formatMessageTime, formatRelativeTime } from '../../helpers/time';
+import { uploadToCloudinary } from '../../helpers/clouadinary';
+import { truncateText } from '../../helpers/textFormatting';
 
 const Chats = () => {
   const [loading, setLoading] = useState<boolean>(false);
+  const [isUploading, setIsUploading] = useState<boolean>(false);
   const [selectedChat, setSelectedChat] = useState<IUser | null>({});
   const [empty, setEmpty] = useState(true);
   const [newMessage, setNewMessage] = useState('');
@@ -72,7 +75,7 @@ const Chats = () => {
     }
   };
 
-  const fetchChatmessages = async (receiverId: string) => {
+  const fetchChatmessages = async (receiverId: any) => {
     setLoading(true);
     try {
       const response = await chatSlice.getChatMessages(receiverId);
@@ -97,11 +100,9 @@ const Chats = () => {
     try {
       if (!newMessage.trim()) return;
 
-      const profile = getUserProfile();
       const newMsg: IMessage = {
         content: newMessage,
         receiverId: selectedChat?._id,
-        senderId: profile._id,
       };
 
       const response = await chatSlice.sendMessage(newMsg);
@@ -109,7 +110,7 @@ const Chats = () => {
       if (response?.status === 201) {
         socket.emit('sendMessage', newMsg);
         await fetchUsersChat();
-        setMessages((prevMessages) => [...prevMessages, newMsg]);
+        await fetchChatmessages(selectedChat?._id);
       } else {
         toast.error(response?.message || 'An unexpected error occurred');
       }
@@ -131,6 +132,50 @@ const Chats = () => {
   useEffect(() => {
     fetchUsersChat();
   }, []);
+
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    try {
+      const file = event.target.files?.[0];
+      if (!file) {
+        toast.error('No file selected. Please choose a file.');
+        return;
+      }
+
+      setIsUploading(true);
+      const mediaUrl = await uploadToCloudinary(file);
+      setIsUploading(false);
+
+      if (!mediaUrl) {
+        toast.error('Failed to upload file. Please try again.');
+        return;
+      }
+
+      let fileMarkup = '';
+
+      if (file.type.startsWith('image/')) {
+        fileMarkup = `<img src="${mediaUrl}" alt="Uploaded Image" class="max-w-xs rounded-md" />`;
+      } else if (file.type.startsWith('video/')) {
+        fileMarkup = `<video controls class="max-w-xs"><source src="${mediaUrl}" type="${file.type}" /></video>`;
+      } else {
+        fileMarkup = `<a href="${mediaUrl}" target="_blank" class="text-blue-500 underline">Download File</a>`;
+      }
+
+      setNewMessage((prevMessage) =>
+        prevMessage ? `${prevMessage} ${fileMarkup}` : fileMarkup
+      );
+
+      toast.success('File uploaded successfully!');
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      toast.error(
+        'An unexpected error occurred while uploading. Please try again.'
+      );
+      setIsUploading(false);
+    }
+  };
+
   return (
     <div className="max-w-7xl mx-auto p-4">
       <div className="mb-8">
@@ -139,26 +184,27 @@ const Chats = () => {
           Chat with your peers, share updates, and collaborate on projects.
         </p>
       </div>
-      <div className="flex flex-col md:flex-row gap-4 h-[600px]">
-        <div className="w-full md:w-1/3 bg-white rounded-lg shadow-md p-4">
-          <div className="mb-4">
-            <input
-              type="search"
-              placeholder="Search conversations..."
-              className="w-full p-2 rounded-lg bg-[#C2E0D1] outline-none placeholder:text-gray-600"
-            />
-          </div>
+      <div className="mb-2 md:mb-4">
+        <input
+          type="search"
+          placeholder="Search conversations..."
+          className="w-full p-2 rounded-lg bg-[#C2E0D1] outline-none placeholder:text-gray-600"
+        />
+      </div>
+      <div className="flex flex-row gap-4 h-[600px]">
+        <div className="w-full w-[60px] md:w-1/3 bg-white rounded-lg shadow-md p-1 md:p-4">
           <div className="space-y-4">
             {chats &&
               chats.map((chat) => (
                 <div
                   key={chat._id}
                   onClick={() => handleSelectChat(chat)}
-                  className={`p-3 rounded-lg cursor-pointer transition-colors ${
+                  className={`p-1 md:p-3 rounded-lg cursor-pointer transition-colors ${
                     selectedChat?._id === chat._id
                       ? 'bg-[#C2E0D1]'
                       : 'hover:bg-gray-100'
                   }`}
+                  title={`${chat.firstName} ${chat.lastName}`}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
@@ -167,14 +213,14 @@ const Chats = () => {
                         alt="Avatar"
                         className="w-10 h-10 rounded-full"
                       />
-                      <div>
+                      <div className="hidden md:block">
                         <h3 className="font-semibold">{chat.username}</h3>
                         <p className="text-sm text-gray-600 truncate">
-                          {chat?.lastMessage}
+                          {truncateText(chat?.lastMessage)}
                         </p>
                       </div>
                     </div>
-                    <div className="text-right">
+                    <div className="hidden md:block text-right">
                       <p className="text-xs text-gray-500">
                         {formatMessageTime(chat?.lastMessageDate)}
                       </p>
@@ -228,38 +274,59 @@ const Chats = () => {
                           : 'bg-gray-100'
                       }`}
                     >
-                      <p>{message?.content}</p>
                       <p
-                        className={`text-xs mt-1 ${
-                          isSentByUser(
-                            message?.senderId?._id || message?.senderId
-                          )
-                            ? 'text-gray-200'
-                            : 'text-gray-500'
-                        }`}
-                      >
-                        {formatRelativeTime(message?.createdAt)}
-                      </p>
+                        dangerouslySetInnerHTML={{ __html: message?.content }}
+                      />
+                      <div className="flex">
+                        <img src={Avatar} alt="" className="w-4 h-4 m-1" />
+                        <p
+                          className={`text-xs mt-1 ${
+                            isSentByUser(
+                              message?.senderId?._id || message?.senderId
+                            )
+                              ? 'text-gray-200'
+                              : 'text-gray-500'
+                          }`}
+                        >
+                          {formatRelativeTime(message?.createdAt)}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 ))}
               </div>
-
               <form onSubmit={handleSendMessage} className="p-4 border-t">
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={newMessage}
-                    onChange={(e) => setNewMessage(e.target.value)}
-                    placeholder="Type your message..."
-                    className="flex-1 p-2 rounded-lg bg-gray-100 outline-none"
-                  />
-                  <button
-                    type="submit"
-                    className="p-2 rounded-lg bg-primary text-white hover:bg-primary-dark transition-colors"
-                  >
-                    <Send className="w-5 h-5" />
-                  </button>
+                <div className="flex items-center gap-4">
+                  <div className="flex-1">
+                    <textarea
+                      value={newMessage}
+                      onChange={(e) => setNewMessage(e.target.value)}
+                      placeholder="Type your message..."
+                      className="w-full p-3 rounded-lg bg-gray-100 outline-none resize-none focus:ring-2 focus:ring-primary transition-all"
+                    />
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="file"
+                      onChange={handleFileChange}
+                      className="hidden"
+                      id="fileInput"
+                    />
+                    <label
+                      htmlFor="fileInput"
+                      className="p-2 rounded-lg bg-gray-100 cursor-pointer hover:bg-gray-200 transition-colors"
+                    >
+                      📎
+                    </label>
+
+                    <button
+                      type="submit"
+                      className="p-2 rounded-lg bg-primary text-white hover:bg-primary-dark transition-colors flex items-center justify-center"
+                    >
+                      <Send className="w-5 h-5" />
+                    </button>
+                  </div>
                 </div>
               </form>
             </>
