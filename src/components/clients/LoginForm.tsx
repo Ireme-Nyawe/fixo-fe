@@ -29,7 +29,7 @@ const LoginForm = () => {
       const response = await authService.getProfile();
 
       if (response.status === 200) {
-        const { password, _id, ...profileWithoutSensitiveData } = response.data;
+        const { password, ...profileWithoutSensitiveData } = response.data;
 
         localStorage.setItem(
           'profile',

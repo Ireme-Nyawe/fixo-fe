@@ -1,3 +1,6 @@
+
+import { formatDistanceToNow } from 'date-fns';
+
 export const formatDateTime = (dateString: string) => {
     const date = new Date(dateString);
     const options: Intl.DateTimeFormatOptions = {
@@ -49,3 +52,46 @@ export const getGreeting = (name: any) => {
         return `Good evening, ${name}!`;
     }
 };
+
+/**
+ * Formats a given date into a human-readable relative time format.
+ * @param {string | Date} timestamp - The timestamp to format.
+ * @returns {string} - The formatted relative time (e.g., "2 hours ago").
+ */
+export const formatRelativeTime = (timestamp: string | Date): string => {
+    if (!timestamp) return 'Just now';
+
+    return formatDistanceToNow(new Date(timestamp), { addSuffix: true });
+};
+
+
+export const formatMessageTime = (timestamp: any) => {
+    const now = new Date();
+    const messageDate = new Date(timestamp);
+    const diffInSeconds = Math.floor((now - messageDate) / 1000);
+
+    if (diffInSeconds < 60) {
+        return `${diffInSeconds} sec${diffInSeconds > 1 ? 's' : ''} ago`;
+    }
+
+    const diffInMinutes = Math.floor(diffInSeconds / 60);
+    if (diffInMinutes < 60) {
+        return `${diffInMinutes} min${diffInMinutes > 1 ? 's' : ''} ago`;
+    }
+
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    if (diffInHours < 24) {
+        return `${diffInHours} hour${diffInHours > 1 ? 's' : ''} ago`;
+    }
+
+    const diffInDays = Math.floor(diffInHours / 24);
+    if (diffInDays < 7) {
+        return `${diffInDays} day${diffInDays > 1 ? 's' : ''} ago`;
+    }
+
+    return messageDate.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: messageDate.getFullYear() !== now.getFullYear() ? "numeric" : undefined,
+    });
+};  
