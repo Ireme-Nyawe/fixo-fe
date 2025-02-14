@@ -25,7 +25,6 @@ const Chats = () => {
     const profileObject = getUserProfile();
     if (!profileObject) return;
 
-    console.log(profileObject);
     socket.emit('join', profileObject._id);
 
     socket.on('receiveMessage', async (data) => {
