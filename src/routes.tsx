@@ -18,6 +18,8 @@ import Profile from './pages/dashboard/Profile';
 import AdminViewUsers from './pages/dashboard/AdminViewUsers';
 import NewUser from './pages/dashboard/NewUser';
 import Services from './pages/Services';
+import Chats from './pages/dashboard/Chats';
+import Logout from './components/dashboard/Logout';
 
 const AppRouter = () => {
   return (
@@ -52,6 +54,8 @@ const AppRouter = () => {
             />
           </Route>
           <Route path="profile" element={<Profile />} />
+          <Route path="chat" element={<Chats />} />
+          <Route path="logout" element={<Logout />} />
           <Route path="*" element={<h1>Page Not Found</h1>} />
         </Route>
       </Route>

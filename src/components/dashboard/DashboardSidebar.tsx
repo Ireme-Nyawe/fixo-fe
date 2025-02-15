@@ -1,6 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { FaHome, FaBox, FaUsers, FaTools, FaUser } from 'react-icons/fa';
+import {
+  FaHome,
+  FaBox,
+  FaUsers,
+  FaTools,
+  FaUser,
+  FaComments,
+  FaSignOutAlt,
+} from 'react-icons/fa';
 
 interface DashboardSidebarProps {
   isSidebarOpen: boolean;
@@ -23,10 +31,8 @@ const DashboardSidebar = ({
   }, []);
 
   const commonLinks = [
-    {
-      name: 'Profile',
-      icon: <FaUser />,
-    },
+    { name: 'Chat', icon: <FaComments /> },
+    { name: 'Profile', icon: <FaUser /> },
   ];
   const adminLinks = [
     { name: 'Dashboard', icon: <FaHome /> },
@@ -34,14 +40,8 @@ const DashboardSidebar = ({
     { name: 'Products', icon: <FaBox /> },
   ];
   const technicianLinks = [
-    {
-      name: 'Tech Dashboard',
-      icon: <FaHome />,
-    },
-    {
-      name: 'Tools',
-      icon: <FaTools />,
-    },
+    { name: 'Tech Dashboard', icon: <FaHome /> },
+    { name: 'Tools', icon: <FaTools /> },
   ];
 
   let visibleLinks: any = [];
@@ -57,7 +57,7 @@ const DashboardSidebar = ({
       <aside
         className={`fixed md:relative z-30 transform ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        } md:translate-x-0 transition-transform duration-200 ease-in-out w-64 bg-primary h-full`}
+        } md:translate-x-0 transition-transform duration-200 ease-in-out w-64 bg-primary h-full flex flex-col justify-between`}
       >
         <nav className="p-4 space-y-2">
           {visibleLinks.map((link: any) => (
@@ -82,6 +82,17 @@ const DashboardSidebar = ({
             </Link>
           ))}
         </nav>
+        <div className="p-4">
+          <Link
+            to={'/dashboard/logout'}
+            className="flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-colors bg-red-600 text-white hover:bg-red-700"
+          >
+            <span className="text-xl">
+              <FaSignOutAlt />
+            </span>
+            <span className="font-medium">Logout</span>
+          </Link>
+        </div>
       </aside>
 
       {isSidebarOpen && (

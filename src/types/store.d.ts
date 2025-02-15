@@ -39,3 +39,24 @@ export interface IProduct {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+export interface IMessage {
+  _id?: mongoose.Types.ObjectId | string;
+  senderId?: mongoose.Types.ObjectId | string;
+  receiverId: mongoose.Types.ObjectId | string;
+  content: string;
+  isRead?: Boolean;
+  createdAt?: any;
+  updatedAt?: Date;
+}
+
+export interface iMessageChat {
+  _id?: mongoose.Types.ObjectId | string;
+  lastMessage?: string;
+  lastMessageDate?: any;
+  lastMessageisRead?: Boolean;
+  userId?: mongoose.Types.ObjectId | string;
+  username?: mongoose.Types.ObjectId | string;
+  firstName?: string;
+  lastName?: string;
+}

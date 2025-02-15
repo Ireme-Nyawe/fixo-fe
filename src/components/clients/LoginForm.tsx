@@ -5,11 +5,14 @@ import { toast, Toaster } from 'sonner';
 import { useFormik } from 'formik';
 import LoginImage from '/loginbg.png';
 import authService from '../../state/features/auth/authService';
+import { io } from 'socket.io-client';
+import { BACKEND_URL } from '../../utils/axios';
 
 const LoginForm = () => {
   const [showOTPForm, setShowOTPForm] = useState(false);
   const [otp, setOtp] = useState('');
   const navigate = useNavigate();
+  const socket = io(BACKEND_URL);
 
   const LoginSchema = Yup.object().shape({
     email: Yup.string().email('Invalid email').required('Email is required'),
@@ -29,7 +32,7 @@ const LoginForm = () => {
       const response = await authService.getProfile();
 
       if (response.status === 200) {
-        const { password, _id, ...profileWithoutSensitiveData } = response.data;
+        const { password, ...profileWithoutSensitiveData } = response.data;
 
         localStorage.setItem(
           'profile',
@@ -63,6 +66,7 @@ const LoginForm = () => {
           } else {
             toast.success('Logged in successfully!');
             saveToken(response?.data?.content);
+            await markUserOnline(response?.data?.userId);
             await fetchProfile();
           }
         } else toast.error(response.message || 'Incorrect email or password');
@@ -74,7 +78,19 @@ const LoginForm = () => {
       }
     },
   });
+  const markUserOnline = async (_id: any) => {
+    socket.emit('join', _id);
 
+    socket.on('receiveMessage', async (data) => {
+      toast.success(`New message from ${data.senderNames}`);
+    });
+
+    socket.emit('register', _id);
+
+    return () => {
+      socket.off();
+    };
+  };
   const handleVerifyOTP = async (e: any) => {
     e.preventDefault();
     const userId = localStorage.getItem('otpUserId');
@@ -84,6 +100,7 @@ const LoginForm = () => {
       if (response?.status === 200) {
         toast.success('OTP verified successfully! Logging in...');
         saveToken(response?.data?.content);
+        await markUserOnline(response?.data?.userId);
         localStorage.removeItem('otpUserId');
         await fetchProfile();
       } else {
