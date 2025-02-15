@@ -66,8 +66,8 @@ export const formatRelativeTime = (timestamp: string | Date): string => {
 
 
 export const formatMessageTime = (timestamp: any) => {
-    const now = new Date();
-    const messageDate = new Date(timestamp);
+    const now: any = new Date();
+    const messageDate: any = new Date(timestamp);
     const diffInSeconds = Math.floor((now - messageDate) / 1000);
 
     if (diffInSeconds < 60) {

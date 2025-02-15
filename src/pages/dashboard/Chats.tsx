@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Phone, Video, Send, CheckIcon } from 'lucide-react';
+import { Phone, Video, Send, EditIcon } from 'lucide-react';
 import Avatar from '/avatar.svg';
 import { IMessage, iMessageChat, IUser } from '../../types/store';
 import chatSlice from '../../state/features/chat/chatSlice';
@@ -10,6 +10,7 @@ import { BACKEND_URL } from '../../utils/axios';
 import { formatMessageTime, formatRelativeTime } from '../../helpers/time';
 import { uploadToCloudinary } from '../../helpers/clouadinary';
 import { truncateText } from '../../helpers/textFormatting';
+import NewChat from '../../components/dashboard/Chat/NewChat';
 
 const Chats = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -20,6 +21,9 @@ const Chats = () => {
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [chats, setChats] = useState<iMessageChat[]>([]);
   const socket = io(BACKEND_URL);
+  const [newChatModalOpen, setNewChatModalOpen] = useState(false);
+  const [search, setSearch] = useState('');
+  const [sendingMessage, setSendingMessage] = useState(false);
 
   useEffect(() => {
     const profileObject = getUserProfile();
@@ -61,7 +65,6 @@ const Chats = () => {
     try {
       const response = await chatSlice.getUsersForChat();
       if (response.status === 200) {
-        console.log(response.data);
         setChats(response.data);
       } else {
         toast.error(response.message || 'An unexpected error occurred');
@@ -75,12 +78,11 @@ const Chats = () => {
   };
 
   const fetchChatmessages = async (receiverId: any) => {
-    setLoading(true);
+    setSendingMessage(true);
     try {
       const response = await chatSlice.getChatMessages(receiverId);
       if (response.status === 200) {
         setMessages(response.data);
-        console.log('Messages', response.data);
       } else {
         toast.error(response.message || 'An unexpected error occurred');
       }
@@ -88,13 +90,13 @@ const Chats = () => {
       console.error('Error fetching messages', error);
       toast.error(error.message || 'An unexpected error occurred');
     } finally {
-      setLoading(false);
+      setSendingMessage(false);
     }
   };
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    setSendingMessage(true);
 
     try {
       if (!newMessage.trim()) return;
@@ -118,7 +120,7 @@ const Chats = () => {
       toast.error(error?.message || 'An unexpected error occurred');
     } finally {
       setNewMessage('');
-      setLoading(false);
+      setSendingMessage(false);
     }
   };
 
@@ -131,6 +133,12 @@ const Chats = () => {
   useEffect(() => {
     fetchUsersChat();
   }, []);
+
+  const filteredChats = chats.filter((chat) =>
+    `${chat?.firstName} ${chat?.lastName}`
+      .toLowerCase()
+      .includes(search?.toLowerCase() || '')
+  );
 
   const handleFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -183,18 +191,45 @@ const Chats = () => {
           Chat with your peers, share updates, and collaborate on projects.
         </p>
       </div>
-      <div className="mb-2 md:mb-4">
+      <div className="mb-4 flex items-center gap-3 bg-[#C2E0D1] p-2 rounded-lg shadow-md">
         <input
           type="search"
           placeholder="Search conversations..."
-          className="w-full p-2 rounded-lg bg-[#C2E0D1] outline-none placeholder:text-gray-600"
+          className="w-full p-3 rounded-lg bg-transparent outline-none text-gray-800 placeholder:text-gray-600 focus:ring-2 focus:ring-primary"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
         />
+        <button
+          className="bg-primary p-3 rounded-lg text-white hover:bg-primary-dark transition-all"
+          title="New conversation"
+          onClick={() => setNewChatModalOpen(!newChatModalOpen)}
+        >
+          <EditIcon className="w-5 h-5" />
+        </button>
       </div>
+
       <div className="flex flex-row gap-4 h-[600px]">
-        <div className="w-full w-[60px] md:w-1/3 bg-white rounded-lg shadow-md p-1 md:p-4">
+        <div className="w-[60px] md:w-1/3 bg-white rounded-lg shadow-md p-1 md:p-4 overflow-y-auto max-h-[600px]">
           <div className="space-y-4">
-            {chats &&
-              chats.map((chat) => (
+            {loading ? (
+              <div>
+                {[...Array(10)].map((_, index) => (
+                  <div
+                    key={index}
+                    className="p-3 rounded-lg flex items-center justify-between animate-pulse bg-gray-200 mb-2"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-gray-300"></div>
+                      <div className="hidden md:block">
+                        <div className="h-4 bg-gray-300 rounded w-32 mb-2"></div>
+                        <div className="h-3 bg-gray-300 rounded w-24"></div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : filteredChats && filteredChats.length > 0 ? (
+              filteredChats.map((chat) => (
                 <div
                   key={chat._id}
                   onClick={() => handleSelectChat(chat)}
@@ -213,20 +248,26 @@ const Chats = () => {
                         className="w-10 h-10 rounded-full"
                       />
                       <div className="hidden md:block">
-                        <h3 className="font-semibold">{chat.username}</h3>
+                        <h3 className="font-semibold">
+                          {truncateText(chat.username, 20)}
+                        </h3>
                         <p className="text-sm text-gray-600 truncate">
-                          {truncateText(chat?.lastMessage)}
+                          {truncateText(chat?.lastMessage, 10)}
                         </p>
                       </div>
                     </div>
                     <div className="hidden md:block text-right">
                       <p className="text-xs text-gray-500">
-                        {formatMessageTime(chat?.lastMessageDate)}
+                        {chat?.lastMessage !== null &&
+                          formatMessageTime(chat?.lastMessageDate)}
                       </p>
                     </div>
                   </div>
                 </div>
-              ))}
+              ))
+            ) : (
+              <div className="text-primary">No chats found</div>
+            )}
           </div>
         </div>
 
@@ -253,47 +294,75 @@ const Chats = () => {
                   </button>
                 </div>
               </div>
-
               <div className="flex-1 p-4 overflow-y-auto flex flex-col-reverse space-y-4 space-y-reverse">
-                {messages.map((message: IMessage) => (
-                  <div
-                    key={message?._id}
-                    className={`flex ${
-                      isSentByUser(message?.senderId?._id || message?.senderId)
-                        ? 'justify-end'
-                        : 'justify-start'
-                    }`}
-                  >
+                {sendingMessage ? (
+                  <div className="animate-pulse space-y-4">
+                    <div className="flex-1 p-4 space-y-4">
+                      <div className="w-full h-12 bg-gray-300 rounded"></div>
+                      <div className="w-full h-12 bg-gray-300 rounded"></div>
+                      <div className="w-full h-12 bg-gray-300 rounded"></div>
+                      <div className="w-full h-12 bg-gray-300 rounded"></div>
+                      <div className="w-full h-12 bg-gray-300 rounded"></div>
+                      <div className="w-full h-12 bg-gray-300 rounded"></div>
+                      <div className="w-full h-12 bg-gray-300 rounded"></div>
+                      <div className="w-full h-12 bg-gray-300 rounded"></div>
+                      <div className="w-full h-12 bg-gray-300 rounded"></div>
+                    </div>
+                  </div>
+                ) : messages && messages.length > 0 ? (
+                  messages.map((message: IMessage) => (
                     <div
-                      className={`max-w-[70%] rounded-lg p-3 ${
+                      key={message?._id}
+                      className={`flex ${
                         isSentByUser(
                           message?.senderId?._id || message?.senderId
                         )
-                          ? 'bg-primary text-white'
-                          : 'bg-gray-100'
+                          ? 'justify-end'
+                          : 'justify-start'
                       }`}
                     >
-                      <p
-                        dangerouslySetInnerHTML={{ __html: message?.content }}
-                      />
-                      <div className="flex">
-                        <img src={Avatar} alt="" className="w-4 h-4 m-1" />
+                      <div
+                        className={`max-w-[70%] w-full rounded-lg p-3 ${
+                          isSentByUser(
+                            message?.senderId?._id || message?.senderId
+                          )
+                            ? 'bg-primary text-white'
+                            : 'bg-gray-100'
+                        }`}
+                      >
                         <p
-                          className={`text-xs mt-1 ${
-                            isSentByUser(
-                              message?.senderId?._id || message?.senderId
-                            )
-                              ? 'text-gray-200'
-                              : 'text-gray-500'
-                          }`}
-                        >
-                          {formatRelativeTime(message?.createdAt)}
-                        </p>
+                          dangerouslySetInnerHTML={{
+                            __html: message?.content,
+                          }}
+                        />
+                        <div className="flex">
+                          <img src={Avatar} alt="" className="w-4 h-4 m-1" />
+                          <p
+                            className={`text-xs mt-1 ${
+                              isSentByUser(
+                                message?.senderId?._id || message?.senderId
+                              )
+                                ? 'text-gray-200'
+                                : 'text-gray-500'
+                            }`}
+                          >
+                            {formatRelativeTime(message?.createdAt)}
+                          </p>
+                        </div>
                       </div>
                     </div>
+                  ))
+                ) : (
+                  <div className="flex flex-1 flex-col items-center justify-center text-gray-500">
+                    <p className="mb-2 text-lg font-medium">
+                      Be the first to chat with {selectedChat?.username}
+                    </p>
+                    <FaCommentAlt size={42} />
                   </div>
-                ))}
+                )}
               </div>
+
+              {/* Message Input */}
               <form onSubmit={handleSendMessage} className="p-4 border-t">
                 <div className="flex items-center gap-4">
                   <div className="flex-1">
@@ -312,12 +381,16 @@ const Chats = () => {
                       className="hidden"
                       id="fileInput"
                     />
-                    <label
-                      htmlFor="fileInput"
-                      className="p-2 rounded-lg bg-gray-100 cursor-pointer hover:bg-gray-200 transition-colors"
-                    >
-                      📎
-                    </label>
+                    {isUploading ? (
+                      <div className="animate-spin h-5 w-5 border-2 border-gray-600 border-t-transparent rounded-full"></div>
+                    ) : (
+                      <label
+                        htmlFor="fileInput"
+                        className="p-2 rounded-lg bg-gray-100 cursor-pointer hover:bg-gray-200 transition-colors"
+                      >
+                        📎
+                      </label>
+                    )}
 
                     <button
                       type="submit"
@@ -338,6 +411,17 @@ const Chats = () => {
             </div>
           )}
         </div>
+
+        {newChatModalOpen && (
+          <NewChat
+            isOpen={newChatModalOpen}
+            closeModal={() => setNewChatModalOpen(!newChatModalOpen)}
+            startChat={(chat: any) => {
+              handleSelectChat(chat);
+              setNewChatModalOpen(false);
+            }}
+          />
+        )}
       </div>
     </div>
   );

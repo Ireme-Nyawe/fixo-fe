@@ -1,4 +1,4 @@
-export const truncateText = (text: string | undefined): string => {
+export const truncateText = (text: string | undefined, length: number): string => {
     if (!text) return '';
-    return text.length > 10 ? `${text.slice(0, 10)}...` : text;
+    return text.length > length ? `${text.slice(0, length)}...` : text;
 };
