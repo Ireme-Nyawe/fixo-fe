@@ -32,6 +32,7 @@ const DashboardSidebar = ({
 
   const commonLinks = [
     { name: 'Chat', icon: <FaComments /> },
+    { name: 'Support', icon: <FaComments /> },
     { name: 'Profile', icon: <FaUser /> },
   ];
   const adminLinks = [

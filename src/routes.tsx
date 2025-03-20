@@ -1,25 +1,28 @@
-import { Route, Routes } from 'react-router-dom';
-import HomePage from './pages/HomePage';
-import Login from './pages/Login';
-import Dashboard from './pages/dashboard/Dashboard';
-import Products from './pages/Products';
-import SingleProduct from './pages/SingleProduct';
-import DashboardLayout from './pages/dashboard/DashboardLayout';
-import DashboardProducts from './pages/dashboard/Products';
-import Categories from './pages/dashboard/ProductsCategories';
-import NewProductCategory from './pages/dashboard/NewProductCategory';
-import ProtectedRoute from './components/dashboard/ProtectedRoute';
-import AdminRoute from './components/dashboard/AdminRoute';
-import TechnicianRoute from './components/dashboard/TechnicianRoute';
-import NewProduct from './pages/dashboard/NewProduct';
-import EditProductCategory from './pages/dashboard/EditProductCategory';
-import EditProduct from './pages/dashboard/EditProduct';
-import Profile from './pages/dashboard/Profile';
-import AdminViewUsers from './pages/dashboard/AdminViewUsers';
-import NewUser from './pages/dashboard/NewUser';
-import Services from './pages/Services';
-import Chats from './pages/dashboard/Chats';
-import Logout from './components/dashboard/Logout';
+import { Route, Routes } from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import Login from "./pages/Login";
+import Dashboard from "./pages/dashboard/Dashboard";
+import Products from "./pages/Products";
+import SingleProduct from "./pages/SingleProduct";
+import DashboardLayout from "./pages/dashboard/DashboardLayout";
+import DashboardProducts from "./pages/dashboard/Products";
+import Categories from "./pages/dashboard/ProductsCategories";
+import NewProductCategory from "./pages/dashboard/NewProductCategory";
+import ProtectedRoute from "./components/dashboard/ProtectedRoute";
+import AdminRoute from "./components/dashboard/AdminRoute";
+import TechnicianRoute from "./components/dashboard/TechnicianRoute";
+import NewProduct from "./pages/dashboard/NewProduct";
+import EditProductCategory from "./pages/dashboard/EditProductCategory";
+import EditProduct from "./pages/dashboard/EditProduct";
+import Profile from "./pages/dashboard/Profile";
+import AdminViewUsers from "./pages/dashboard/AdminViewUsers";
+import NewUser from "./pages/dashboard/NewUser";
+import Services from "./pages/Services";
+import Chats from "./pages/dashboard/Chats";
+import Logout from "./components/dashboard/Logout";
+import SupportPage from "./pages/SupportPage";
+import AdminCalls from "./pages/dashboard/AdminCalls";
+import AdminDashboard from "./pages/dashboard/AdminCall";
 
 const AppRouter = () => {
   return (
@@ -29,6 +32,7 @@ const AppRouter = () => {
       <Route path="/services" element={<Services />} />
       <Route path="/products" element={<Products />} />
       <Route path="/product/:id" element={<SingleProduct />} />
+      <Route path="/direct-support" element={<SupportPage/>} />
 
       <Route element={<ProtectedRoute />}>
         <Route path="/dashboard" element={<DashboardLayout />}>
@@ -53,6 +57,7 @@ const AppRouter = () => {
               element={<h1>Technician Tools Page</h1>}
             />
           </Route>
+          <Route path="support" element={<AdminDashboard />} />
           <Route path="profile" element={<Profile />} />
           <Route path="chat" element={<Chats />} />
           <Route path="logout" element={<Logout />} />

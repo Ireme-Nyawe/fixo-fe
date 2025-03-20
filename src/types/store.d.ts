@@ -60,3 +60,11 @@ export interface iMessageChat {
   firstName?: string;
   lastName?: string;
 }
+
+export interface SignalData {
+  senderId: string;
+  receiverId: string;
+  offer?: RTCSessionDescriptionInit;
+  answer?: RTCSessionDescriptionInit;
+  candidate?: RTCIceCandidateInit;
+}
