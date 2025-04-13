@@ -1,0 +1,140 @@
+import React, { useEffect, useRef, useState } from "react";
+import { io, Socket } from "socket.io-client";
+import TechnicianCallView from "./TechnicianCallView";
+
+interface SupportRequest {
+  userId: string;
+  username: string;
+  timestamp: number;
+}
+
+interface TechnicianDashboardProps {
+  technicianId: string;
+}
+
+const TechnicianDashboard: React.FC<TechnicianDashboardProps> = ({}) => {
+  const profileString = localStorage.getItem("profile");
+  const profile = profileString ? JSON.parse(profileString) : null;
+  const technicianName = profile?.lastName;
+  const technicianId = useRef<string>(crypto.randomUUID());
+
+  const [socket, setSocket] = useState<Socket | null>(null);
+  const [supportRequests, setSupportRequests] = useState<SupportRequest[]>([]);
+  const [activeCall, setActiveCall] = useState<SupportRequest | null>(null);
+  const SOCKET_URL = import.meta.env.VITE_API_BASE_URL;
+  useEffect(() => {
+    const newSocket = io(SOCKET_URL);
+    setSocket(newSocket);
+
+    return () => {
+      newSocket.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!socket) return;
+
+    socket.on("connect", () => {
+      console.log("Connected to signaling server");
+      socket.emit("technicianOnline", { technicianId:technicianId.current, technicianName });
+    });
+
+    socket.on("newSupportRequest", (request: SupportRequest) => {
+      console.log("New support request:", request);
+      setSupportRequests((prev) => [...prev, request]);
+    });
+
+    socket.on("supportRequestEnded", ({ userId }) => {
+      console.log("Support request ended by user:", userId);
+      setSupportRequests((prev) => prev.filter((req) => req.userId !== userId));
+
+      if (activeCall && activeCall.userId === userId) {
+        setActiveCall(null);
+      }
+    });
+
+    return () => {
+      socket.off("connect");
+      socket.off("newSupportRequest");
+      socket.off("supportRequestEnded");
+    };
+  }, [socket, activeCall]);
+
+  const handleAcceptCall = (request: SupportRequest) => {
+    setActiveCall(request);
+    console.log("request",request);
+    
+    socket?.emit("acceptSupport", {
+      userId: request.userId,
+      technicianId:technicianId.current,
+      technicianName,
+    });
+
+    setSupportRequests((prev) =>
+      prev.filter((req) => req.userId !== request.userId)
+    );
+  };
+
+  const handleEndCall = () => {
+    if (activeCall) {
+      socket?.emit("endSupport", { userId: activeCall.userId });
+      setActiveCall(null);
+    }
+  };
+  console.log("active call",activeCall);
+  
+
+  return (
+    <div className="container mx-auto p-6">
+      {activeCall ? (
+        <TechnicianCallView
+          socket={socket}
+          user={activeCall}
+          technicianId={technicianId.current}
+          technicianName={technicianName}
+          onEndCall={handleEndCall}
+        />
+      ) : (
+        <>
+          <h1 className="text-2xl font-bold mb-6">Support Dashboard</h1>
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            {supportRequests.length === 0 ? (
+              <p className="text-gray-500 text-center py-8">
+                No pending support requests.
+              </p>
+            ) : (
+              <div className="space-y-4">
+                <h2 className="text-xl font-semibold mb-4">
+                  Pending Support Requests
+                </h2>
+                <div className="divide-y">
+                  {supportRequests.map((request) => (
+                    <div
+                      key={request.userId}
+                      className="py-4 flex justify-between items-center"
+                    >
+                      <div>
+                        <p className="font-medium">{request.username}</p>
+                        <p className="text-sm text-gray-500">
+                          {new Date(request.timestamp).toLocaleTimeString()}
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => handleAcceptCall(request)}
+                        className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                      >
+                        Accept
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
+
+export default TechnicianDashboard;

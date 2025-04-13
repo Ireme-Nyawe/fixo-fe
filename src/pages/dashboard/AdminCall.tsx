@@ -187,7 +187,7 @@ const AdminDashboard: React.FC = () => {
     if (socket) {
       socket.emit('endCall', {
         userId: adminId,
-        message:"Call ended"
+        peerId:activeCall?.callerId
       });
     }
     

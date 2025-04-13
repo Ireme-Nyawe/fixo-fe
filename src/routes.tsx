@@ -20,9 +20,10 @@ import NewUser from "./pages/dashboard/NewUser";
 import Services from "./pages/Services";
 import Chats from "./pages/dashboard/Chats";
 import Logout from "./components/dashboard/Logout";
-import SupportPage from "./pages/SupportPage";
 import AdminCalls from "./pages/dashboard/AdminCalls";
 import AdminDashboard from "./pages/dashboard/AdminCall";
+import SupportPage from "./pages/SupportPage";
+import TechnicianDashboard from "./components/dashboard/TechnicianDashboard";
 
 const AppRouter = () => {
   return (
@@ -57,7 +58,7 @@ const AppRouter = () => {
               element={<h1>Technician Tools Page</h1>}
             />
           </Route>
-          <Route path="support" element={<AdminDashboard />} />
+          <Route path="support" element={<TechnicianDashboard />} />
           <Route path="profile" element={<Profile />} />
           <Route path="chat" element={<Chats />} />
           <Route path="logout" element={<Logout />} />

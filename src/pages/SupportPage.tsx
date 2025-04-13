@@ -1,589 +1,449 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
 import { io, Socket } from "socket.io-client";
 import {
-  BsMicFill,
-  BsMicMuteFill,
-  BsCameraVideoFill,
-  BsCameraVideoOffFill,
-  BsDisplayFill,
-  BsXCircleFill,
-} from "react-icons/bs";
-import { MdFullscreen, MdFullscreenExit } from "react-icons/md";
+  X,
+  Mic,
+  MicOff,
+  Video,
+  VideoOff,
+  Monitor,
+  Phone,
+  Maximize,
+  Minimize,
+} from "lucide-react";
 
-// Make sure to use your correct backend URL
-const SOCKET_URL = import.meta.env.VITE_API_BASE_URL;
+interface SupportPageProps {
+  userId: string;
+  username: string;
+  onClose: () => void;
+}
 
-const SupportPage: React.FC = () => {
-  const [callStatus, setCallStatus] = useState<
-    "waiting" | "connected" | "ended"
-  >("waiting");
-  const [adminId, setAdminId] = useState<string | null>(null);
-  const [stream, setStream] = useState<MediaStream | null>(null);
-  // Media controls
-  const [micActive, setMicActive] = useState(true);
-  const [cameraActive, setCameraActive] = useState(true);
-  const [screenSharing, setScreenSharing] = useState(false);
+const SupportPage: React.FC<SupportPageProps> = ({ onClose }) => {
+  const userId = useRef<string>(crypto.randomUUID());
+  const username = "clienteur";
+  const [socket, setSocket] = useState<Socket | null>(null);
+  const [localStream, setLocalStream] = useState<MediaStream | null>(null);
+  const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
+  const [isConnected, setIsConnected] = useState<boolean>(false);
+  const [isMuted, setIsMuted] = useState<boolean>(false);
+  const [isVideoOff, setIsVideoOff] = useState<boolean>(false);
+  const [isScreenSharing, setIsScreenSharing] = useState<boolean>(false);
+  const [technician, setTechnician] = useState<string>("");
+  const [technicianId, setTechnicianId] = useState<string>("");
+  const [userFullScreen, setUserFullScreen] = useState<boolean>(false);
+  const [techFullScreen, setTechFullScreen] = useState<boolean>(false);
+  const [connectionState, setConnectionState] = useState<string>(
+    "Waiting for support..."
+  );
 
-  // Fullscreen controls
-  const [localFullScreen, setLocalFullScreen] = useState(false);
-  const [remoteFullScreen, setRemoteFullScreen] = useState(false);
-
-  // WebRTC state
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
-  const screenStreamRef = useRef<MediaStream | null>(null);
-  const peerConnectionRef = useRef<RTCPeerConnection | null>(null);
-  const socketRef = useRef<Socket | null>(null);
-
-  const navigate = useNavigate();
-  const clientId = useRef<string>(crypto.randomUUID());
+  const peerConnection = useRef<RTCPeerConnection | null>(null);
+  const userVideoContainerRef = useRef<HTMLDivElement>(null);
+  const techVideoContainerRef = useRef<HTMLDivElement>(null);
+  const SOCKET_URL = import.meta.env.VITE_API_BASE_URL;
 
   useEffect(() => {
-    // Connect to socket server
-    socketRef.current = io(SOCKET_URL);
-    const socket = socketRef.current;
-    socket.on("connect", () => {
-      // Register as a client looking for support
-      socket.emit("requestSupport", {
-        userId: clientId.current,
-        issue: "Tech Support",
-      });
-      socket.emit("register", { userId: clientId.current, userType: "user" });
-      // Listen for the offer from the admin
-      
-      socket.on("receiveOffer", async (data) => {
-        console.log("Received offer:", data.offer);
-
-        // Initialize Peer Connection
-        const configuration = {
-          iceServers: [
-            { urls: "stun:stun.l.google.com:19302" },
-            { urls: "stun:stun1.l.google.com:19302" },
-          ],
-        };
-        const pc = new RTCPeerConnection(configuration);
-
-        // Store PeerConnection
-        peerConnectionRef.current = pc;
-
-        // Handle ICE candidates
-        pc.onicecandidate = (event) => {
-          if (event.candidate) {
-            socket.emit("sendIceCandidate", {
-              receiverId: data.senderId, // Admin's ID
-              candidate: event.candidate,
-            });
-          }
-        };
-
-        // Handle remote track (video/audio from admin)
-        pc.ontrack = (event) => {
-          if (remoteVideoRef.current && event.streams[0]) {
-            remoteVideoRef.current.srcObject = event.streams[0];
-          }
-        };
-
-        try {
-          // Set remote description with the received offer
-          await pc.setRemoteDescription(new RTCSessionDescription(data.offer));
-
-          // Get local media stream
-          const localStream = await navigator.mediaDevices.getUserMedia({
-            video: true,
-            audio: true,
-          });
-        //   localStreamRef.current = localStream;
-
-          // Add local tracks to the peer connection
-          localStream.getTracks().forEach((track) => {
-            pc.addTrack(track, localStream);
-          });
-
-          // Create and send answer
-          const answer = await pc.createAnswer();
-          await pc.setLocalDescription(answer);
-
-          // Emit answer back to the admin
-          socket.emit("sendAnswer", {
-            receiverId: data.senderId, // Admin's socket ID
-            answer,
-          });
-
-          console.log("Answer sent");
-        } catch (error) {
-          console.error("Error handling offer:", error);
-        }
-      });
-        socket.off("receiveOffer"); // Clean up listener
-
-
-      socket.on("call-ended", () => {
-        if (socket) {
-            socket.emit('endCall', {
-              userId: adminId,
-              message:"Call ended"
-            });
-            setCallStatus("ended");
-            cleanupCall();
-        }
-      });
-
-      return () => {
-        // Cleanup on component unmount
-        if (socketRef.current) {
-          socketRef.current.disconnect();
-        }
-        cleanupCall();
-      };
-    });
-  }, [clientId]);
-
-  useEffect(() => {
-    const startVideo = async () => {
-      try {
-        const mediaStream = await navigator.mediaDevices.getUserMedia({
-          video: true,
-          audio: true,
-        });
-        setStream(mediaStream);
-        if (localVideoRef.current) {
-          localVideoRef.current.srcObject = mediaStream;
-        }
-      } catch (error) {
-        console.error("Error accessing camera or microphone:", error);
+    const newSocket = io(SOCKET_URL);
+    setSocket(newSocket);
+    initializeMedia();
+    return () => {
+      localStream?.getTracks().forEach((track) => track.stop());
+      if (peerConnection.current) {
+        peerConnection.current.close();
+        peerConnection.current = null;
       }
+      newSocket.disconnect();
     };
-
-    startVideo();
   }, []);
 
-  const createPeerConnection = (targetAdminId: string) => {
+  useEffect(() => {
+    if (!socket) return;
+    socket.on("connect", () => {
+      console.log("Connected to signaling server");
+      socket.emit("requestSupport", { userId: userId.current, username });
+    });
+
+    socket.on("supportAccepted", ({ technicianId, technicianName }) => {
+      console.log("Support accepted by technician:", technicianName);
+      setTechnician(technicianName);
+      setTechnicianId(technicianId);
+      setIsConnected(true);
+      setConnectionState("Establishing connection...");
+      createPeerConnection(technicianId);
+    });
+
+    socket.on("iceCandidate", ({ candidate }) => {
+      console.log("Received ICE candidate from technician");
+      if (!peerConnection.current || !candidate) return;
+
+      peerConnection.current
+        .addIceCandidate(new RTCIceCandidate(candidate))
+        .then(() => {
+          console.log("Successfully added ICE candidate");
+        })
+        .catch((e) => console.error("Error adding ice candidate:", e));
+    });
+
+    socket.on("offer", async ({ offer }) => {
+      console.log("Received offer from technician");
+
+      try {
+        if (!peerConnection.current) {
+          console.error("No peer connection exists when offer received");
+          return;
+        }
+        await peerConnection.current.setRemoteDescription(
+          new RTCSessionDescription(offer)
+        );
+        console.log("Remote description set successfully after offer");
+        const answer = await peerConnection.current.createAnswer();
+        await peerConnection.current.setLocalDescription(answer);
+        console.log("Created and set local description (answer)");
+        socket.emit("answer", {
+          to: technicianId,
+          answer,
+        });
+      } catch (error) {
+        console.error("Error handling offer:", error);
+      }
+    });
+
+    socket.on("supportEnded", () => {
+      endCall();
+    });
+
+    // Cleanup function
+    return () => {
+      socket.off("connect");
+      socket.off("supportAccepted");
+      socket.off("iceCandidate");
+      socket.off("offer");
+      socket.off("supportEnded");
+    };
+  }, [socket, technicianId, localStream]);
+
+  const initializeMedia = async () => {
     try {
-      // Configure ICE servers (STUN/TURN)
-      const configuration: RTCConfiguration = {
-        iceServers: [
-          { urls: "stun:stun.l.google.com:19302" }, // Free public STUN server
-          // Add TURN servers if needed for production
-        ],
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true,
+      });
+      setLocalStream(stream);
+
+      if (localVideoRef.current) {
+        localVideoRef.current.srcObject = stream;
+      }
+    } catch (error) {
+      console.error("Error accessing media devices:", error);
+    }
+  };
+
+  const createPeerConnection = (techId: string) => {
+    console.log("Creating peer connection to connect with technician:", techId);
+
+    const configuration = {
+      iceServers: [
+        { urls: "stun:stun.l.google.com:19302" },
+        { urls: "stun:stun1.l.google.com:19302" },
+      ],
+    };
+
+    try {
+      const pc = new RTCPeerConnection(configuration);
+      peerConnection.current = pc;
+
+      pc.onconnectionstatechange = () => {
+        console.log("Connection state changed:", pc.connectionState);
+        setConnectionState(pc.connectionState);
+
+        if (pc.connectionState === "connected") {
+          console.log("WebRTC connection established successfully!");
+          setConnectionState("Connected");
+        } else if (
+          pc.connectionState === "failed" ||
+          pc.connectionState === "disconnected" ||
+          pc.connectionState === "closed"
+        ) {
+          setConnectionState("Connection failed or closed");
+        }
       };
 
-      const peerConnection = new RTCPeerConnection(configuration);
-      peerConnectionRef.current = peerConnection;
+      pc.oniceconnectionstatechange = () => {
+        console.log("ICE connection state:", pc.iceConnectionState);
+      };
 
-      // Add local stream tracks to peer connection
-      if (stream) {
-        stream.getTracks().forEach((track) => {
-          peerConnection.addTrack(track, stream);
+      pc.onsignalingstatechange = () => {
+        console.log("Signaling state:", pc.signalingState);
+      };
+
+      if (localStream) {
+        localStream.getTracks().forEach((track) => {
+          console.log("Adding local track to peer connection:", track.kind);
+          pc.addTrack(track, localStream);
         });
       }
 
-      // Handle ICE candidates
-      peerConnection.onicecandidate = (event) => {
-        if (event.candidate && socketRef.current) {
-          socketRef.current.emit("ice-candidate", {
+      pc.onicecandidate = (event) => {
+        if (event.candidate) {
+          console.log("Generated ICE candidate for technician");
+          socket?.emit("iceCandidate", {
+            to: techId,
             candidate: event.candidate,
-            targetId: targetAdminId,
           });
         }
       };
 
-      // Listen for remote stream
-      peerConnection.ontrack = (event) => {
+      pc.ontrack = (event) => {
+        console.log("Received remote track");
+        
         if (remoteVideoRef.current && event.streams[0]) {
           remoteVideoRef.current.srcObject = event.streams[0];
+          setRemoteStream(event.streams[0]);
         }
       };
-
-      // Create and send an offer if we're initiating the call
-      createAndSendOffer(targetAdminId);
     } catch (error) {
       console.error("Error creating peer connection:", error);
     }
   };
 
-  const createAndSendOffer = async (targetAdminId: string) => {
-    try {
-      if (peerConnectionRef.current && socketRef.current) {
-        const offer = await peerConnectionRef.current.createOffer();
-        await peerConnectionRef.current.setLocalDescription(offer);
-
-        socketRef.current.emit("offer", {
-          offer,
-          targetId: targetAdminId,
-          clientId: clientId.current,
-        });
-      }
-    } catch (error) {
-      console.error("Error creating or sending offer:", error);
+  const toggleMute = () => {
+    if (localStream) {
+      const audioTracks = localStream.getAudioTracks();
+      audioTracks.forEach((track) => {
+        track.enabled = !track.enabled;
+      });
+      setIsMuted(!isMuted);
     }
   };
 
-  const handleOffer = async (
-    offer: RTCSessionDescriptionInit,
-    adminId: string
-  ) => {
-    try {
-      if (!peerConnectionRef.current) {
-        createPeerConnection(adminId);
-      }
-
-      await peerConnectionRef.current?.setRemoteDescription(
-        new RTCSessionDescription(offer)
-      );
-      const answer = await peerConnectionRef.current?.createAnswer();
-      await peerConnectionRef.current?.setLocalDescription(answer);
-
-      if (socketRef.current && answer) {
-        socketRef.current.emit("answer", {
-          answer,
-          targetId: adminId,
-          clientId: clientId.current,
-        });
-      }
-    } catch (error) {
-      console.error("Error handling offer:", error);
-    }
-  };
-
-  const cleanupCall = () => {
-    // Close peer connection
-    if (peerConnectionRef.current) {
-      peerConnectionRef.current.close();
-      peerConnectionRef.current = null;
-    }
-
-    // Clean up media streams
-    if (stream) {
-      stream.getTracks().forEach((track) => track.stop());
-      setStream(null);
-    }
-
-    if (screenStreamRef.current) {
-      screenStreamRef.current.getTracks().forEach((track) => track.stop());
-      screenStreamRef.current = null;
-    }
-
-    // Reset UI states
-    setMicActive(false);
-    setCameraActive(false);
-    setScreenSharing(false);
-
-    if (localVideoRef.current) {
-      localVideoRef.current.srcObject = null;
-    }
-
-    if (remoteVideoRef.current) {
-      remoteVideoRef.current.srcObject = null;
-    }
-  };
-
-  const toggleMicrophone = () => {
-    if (stream) {
-      const audioTrack = stream.getAudioTracks()[0];
-      if (audioTrack) {
-        audioTrack.enabled = !audioTrack.enabled; // Toggle mic
-        setMicActive(audioTrack.enabled);
-      }
-    }
-  };
-
-  const toggleCamera = async () => {
-    if (stream) {
-      const videoTrack = stream.getVideoTracks()[0];
-
-      if (videoTrack) {
-        if (videoTrack.readyState === "live") {
-          // Stop the video track and disable the camera
-          videoTrack.stop();
-          setCameraActive(false);
-
-          // Clear the video stream from the video element
-          if (localVideoRef.current) {
-            localVideoRef.current.srcObject = null;
-          }
-        } else {
-          try {
-            // Request a new video stream to turn the camera back on
-            const newStream = await navigator.mediaDevices.getUserMedia({
-              video: true,
-            });
-
-            // Retrieve the new video track
-            const newVideoTrack = newStream.getVideoTracks()[0];
-
-            // Stop the existing track in the old stream, if any
-            stream
-              .getVideoTracks()
-              .forEach((track) => stream.removeTrack(track));
-
-            // Add the new video track to the existing stream
-            stream.addTrack(newVideoTrack);
-
-            // Bind the updated stream to the video element
-            if (localVideoRef.current) {
-              localVideoRef.current.srcObject = stream;
-            }
-
-            setCameraActive(true);
-
-            // Update the peer connection with the new track
-            if (peerConnectionRef.current && adminId) {
-              const sender = peerConnectionRef.current
-                .getSenders()
-                .find((s) => s.track?.kind === "video");
-
-              if (sender) {
-                sender.replaceTrack(newVideoTrack);
-              } else {
-                peerConnectionRef.current.addTrack(newVideoTrack, stream);
-              }
-            }
-          } catch (error) {
-            console.error("Error re-enabling camera and video:", error);
-          }
-        }
-      } else {
-        console.error("No video track found to toggle.");
-      }
-    } else {
-      console.error("No active stream available to toggle the camera.");
+  const toggleVideo = () => {
+    if (localStream) {
+      const videoTracks = localStream.getVideoTracks();
+      videoTracks.forEach((track) => {
+        track.enabled = !track.enabled;
+      });
+      setIsVideoOff(!isVideoOff);
     }
   };
 
   const toggleScreenShare = async () => {
-    if (!screenSharing) {
+    if (isScreenSharing) {
       try {
-        const displayStream = await navigator.mediaDevices.getDisplayMedia({
+        const stream = await navigator.mediaDevices.getUserMedia({
           video: true,
+          audio: true,
         });
-        screenStreamRef.current = displayStream;
-
-        // Replace the current video track with the screen-sharing track
-        const videoTrack = displayStream.getVideoTracks()[0];
-
-        // Update the peer connection with the screen sharing track
-        if (peerConnectionRef.current) {
-          const sender = peerConnectionRef.current
-            .getSenders()
-            .find((s) => s.track?.kind === "video");
-
-          if (sender) {
-            sender.replaceTrack(videoTrack);
-          }
-        }
 
         if (localVideoRef.current) {
-          localVideoRef.current.srcObject = displayStream;
+          localVideoRef.current.srcObject = stream;
+        }
+        if (peerConnection.current && stream) {
+          const senders = peerConnection.current.getSenders();
+          const videoTrack = stream.getVideoTracks()[0];
+
+          const videoSender = senders.find(
+            (sender) => sender.track?.kind === "video"
+          );
+
+          if (videoSender && videoTrack) {
+            videoSender.replaceTrack(videoTrack);
+          }
         }
 
-        videoTrack.onended = () => {
-          toggleScreenShare(); // Automatically stop screen sharing when user ends it
-        };
-
-        setScreenSharing(true);
+        setLocalStream(stream);
+        setIsScreenSharing(false);
       } catch (error) {
-        console.error("Error starting screen sharing:", error);
+        console.error("Error accessing camera:", error);
       }
     } else {
-      // Stop screen sharing
-      if (screenStreamRef.current) {
-        const tracks = screenStreamRef.current.getTracks();
-        tracks.forEach((track) => track.stop());
-      }
-
-      // Switch back to camera
       try {
-        if (stream) {
-          // Get a new video track from the camera
-          const originalStream = await navigator.mediaDevices.getUserMedia({
-            video: true,
-          });
-          const newVideoTrack = originalStream.getVideoTracks()[0];
+        const stream = await navigator.mediaDevices.getDisplayMedia({
+          video: true,
+        });
 
-          // Update the peer connection
-          if (peerConnectionRef.current) {
-            const sender = peerConnectionRef.current
-              .getSenders()
-              .find((s) => s.track?.kind === "video");
-
-            if (sender) {
-              sender.replaceTrack(newVideoTrack);
-            }
-          }
-
-          // Update the local video
-          if (localVideoRef.current) {
-            localVideoRef.current.srcObject = originalStream;
-          }
-
-          // Update the stream reference
-          stream.getVideoTracks().forEach((track) => track.stop());
-          stream.addTrack(newVideoTrack);
+        if (localVideoRef.current) {
+          localVideoRef.current.srcObject = stream;
         }
+
+        if (peerConnection.current && stream) {
+          const senders = peerConnection.current.getSenders();
+          const videoTrack = stream.getVideoTracks()[0];
+
+          const videoSender = senders.find(
+            (sender) => sender.track?.kind === "video"
+          );
+
+          if (videoSender && videoTrack) {
+            videoSender.replaceTrack(videoTrack);
+          }
+        }
+
+        stream.getVideoTracks()[0].onended = async () => {
+          await toggleScreenShare();
+        };
+
+        setLocalStream((prev) => {
+          if (prev) {
+            prev.getAudioTracks().forEach((track) => {
+              stream.addTrack(track);
+            });
+          }
+          return stream;
+        });
+        setIsScreenSharing(true);
       } catch (error) {
-        console.error("Error switching back to camera:", error);
+        console.error("Error sharing screen:", error);
       }
-
-      setScreenSharing(false);
     }
-  };
-
-  // Toggle fullscreen for local video
-  const toggleLocalFullScreen = () => {
-    setLocalFullScreen(!localFullScreen);
-    setRemoteFullScreen(false);
-  };
-
-  // Toggle fullscreen for remote video
-  const toggleRemoteFullScreen = () => {
-    setRemoteFullScreen(!remoteFullScreen);
-    setLocalFullScreen(false);
   };
 
   const endCall = () => {
-    // Notify admin that call is ending
-    if (socketRef.current && adminId) {
-      socketRef.current.emit("end-call", {
-        targetId: adminId,
-        clientId: clientId.current,
-      });
+    socket?.emit("endSupport", { userId: userId.current });
+    if (peerConnection.current) {
+      peerConnection.current.close();
+      peerConnection.current = null;
     }
-
-    cleanupCall();
-    setCallStatus("ended");
-    navigate("/");
+    localStream?.getTracks().forEach((track) => track.stop());
+    setIsConnected(false);
+    onClose();
   };
 
-  return (
-    <div className="flex flex-col h-screen bg-gray-100">
-      {/* Header */}
+  const toggleUserFullScreen = () => {
+    if (userVideoContainerRef.current) {
+      if (!userFullScreen) {
+        if (userVideoContainerRef.current.requestFullscreen) {
+          userVideoContainerRef.current.requestFullscreen();
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
+      setUserFullScreen(!userFullScreen);
+    }
+  };
 
-      {/* Main content */}
-      <div className="flex-1 p-4 flex flex-col lg:flex-row gap-4 overflow-hidden">
-        {/* Video containers */}
-        <div
-          className={`relative ${
-            remoteFullScreen
-              ? "w-full h-full"
-              : localFullScreen
-              ? "hidden"
-              : "lg:w-2/3 w-full h-64 lg:h-auto"
-          }`}
-        >
-          {callStatus === "waiting" ? (
-            <div className="w-full h-full flex items-center justify-center bg-gray-800 rounded-lg">
-              <div className="text-center text-white">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto mb-4"></div>
-                <p className="text-lg font-medium">Please wait</p>
-                <p className="text-sm">
-                  A support agent will be with you shortly
-                </p>
-              </div>
-            </div>
-          ) : (
-            <div className="w-full h-full bg-gray-800 rounded-lg overflow-hidden relative">
-              <video
-                ref={remoteVideoRef}
-                autoPlay
-                playsInline
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute top-2 right-2 flex gap-2">
-                <button
-                  onClick={toggleRemoteFullScreen}
-                  className="bg-gray-800 bg-opacity-70 text-white p-2 rounded-full"
-                >
-                  {remoteFullScreen ? (
-                    <MdFullscreenExit size={20} />
-                  ) : (
-                    <MdFullscreen size={20} />
-                  )}
-                </button>
-              </div>
-              <div className="absolute bottom-2 left-2 text-white text-sm bg-black bg-opacity-50 px-2 py-1 rounded">
-                Support Agent {adminId ? `(${adminId})` : ""}
-              </div>
-            </div>
-          )}
+  const toggleTechFullScreen = () => {
+    if (techVideoContainerRef.current) {
+      if (!techFullScreen) {
+        if (techVideoContainerRef.current.requestFullscreen) {
+          techVideoContainerRef.current.requestFullscreen();
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
+      setTechFullScreen(!techFullScreen);
+    }
+  };
+  console.log("stream remote", remoteStream?.getTracks());
+
+  return (
+    <div className="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-6xl">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold">Support Session</h2>
+          <button
+            onClick={endCall}
+            className="p-2 rounded-full bg-red-100 text-red-500 hover:bg-red-200"
+          >
+            <X size={20} />
+          </button>
         </div>
 
-        <div
-          className={`relative ${
-            localFullScreen
-              ? "w-full h-full"
-              : remoteFullScreen
-              ? "hidden"
-              : "lg:w-1/3 w-full h-48 lg:h-auto"
-          }`}
-        >
-          <div className="w-full h-full bg-gray-800 rounded-lg overflow-hidden relative">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div
+            ref={userVideoContainerRef}
+            className="relative bg-gray-800 rounded-lg overflow-hidden aspect-video"
+          >
             <video
               ref={localVideoRef}
               autoPlay
+              muted
               playsInline
-              muted // Always mute local video to prevent echo
               className="w-full h-full object-cover"
             />
-            <div className="absolute top-2 right-2 flex gap-2">
-              <button
-                onClick={toggleLocalFullScreen}
-                className="bg-gray-800 bg-opacity-70 text-white p-2 rounded-full"
-              >
-                {localFullScreen ? (
-                  <MdFullscreenExit size={20} />
-                ) : (
-                  <MdFullscreen size={20} />
-                )}
-              </button>
+            <div className="absolute bottom-4 left-4 bg-black bg-opacity-50 text-white px-3 py-1 rounded-full">
+              You {isScreenSharing ? "(Screen)" : ""}
             </div>
-            <div className="absolute bottom-2 left-2 text-white text-sm bg-black bg-opacity-50 px-2 py-1 rounded">
-              You {screenSharing ? "(Screen Sharing)" : ""}
-            </div>
+            <button
+              onClick={toggleUserFullScreen}
+              className="absolute top-4 right-4 bg-black bg-opacity-50 text-white p-2 rounded-full"
+            >
+              {userFullScreen ? <Minimize size={16} /> : <Maximize size={16} />}
+            </button>
+          </div>
+          <div
+            ref={techVideoContainerRef}
+            className="relative bg-gray-800 rounded-lg overflow-hidden aspect-video"
+          >
+            <video
+              ref={remoteVideoRef}
+              autoPlay
+              playsInline
+              className={`w-full h-full object-cover ${
+                !remoteStream ? "hidden" : ""
+              }`}
+            />
+            {(!remoteStream || connectionState !== "Connected") && (
+              <div className="w-full h-full flex items-center justify-center text-white">
+                {connectionState}
+              </div>
+            )}
+            {isConnected && remoteStream && (
+              <>
+                <div className="absolute bottom-4 left-4 bg-black bg-opacity-50 text-white px-3 py-1 rounded-full">
+                  {technician}
+                </div>
+                <button
+                  onClick={toggleTechFullScreen}
+                  className="absolute top-4 right-4 bg-black bg-opacity-50 text-white p-2 rounded-full"
+                >
+                  {techFullScreen ? (
+                    <Minimize size={16} />
+                  ) : (
+                    <Maximize size={16} />
+                  )}
+                </button>
+              </>
+            )}
           </div>
         </div>
-      </div>
 
-      {/* Controls */}
-      <div className="bg-primary p-4">
-        <div className="flex justify-center gap-4">
+        <div className="flex justify-center mt-6 space-x-4">
           <button
-            onClick={toggleMicrophone}
-            className={`p-3 rounded-full ${
-              micActive ? "bg-blue-500" : "bg-red-500"
+            onClick={toggleMute}
+            className={`p-4 rounded-full ${
+              isMuted ? "bg-red-500 text-white" : "bg-gray-200 text-gray-700"
             }`}
           >
-            {micActive ? (
-              <BsMicFill size={24} color="white" />
-            ) : (
-              <BsMicMuteFill size={24} color="white" />
-            )}
+            {isMuted ? <MicOff size={20} /> : <Mic size={20} />}
           </button>
-
           <button
-            onClick={toggleCamera}
-            className={`p-3 rounded-full ${
-              cameraActive ? "bg-blue-500" : "bg-red-500"
+            onClick={toggleVideo}
+            className={`p-4 rounded-full ${
+              isVideoOff ? "bg-red-500 text-white" : "bg-gray-200 text-gray-700"
             }`}
           >
-            {cameraActive ? (
-              <BsCameraVideoFill size={24} color="white" />
-            ) : (
-              <BsCameraVideoOffFill size={24} color="white" />
-            )}
+            {isVideoOff ? <VideoOff size={20} /> : <Video size={20} />}
           </button>
-
           <button
             onClick={toggleScreenShare}
-            className={`p-3 rounded-full ${
-              screenSharing ? "bg-blue-500" : "bg-red-500"
+            className={`p-4 rounded-full ${
+              isScreenSharing
+                ? "bg-blue-500 text-white"
+                : "bg-gray-200 text-gray-700"
             }`}
           >
-            <BsDisplayFill size={24} color="white" />
+            <Monitor size={20} />
           </button>
-
-          <button onClick={endCall} className="p-3 rounded-full bg-red-600">
-            <BsXCircleFill size={24} color="white" />
+          <button
+            onClick={endCall}
+            className="p-4 rounded-full bg-red-500 text-white"
+          >
+            <Phone size={20} />
           </button>
         </div>
       </div>
