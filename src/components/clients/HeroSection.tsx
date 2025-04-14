@@ -1,4 +1,5 @@
 import { FaPhoneAlt } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 const HeroSection = ({ lang }: any) => {
   return (
@@ -30,12 +31,13 @@ const HeroSection = ({ lang }: any) => {
             )}
           </h1>
 
+          <Link to="/direct-support">
           <button className="bg-secondary hover:bg-secondary-dark text-white font-semibold py-3 px-6 rounded-lg flex items-center gap-2 transition duration-300">
             <FaPhoneAlt className="text-lg" />
             <span className="text-lg">
               {lang === 'en' ? 'Call Now' : 'Saba ubufasha'}
             </span>
-          </button>
+          </button></Link>
         </div>
       </div>
     </div>
