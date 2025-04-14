@@ -90,7 +90,11 @@ const Header = () => {
           </ul>
 
           <div className="bg-primary p-2 px-4 rounded text-white hover:bg-primary-dark transition duration-300">
-            <button>{lang === 'en' ? 'Call now' : 'Saba ubufasha'}</button>
+          <Link to="/direct-support">
+                  <button>
+                    {lang === 'en' ? 'Call now' : 'Saba ubufasha'}
+                  </button>
+                  </Link>
           </div>
 
           {/* Language Switcher Button */}
@@ -143,9 +147,11 @@ const Header = () => {
               </li>
               <li>
                 <div className="bg-primary p-2 px-4 rounded text-white hover:bg-primary-dark transition duration-300">
+                <Link to="/direct-support">
                   <button>
                     {lang === 'en' ? 'Call now' : 'Saba ubufasha'}
                   </button>
+                  </Link>
                 </div>
               </li>
               <li>

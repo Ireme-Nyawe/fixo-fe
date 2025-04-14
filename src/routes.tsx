@@ -20,8 +20,6 @@ import NewUser from "./pages/dashboard/NewUser";
 import Services from "./pages/Services";
 import Chats from "./pages/dashboard/Chats";
 import Logout from "./components/dashboard/Logout";
-import AdminCalls from "./pages/dashboard/AdminCalls";
-import AdminDashboard from "./pages/dashboard/AdminCall";
 import SupportPage from "./pages/SupportPage";
 import TechnicianDashboard from "./components/dashboard/TechnicianDashboard";
 

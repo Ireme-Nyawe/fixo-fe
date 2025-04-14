@@ -11,16 +11,13 @@ import {
   Maximize,
   Minimize,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
-interface SupportPageProps {
-  userId: string;
-  username: string;
-  onClose: () => void;
-}
 
-const SupportPage: React.FC<SupportPageProps> = ({ onClose }) => {
+const SupportPage: React.FC<any> = () => {
+  const navigate = useNavigate();
   const userId = useRef<string>(crypto.randomUUID());
-  const username = "clienteur";
+  const username = "Need-for-support";
   const [socket, setSocket] = useState<Socket | null>(null);
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
   const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
@@ -306,7 +303,7 @@ const SupportPage: React.FC<SupportPageProps> = ({ onClose }) => {
     }
     localStream?.getTracks().forEach((track) => track.stop());
     setIsConnected(false);
-    onClose();
+    navigate("/")
   };
 
   const toggleUserFullScreen = () => {
@@ -395,7 +392,7 @@ const SupportPage: React.FC<SupportPageProps> = ({ onClose }) => {
             {isConnected && remoteStream && (
               <>
                 <div className="absolute bottom-4 left-4 bg-black bg-opacity-50 text-white px-3 py-1 rounded-full">
-                  {technician}
+                  Technician {technician}
                 </div>
                 <button
                   onClick={toggleTechFullScreen}

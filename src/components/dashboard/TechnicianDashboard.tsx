@@ -8,11 +8,7 @@ interface SupportRequest {
   timestamp: number;
 }
 
-interface TechnicianDashboardProps {
-  technicianId: string;
-}
-
-const TechnicianDashboard: React.FC<TechnicianDashboardProps> = ({}) => {
+const TechnicianDashboard: React.FC<any> = () => {
   const profileString = localStorage.getItem("profile");
   const profile = profileString ? JSON.parse(profileString) : null;
   const technicianName = profile?.lastName;
