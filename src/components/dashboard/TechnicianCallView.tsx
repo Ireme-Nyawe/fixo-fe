@@ -23,7 +23,6 @@ const TechnicianCallView: React.FC<TechnicianCallViewProps> = ({
   onEndCall 
 }) => {
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
-  const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const [isVideoOff, setIsVideoOff] = useState<boolean>(false);
   const [isScreenSharing, setIsScreenSharing] = useState<boolean>(false);
@@ -154,7 +153,6 @@ const TechnicianCallView: React.FC<TechnicianCallViewProps> = ({
       
       if (remoteVideoRef.current && event.streams[0]) {
         remoteVideoRef.current.srcObject = event.streams[0];
-        setRemoteStream(event.streams[0]);
       }
     };
   };
