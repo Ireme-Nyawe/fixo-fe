@@ -275,7 +275,7 @@ const TechnicianCallView: React.FC<TechnicianCallViewProps> = ({
         }, 10000); // Every 10 seconds
         
         // Clean up interval when connection closes
-        pc.onconnectionstatechange = function(event) {
+        pc.onconnectionstatechange = function() {
           if (pc.connectionState === 'closed' || pc.connectionState === 'failed') {
             clearInterval(statsInterval);
           }
@@ -462,6 +462,7 @@ const TechnicianCallView: React.FC<TechnicianCallViewProps> = ({
     }
     localStream?.getTracks().forEach(track => track.stop());
     onEndCall();
+    closePeerConnection()
   };
 
   const toggleUserFullScreen = () => {
