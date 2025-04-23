@@ -462,6 +462,7 @@ const TechnicianCallView: React.FC<TechnicianCallViewProps> = ({
     }
     localStream?.getTracks().forEach(track => track.stop());
     onEndCall();
+    closePeerConnection()
   };
 
   const toggleUserFullScreen = () => {

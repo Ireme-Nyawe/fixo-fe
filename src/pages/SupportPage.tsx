@@ -430,6 +430,7 @@ const SupportPage: React.FC<any> = () => {
     localStream?.getTracks().forEach((track) => track.stop());
     setIsConnected(false);
     navigate("/");
+    closePeerConnection()
   };
 
   const toggleUserFullScreen = () => {
