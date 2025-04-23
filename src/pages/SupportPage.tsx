@@ -13,7 +13,6 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-
 const SupportPage: React.FC<any> = () => {
   const navigate = useNavigate();
   const userId = useRef<string>(crypto.randomUUID());
@@ -138,75 +137,196 @@ const SupportPage: React.FC<any> = () => {
 
   const createPeerConnection = (techId: string) => {
     console.log("Creating peer connection to connect with technician:", techId);
-
-      const configuration = {
-        iceServers: [
-          { urls: 'stun:stun.l.google.com:19302' },
-          {
-            urls: 'turn:openrelay.metered.ca:80',
-            username: 'openrelayproject',
-            credential: 'openrelayproject'
-          }
-        ],
-        sdpSemantics: 'unified-plan'
-      };
-
-
+  
+    const configuration = {
+      iceServers: [
+        { urls: "stun:stun.l.google.com:19302" },
+        { urls: "stun:stun1.l.google.com:19302" },
+        { urls: "stun:stun2.l.google.com:19302" },
+        { urls: "stun:stun3.l.google.com:19302" },
+        { urls: "stun:stun4.l.google.com:19302" },
+        {
+          urls: "turn:openrelay.metered.ca:443",
+          username: "openrelayproject",
+          credential: "openrelayproject",
+        },
+      ],
+      iceCandidatePoolSize: 10,
+      sdpSemantics: "unified-plan",
+    };
+  
     try {
       const pc = new RTCPeerConnection(configuration);
       peerConnection.current = pc;
-
+  
+      // Set up connection timeout
+      const connectionTimeout = setTimeout(() => {
+        if (
+          pc.iceConnectionState !== 'connected' && 
+          pc.iceConnectionState !== 'completed'
+        ) {
+          console.log("Connection timeout - consider using different ICE servers or restart");
+          setConnectionState("Connection timeout");
+        }
+      }, 20000); // 20 seconds timeout
+  
       pc.onconnectionstatechange = () => {
         console.log("Connection state changed:", pc.connectionState);
         setConnectionState(pc.connectionState);
-
+  
         if (pc.connectionState === "connected") {
           console.log("WebRTC connection established successfully!");
           setConnectionState("Connected");
+          clearTimeout(connectionTimeout);
         } else if (
           pc.connectionState === "failed" ||
           pc.connectionState === "disconnected" ||
           pc.connectionState === "closed"
         ) {
           setConnectionState("Connection failed or closed");
+          // Consider attempting reconnection here
+          console.log("Connection failed or closed, may need to reconnect");
         }
       };
-
+  
       pc.oniceconnectionstatechange = () => {
         console.log("ICE connection state:", pc.iceConnectionState);
+        
+        if (pc.iceConnectionState === 'connected' || pc.iceConnectionState === 'completed') {
+          clearTimeout(connectionTimeout);
+        } else if (pc.iceConnectionState === 'failed') {
+          console.log("ICE connection failed, attempting to restart ICE");
+          try {
+            pc.restartIce();
+          } catch (error) {
+            console.error("Error during ICE restart:", error);
+          }
+        } else if (pc.iceConnectionState === 'disconnected') {
+          console.log("ICE connection disconnected, monitoring for recovery");
+          // Start a timer to check if it recovers on its own
+          setTimeout(() => {
+            if (pc.iceConnectionState === 'disconnected') {
+              console.log("ICE connection still disconnected, attempting restart");
+              try {
+                pc.restartIce();
+              } catch (error) {
+                console.error("Error during ICE restart:", error);
+              }
+            }
+          }, 5000); // Wait 5 seconds before attempting restart
+        }
       };
-
+  
+      pc.onicegatheringstatechange = () => {
+        console.log("ICE gathering state:", pc.iceGatheringState);
+        
+        if (pc.iceGatheringState === 'complete' && 
+            pc.iceConnectionState !== 'connected' && 
+            pc.iceConnectionState !== 'completed') {
+          console.log("Gathered all candidates but not connected - may indicate NAT/firewall issues");
+        }
+      };
+  
       pc.onsignalingstatechange = () => {
         console.log("Signaling state:", pc.signalingState);
+        
+        if (pc.signalingState === 'closed') {
+          console.log("Signaling state closed");
+        }
       };
-
+  
       if (localStream) {
         localStream.getTracks().forEach((track) => {
           console.log("Adding local track to peer connection:", track.kind);
           pc.addTrack(track, localStream);
         });
       }
-
+  
       pc.onicecandidate = (event) => {
         if (event.candidate) {
-          console.log("Generated ICE candidate for technician");
+          const candidateInfo = event.candidate.candidate || "unknown";
+          const candidateType = event.candidate.type || "unknown";
+          console.log(`ICE candidate (${candidateType}): ${candidateInfo}`);
+          
           socket?.emit("iceCandidate", {
             to: techId,
             candidate: event.candidate,
           });
+        } else {
+          console.log("End of ICE candidates gathering");
         }
       };
-
+  
       pc.ontrack = (event) => {
-        console.log("Received remote track");
-        
+        console.log("Received remote track:", event.track.kind);
+  
         if (remoteVideoRef.current && event.streams[0]) {
+          console.log("Setting remote stream to video element");
           remoteVideoRef.current.srcObject = event.streams[0];
           setRemoteStream(event.streams[0]);
         }
       };
+  
+      // Add stats collection for diagnostics (optional)
+      if (pc.getStats) {
+        // Periodically collect connection stats
+        const statsInterval = setInterval(async () => {
+          if (pc.connectionState === 'connected') {
+            try {
+              const stats = await pc.getStats();
+              let hasActiveCandidate = false;
+              
+              stats.forEach(report => {
+                if (report.type === 'candidate-pair' && report.state === 'succeeded') {
+                  hasActiveCandidate = true;
+                  console.log('Active candidate pair:', report);
+                }
+              });
+              
+              if (!hasActiveCandidate && pc.connectionState === 'connected') {
+                console.log("Connected but no active candidate pair found - possible issue");
+              }
+            } catch (error) {
+              console.error("Error getting stats:", error);
+            }
+          }
+        }, 10000); // Every 10 seconds
+        
+        // Clean up interval when connection closes
+        pc.onconnectionstatechange = function(event) {
+          if (pc.connectionState === 'closed' || pc.connectionState === 'failed') {
+            clearInterval(statsInterval);
+          }
+        };
+      }
+  
+      return pc;
     } catch (error) {
       console.error("Error creating peer connection:", error);
+      setConnectionState("Error creating connection");
+      return null;
+    }
+  };
+  
+  // Helper function to close connection properly
+  const closePeerConnection = () => {
+    if (peerConnection.current) {
+      // Stop stats collection intervals if any
+      
+      // Close all tracks
+      if (peerConnection.current.getSenders) {
+        peerConnection.current.getSenders().forEach(sender => {
+          if (sender.track) {
+            sender.track.stop();
+          }
+        });
+      }
+      
+      // Close connection
+      peerConnection.current.close();
+      peerConnection.current = null;
+      setConnectionState("Closed");
+      console.log("Peer connection closed properly");
     }
   };
 
@@ -309,7 +429,7 @@ const SupportPage: React.FC<any> = () => {
     }
     localStream?.getTracks().forEach((track) => track.stop());
     setIsConnected(false);
-    navigate("/")
+    navigate("/");
   };
 
   const toggleUserFullScreen = () => {
