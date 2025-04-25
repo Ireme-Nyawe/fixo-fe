@@ -141,19 +141,16 @@ const SupportPage: React.FC<any> = () => {
     const configuration = {
       iceServers: [
         { urls: "stun:stun.l.google.com:19302" },
-        { urls: "stun:stun1.l.google.com:19302" },
-        { urls: "stun:stun2.l.google.com:19302" },
-        { urls: "stun:stun3.l.google.com:19302" },
-        { urls: "stun:stun4.l.google.com:19302" },
         {
-          urls: "turn:global.turn.twilio.com:3478?transport=udp",
-          username: "dc2d2894d5a9023620c467b0e71cfa6a35457e6679785ed6ae9856fe5bdfa269",
-          credential: "tE2DajzSJwnsSbc123",
+          urls: "turn:relay.metered.ca:80",
+          username: "openrelayproject",
+          credential: "openrelayproject",
         },
       ],
       iceCandidatePoolSize: 10,
       sdpSemantics: "unified-plan",
     };
+    
   
     try {
       const pc = new RTCPeerConnection(configuration);
