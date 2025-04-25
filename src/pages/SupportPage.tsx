@@ -308,27 +308,6 @@ const SupportPage: React.FC<any> = () => {
     }
   };
   
-  // Helper function to close connection properly
-  const closePeerConnection = () => {
-    if (peerConnection.current) {
-      // Stop stats collection intervals if any
-      
-      // Close all tracks
-      if (peerConnection.current.getSenders) {
-        peerConnection.current.getSenders().forEach(sender => {
-          if (sender.track) {
-            sender.track.stop();
-          }
-        });
-      }
-      
-      // Close connection
-      peerConnection.current.close();
-      peerConnection.current = null;
-      setConnectionState("Closed");
-      console.log("Peer connection closed properly");
-    }
-  };
 
   const toggleMute = () => {
     if (localStream) {
@@ -430,7 +409,6 @@ const SupportPage: React.FC<any> = () => {
     localStream?.getTracks().forEach((track) => track.stop());
     setIsConnected(false);
     navigate("/");
-    closePeerConnection()
   };
 
   const toggleUserFullScreen = () => {
