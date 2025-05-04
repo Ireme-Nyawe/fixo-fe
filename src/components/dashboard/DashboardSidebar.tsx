@@ -8,6 +8,8 @@ import {
   FaUser,
   FaComments,
   FaSignOutAlt,
+  FaMoneyBill,
+  FaExchangeAlt,
 } from 'react-icons/fa';
 
 interface DashboardSidebarProps {
@@ -39,6 +41,7 @@ const DashboardSidebar = ({
     { name: 'Dashboard', icon: <FaHome /> },
     { name: 'Manage Users', icon: <FaUsers /> },
     { name: 'Products', icon: <FaBox /> },
+    { name: 'Payments', icon: <FaExchangeAlt /> },
   ];
   const technicianLinks = [
     { name: 'Tech Dashboard', icon: <FaHome /> },
