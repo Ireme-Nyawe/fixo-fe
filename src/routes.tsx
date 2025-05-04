@@ -22,7 +22,6 @@ import Chats from './pages/dashboard/Chats';
 import Logout from './components/dashboard/Logout';
 import SupportPage from './pages/SupportPage';
 import TechnicianDashboard from './components/dashboard/TechnicianDashboard';
-import Transactions from './pages/dashboard/admin/Transactions';
 import Payments from './pages/dashboard/admin/Transactions';
 
 const AppRouter = () => {

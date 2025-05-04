@@ -18,15 +18,12 @@ const RequestPayment: React.FC<RequestPaymentProps> = ({
   const [amount, setAmount] = useState('');
   const [note, setNote] = useState('');
   const [status, setStatus] = useState<PaymentStatus>('idle');
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [transactionId, setTransactionId] = useState('');
   const [error, setError] = useState('');
 
   const handlePaymentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    setIsProcessing(true);
     setStatus('processing');
 
     try {
@@ -54,7 +51,6 @@ const RequestPayment: React.FC<RequestPaymentProps> = ({
         setTimeout(() => {
           onClose();
           resetForm();
-          setIsProcessing(false);
         }, 3000);
       } else {
         throw new Error(response.data?.message || 'Payment request failed');
@@ -78,7 +74,6 @@ const RequestPayment: React.FC<RequestPaymentProps> = ({
     setPhoneNumber('');
     setAmount('');
     setNote('');
-    setPaymentSuccess(false);
     setError('');
   };
 
@@ -210,43 +205,13 @@ const RequestPayment: React.FC<RequestPaymentProps> = ({
               >
                 Cancel
               </button>
+
               <button
                 type="submit"
-                disabled={status === 'processing'}
-                aria-disabled={isProcessing}
-                className={`px-4 py-2 rounded-lg text-white ${
-                  status === 'processing'
-                    ? 'bg-green-400 cursor-progress'
-                    : 'bg-green-600 hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2'
-                } transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-75 disabled:cursor-not-allowed`}
+                disabled={status !== 'idle'}
+                className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-all flex items-center justify-center gap-2"
               >
-                {status === 'processing' ? (
-                  <>
-                    <svg
-                      className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      ></circle>
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
-                    Processing...
-                  </>
-                ) : (
-                  'Request Payment'
-                )}
+                Request Payment
               </button>
             </div>
           </form>

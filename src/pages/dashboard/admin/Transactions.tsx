@@ -14,7 +14,7 @@ import SkeletonLoader from '../../../components/dashboard/SkeletonLoader';
 import Pagination2 from '../../../components/Pagination2';
 
 const StatusBadge = memo(({ status }: { status: string }) => {
-  const statusStyles = {
+  const statusStyles: any = {
     pending: 'text-yellow-500',
     paid: 'text-green-500',
     failed: 'text-red-500',

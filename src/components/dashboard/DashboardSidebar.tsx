@@ -8,7 +8,6 @@ import {
   FaUser,
   FaComments,
   FaSignOutAlt,
-  FaMoneyBill,
   FaExchangeAlt,
 } from 'react-icons/fa';
 
