@@ -21,7 +21,17 @@ const findAllTechniciansPayments = async () => {
     }
 }
 
+const findTechOwnPayments = async () => {
+    try {
+        const response = await axiosInstance.get("/api/payments/get-tech-payments");
+        return response.data;
+    } catch (error) {
+        return handleError(error);
+    }
+}
+
 export default {
     technicianRequestPaypackPayment,
-    findAllTechniciansPayments
+    findAllTechniciansPayments,
+    findTechOwnPayments
 }   

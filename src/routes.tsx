@@ -23,6 +23,7 @@ import Logout from './components/dashboard/Logout';
 import SupportPage from './pages/SupportPage';
 import TechnicianDashboard from './components/dashboard/TechnicianDashboard';
 import Payments from './pages/dashboard/admin/Transactions';
+import TechnicianOwnPayments from './pages/dashboard/technician/TechnicianOwnPayments';
 
 const AppRouter = () => {
   return (
@@ -61,6 +62,8 @@ const AppRouter = () => {
           <Route path="support" element={<TechnicianDashboard />} />
           <Route path="profile" element={<Profile />} />
           <Route path="chat" element={<Chats />} />
+          <Route path="my-payments" element={<TechnicianOwnPayments />} />
+
           <Route path="logout" element={<Logout />} />
           <Route path="*" element={<h1>Page Not Found</h1>} />
         </Route>

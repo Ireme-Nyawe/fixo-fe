@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import DashboardHeader from '../../components/dashboard/DashboardHeader';
 import DashboardSidebar from '../../components/dashboard/DashboardSidebar';
 import { Toaster } from 'sonner';
@@ -8,12 +8,14 @@ import authService from '../../state/features/auth/authService';
 const DashboardLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [profile, setProfile] = useState<any>(null);
+  const location = useLocation();
+
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
   useEffect(() => {
     findProfile();
-  }, []);
+  }, [location.pathname]);
 
   const findProfile = async () => {
     try {

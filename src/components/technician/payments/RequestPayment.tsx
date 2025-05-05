@@ -171,7 +171,8 @@ const RequestPayment: React.FC<RequestPaymentProps> = ({
                 onChange={(e) => setAmount(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                 placeholder="1000"
-                min="10"
+                min="100"
+                max="4000000"
                 required
               />
             </div>

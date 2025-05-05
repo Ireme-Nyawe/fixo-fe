@@ -27,7 +27,7 @@ const StatusBadge = memo(({ status }: { status: string }) => {
   );
 });
 
-const Payments = () => {
+const TechnicianOwnPayments = () => {
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -86,9 +86,9 @@ const Payments = () => {
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await paymentSlice.findAllTechniciansPayments();
+      const response = await paymentSlice.findTechOwnPayments();
       if (response.status === 200) {
-        setData(response.data.techniciansPayments);
+        setData(response.data.technicianPayments);
       } else {
         setError('Failed to fetch payments data');
         toast.error('Payment data load failed');
@@ -122,7 +122,6 @@ const Payments = () => {
                 onChange={(e) => setSearchColumn(e.target.value)}
                 className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="technician">Technician Name</option>
                 <option value="payer">Payer</option>
                 <option value="amount">Amount</option>
                 <option value="note">Note</option>
@@ -132,7 +131,6 @@ const Payments = () => {
               <FaChevronDown className="absolute right-3 top-3.5 text-gray-400 text-sm" />
             </div>
 
-            {/* Search Input */}
             <div className="relative flex-[2]">
               <input
                 type="search"
@@ -145,9 +143,7 @@ const Payments = () => {
             </div>
           </div>
 
-          {/* Sort & Action Row */}
           <div className="flex flex-col sm:flex-row gap-2 w-full">
-            {/* Sort Select */}
             <div className="relative flex-1">
               <select
                 value={sortOrder}
@@ -266,4 +262,4 @@ const Payments = () => {
   );
 };
 
-export default Payments;
+export default TechnicianOwnPayments;
