@@ -142,9 +142,9 @@ const SupportPage: React.FC<any> = () => {
       iceServers: [
         { urls: "stun:stun.l.google.com:19302" },
         {
-          urls: "turn:relay.metered.ca:80",
-          username: "openrelayproject",
-          credential: "openrelayproject",
+          urls: "turn:77.220.212.11",
+          username: "webrtcuser",
+          credential: "password123",
         },
       ],
       iceCandidatePoolSize: 10,
