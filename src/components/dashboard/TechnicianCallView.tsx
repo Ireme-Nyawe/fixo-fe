@@ -413,7 +413,9 @@ const TechnicianCallView: React.FC<TechnicianCallViewProps> = ({
     } else {
       try {
         const stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
-        
+        if (!navigator.mediaDevices.getDisplayMedia) {
+          alert("Screen sharing is not supported on this device, Try With Computer!");
+        }
         if (localVideoRef.current) {
           localVideoRef.current.srcObject = stream;
         }
@@ -452,16 +454,24 @@ const TechnicianCallView: React.FC<TechnicianCallViewProps> = ({
   };
 
 
-  const endCall = () => {
-    socket?.emit('endSupport', { userId: user.userId });
-    if (peerConnection.current) {
-      peerConnection.current.close();
-      peerConnection.current = null;
-    }
-    localStream?.getTracks().forEach(track => track.stop());
-    onEndCall();
-    closePeerConnection()
-  };
+const terminateCall = () => {
+  socket?.emit('endSupport', { userId: user.userId });
+  if (peerConnection.current) {
+    peerConnection.current.close();
+    peerConnection.current = null;
+  }
+  localStream?.getTracks().forEach(track => track.stop());
+  onEndCall();
+  closePeerConnection();
+};
+
+const endCall = () => {
+  const isConfirmed = window.confirm("Are you sure you want to end this support call?");
+  
+  if (isConfirmed) {
+    terminateCall();
+  }
+};
 
   const toggleUserFullScreen = () => {
     if (userVideoContainerRef.current) {

@@ -106,7 +106,7 @@ const SupportPage: React.FC<any> = () => {
     });
 
     socket.on("supportEnded", () => {
-      endCall();
+      terminateCall();
     });
 
     // Cleanup function
@@ -165,7 +165,7 @@ const SupportPage: React.FC<any> = () => {
           console.log("Connection timeout - consider using different ICE servers or restart");
           setConnectionState("Connection timeout");
         }
-      }, 20000); // 20 seconds timeout
+      }, 200000); 
   
       pc.onconnectionstatechange = () => {
         console.log("Connection state changed:", pc.connectionState);
@@ -397,7 +397,7 @@ const SupportPage: React.FC<any> = () => {
     }
   };
 
-  const endCall = () => {
+  const terminateCall = () => {
     socket?.emit("endSupport", { userId: userId.current });
     if (peerConnection.current) {
       peerConnection.current.close();
@@ -407,7 +407,20 @@ const SupportPage: React.FC<any> = () => {
     setIsConnected(false);
     navigate("/");
   };
-
+  
+  const endCall = () => {
+    const isConfirmed = window.confirm("Are you sure you want to end this support call?");
+    
+    if (isConfirmed) {
+      if (isConnected) {
+        alert("Dear user, talk to technician to end support session .")
+        
+      }
+      else{
+        terminateCall();
+      }
+    }
+  };
   const toggleUserFullScreen = () => {
     if (userVideoContainerRef.current) {
       if (!userFullScreen) {

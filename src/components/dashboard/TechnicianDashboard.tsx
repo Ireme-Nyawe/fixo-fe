@@ -18,6 +18,11 @@ const TechnicianDashboard: React.FC<any> = () => {
   const [supportRequests, setSupportRequests] = useState<SupportRequest[]>([]);
   const [activeCall, setActiveCall] = useState<SupportRequest | null>(null);
   const SOCKET_URL = import.meta.env.VITE_API_BASE_URL;
+  const playNotificationSound = () => {
+    const audio = new Audio('https://www.soundjay.com/buttons/sounds/beep-05.mp3');
+    audio.play()
+      .catch(err => console.error('Failed to play notification sound:', err));
+  };
   useEffect(() => {
     const newSocket = io(SOCKET_URL);
     setSocket(newSocket);
@@ -36,6 +41,7 @@ const TechnicianDashboard: React.FC<any> = () => {
     });
 
     socket.on("newSupportRequest", (request: SupportRequest) => {
+      playNotificationSound()
       console.log("New support request:", request);
       setSupportRequests((prev) => [...prev, request]);
     });
