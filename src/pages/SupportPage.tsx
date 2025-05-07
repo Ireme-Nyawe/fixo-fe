@@ -165,7 +165,7 @@ const SupportPage: React.FC<any> = () => {
           console.log("Connection timeout - consider using different ICE servers or restart");
           setConnectionState("Connection timeout");
         }
-      }, 200000); // 20 seconds timeout
+      }, 200000); 
   
       pc.onconnectionstatechange = () => {
         console.log("Connection state changed:", pc.connectionState);
@@ -397,7 +397,10 @@ const SupportPage: React.FC<any> = () => {
     }
   };
 
-  const endCall = () => {
+const endCall = () => {
+  const isConfirmed = window.confirm("Are you sure you want to end this support call?");
+  
+  if (isConfirmed) {
     socket?.emit("endSupport", { userId: userId.current });
     if (peerConnection.current) {
       peerConnection.current.close();
@@ -406,8 +409,8 @@ const SupportPage: React.FC<any> = () => {
     localStream?.getTracks().forEach((track) => track.stop());
     setIsConnected(false);
     navigate("/");
-  };
-
+  }
+};
   const toggleUserFullScreen = () => {
     if (userVideoContainerRef.current) {
       if (!userFullScreen) {
