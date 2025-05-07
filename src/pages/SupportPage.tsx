@@ -106,7 +106,7 @@ const SupportPage: React.FC<any> = () => {
     });
 
     socket.on("supportEnded", () => {
-      endCall();
+      terminateCall();
     });
 
     // Cleanup function
@@ -397,10 +397,7 @@ const SupportPage: React.FC<any> = () => {
     }
   };
 
-const endCall = () => {
-  const isConfirmed = window.confirm("Are you sure you want to end this support call?");
-  
-  if (isConfirmed) {
+  const terminateCall = () => {
     socket?.emit("endSupport", { userId: userId.current });
     if (peerConnection.current) {
       peerConnection.current.close();
@@ -409,8 +406,21 @@ const endCall = () => {
     localStream?.getTracks().forEach((track) => track.stop());
     setIsConnected(false);
     navigate("/");
-  }
-};
+  };
+  
+  const endCall = () => {
+    const isConfirmed = window.confirm("Are you sure you want to end this support call?");
+    
+    if (isConfirmed) {
+      if (isConnected) {
+        alert("Dear user, talk to technician to end support session .")
+        
+      }
+      else{
+        terminateCall();
+      }
+    }
+  };
   const toggleUserFullScreen = () => {
     if (userVideoContainerRef.current) {
       if (!userFullScreen) {
