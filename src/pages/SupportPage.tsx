@@ -165,7 +165,7 @@ const SupportPage: React.FC<any> = () => {
           console.log("Connection timeout - consider using different ICE servers or restart");
           setConnectionState("Connection timeout");
         }
-      }, 20000); // 20 seconds timeout
+      }, 200000); // 20 seconds timeout
   
       pc.onconnectionstatechange = () => {
         console.log("Connection state changed:", pc.connectionState);
