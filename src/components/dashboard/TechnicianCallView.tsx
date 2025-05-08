@@ -1,6 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Socket } from 'socket.io-client';
-import { X, Mic, MicOff, Video, VideoOff, Monitor, Phone, Maximize, Minimize } from 'lucide-react';
+import {
+  X,
+  Mic,
+  MicOff,
+  Video,
+  VideoOff,
+  Monitor,
+  Phone,
+  Maximize,
+  Minimize,
+} from 'lucide-react';
+import { FaPlus } from 'react-icons/fa';
+import RequestPayment from '../technician/payments/RequestPayment';
 
 interface User {
   userId: string;
@@ -15,12 +27,12 @@ interface TechnicianCallViewProps {
   onEndCall: () => void;
 }
 
-const TechnicianCallView: React.FC<TechnicianCallViewProps> = ({ 
-  socket, 
-  user, 
+const TechnicianCallView: React.FC<TechnicianCallViewProps> = ({
+  socket,
+  user,
   technicianId,
   technicianName,
-  onEndCall 
+  onEndCall,
 }) => {
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
   const [isMuted, setIsMuted] = useState<boolean>(false);
@@ -28,14 +40,15 @@ const TechnicianCallView: React.FC<TechnicianCallViewProps> = ({
   const [isScreenSharing, setIsScreenSharing] = useState<boolean>(false);
   const [userFullScreen, setUserFullScreen] = useState<boolean>(false);
   const [techFullScreen, setTechFullScreen] = useState<boolean>(false);
-  const [connectionEstablished, setConnectionEstablished] = useState<boolean>(false);
-  
+  const [connectionEstablished, setConnectionEstablished] =
+    useState<boolean>(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
   const peerConnection = useRef<RTCPeerConnection | null>(null);
   const userVideoContainerRef = useRef<HTMLDivElement>(null);
   const techVideoContainerRef = useRef<HTMLDivElement>(null);
-
 
   useEffect(() => {
     // Initialize user media
@@ -43,7 +56,7 @@ const TechnicianCallView: React.FC<TechnicianCallViewProps> = ({
 
     // Clean up on component unmount
     return () => {
-      localStream?.getTracks().forEach(track => track.stop());
+      localStream?.getTracks().forEach((track) => track.stop());
       if (peerConnection.current) {
         peerConnection.current.close();
         peerConnection.current = null;
@@ -57,17 +70,20 @@ const TechnicianCallView: React.FC<TechnicianCallViewProps> = ({
     socket.on('iceCandidate', ({ candidate }) => {
       console.log('Received ICE candidate from user');
       if (!peerConnection.current || !candidate) return;
-      
-      peerConnection.current.addIceCandidate(new RTCIceCandidate(candidate))
-        .catch(e => console.error('Error adding ice candidate:', e));
+
+      peerConnection.current
+        .addIceCandidate(new RTCIceCandidate(candidate))
+        .catch((e) => console.error('Error adding ice candidate:', e));
     });
-    
+
     socket.on('answer', async ({ answer }) => {
       console.log('Received answer from user');
       if (!peerConnection.current) return;
-      
+
       try {
-        await peerConnection.current.setRemoteDescription(new RTCSessionDescription(answer));
+        await peerConnection.current.setRemoteDescription(
+          new RTCSessionDescription(answer)
+        );
         console.log('Remote description set successfully');
         setConnectionEstablished(true);
       } catch (error) {
@@ -80,20 +96,32 @@ const TechnicianCallView: React.FC<TechnicianCallViewProps> = ({
       socket.off('answer');
     };
   }, [socket]);
-  
+
   useEffect(() => {
-    if (localStream && socket && peerConnection.current && !connectionEstablished) {
-      socket.emit('acceptSupport', { 
-        userId: user.userId, 
-        technicianId, 
-        technicianName 
+    if (
+      localStream &&
+      socket &&
+      peerConnection.current &&
+      !connectionEstablished
+    ) {
+      socket.emit('acceptSupport', {
+        userId: user.userId,
+        technicianId,
+        technicianName,
       });
-      
+
       setTimeout(() => {
         createAndSendOffer();
       }, 1000);
     }
-  }, [localStream, socket, user.userId, technicianId, technicianName, connectionEstablished]);
+  }, [
+    localStream,
+    socket,
+    user.userId,
+    technicianId,
+    technicianName,
+    connectionEstablished,
+  ]);
 
   const initializeMedia = async () => {
     try {
@@ -101,13 +129,13 @@ const TechnicianCallView: React.FC<TechnicianCallViewProps> = ({
         video: true,
         audio: true,
       });
-      
+
       setLocalStream(stream);
 
       if (localVideoRef.current) {
         localVideoRef.current.srcObject = stream;
       }
-      
+
       createPeerConnection();
     } catch (error) {
       console.error('Error accessing media devices:', error);
@@ -115,50 +143,51 @@ const TechnicianCallView: React.FC<TechnicianCallViewProps> = ({
   };
 
   const createPeerConnection = () => {
-    console.log("Creating technician-side peer connection");
-  
+    console.log('Creating technician-side peer connection');
+
     const configuration = {
       iceServers: [
-        { urls: "stun:stun.l.google.com:19302" },
+        { urls: 'stun:stun.l.google.com:19302' },
         {
           urls: "turn:77.220.212.11",
           username: "webrtcuser",
           credential: "password123",
         },
       ],
-      
+
       iceCandidatePoolSize: 10,
-      sdpSemantics: "unified-plan",
+      sdpSemantics: 'unified-plan',
     };
-    
-    
+
     try {
       const pc = new RTCPeerConnection(configuration);
       peerConnection.current = pc;
-  
+
       // Set up connection timeout
       const connectionTimeout = setTimeout(() => {
         if (
-          pc.iceConnectionState !== 'connected' && 
+          pc.iceConnectionState !== 'connected' &&
           pc.iceConnectionState !== 'completed'
         ) {
-          console.log("Connection timeout - consider using different ICE servers or restart");
+          console.log(
+            'Connection timeout - consider using different ICE servers or restart'
+          );
         }
       }, 20000); // 20 seconds timeout
-  
+
       // Add audio transceiver
       pc.addTransceiver('audio', {
-        direction: 'sendrecv'
+        direction: 'sendrecv',
       });
-  
+
       // Add video transceiver if needed
       pc.addTransceiver('video', {
-        direction: 'sendrecv'
+        direction: 'sendrecv',
       });
-  
+
       pc.onconnectionstatechange = () => {
         console.log('Connection state:', pc.connectionState);
-        
+
         if (pc.connectionState === 'connected') {
           console.log('WebRTC connection established successfully!');
           setConnectionEstablished(true);
@@ -168,85 +197,96 @@ const TechnicianCallView: React.FC<TechnicianCallViewProps> = ({
           pc.connectionState === 'disconnected' ||
           pc.connectionState === 'closed'
         ) {
-          console.log(`Connection ${pc.connectionState} - may need to reconnect`);
+          console.log(
+            `Connection ${pc.connectionState} - may need to reconnect`
+          );
           setConnectionEstablished(false);
         }
       };
-  
+
       pc.oniceconnectionstatechange = () => {
-        console.log("ICE connection state:", pc.iceConnectionState);
-        
-        if (pc.iceConnectionState === 'connected' || pc.iceConnectionState === 'completed') {
+        console.log('ICE connection state:', pc.iceConnectionState);
+
+        if (
+          pc.iceConnectionState === 'connected' ||
+          pc.iceConnectionState === 'completed'
+        ) {
           clearTimeout(connectionTimeout);
         } else if (pc.iceConnectionState === 'failed') {
-          console.log("ICE connection failed, attempting to restart ICE");
+          console.log('ICE connection failed, attempting to restart ICE');
           try {
             pc.restartIce();
           } catch (error) {
-            console.error("Error during ICE restart:", error);
+            console.error('Error during ICE restart:', error);
           }
         } else if (pc.iceConnectionState === 'disconnected') {
-          console.log("ICE connection disconnected, monitoring for recovery");
+          console.log('ICE connection disconnected, monitoring for recovery');
           // Start a timer to check if it recovers on its own
           setTimeout(() => {
             if (pc.iceConnectionState === 'disconnected') {
-              console.log("ICE connection still disconnected, attempting restart");
+              console.log(
+                'ICE connection still disconnected, attempting restart'
+              );
               try {
                 pc.restartIce();
               } catch (error) {
-                console.error("Error during ICE restart:", error);
+                console.error('Error during ICE restart:', error);
               }
             }
           }, 5000); // Wait 5 seconds before attempting restart
         }
       };
-  
+
       pc.onicegatheringstatechange = () => {
-        console.log("ICE gathering state:", pc.iceGatheringState);
-        
-        if (pc.iceGatheringState === 'complete' && 
-            pc.iceConnectionState !== 'connected' && 
-            pc.iceConnectionState !== 'completed') {
-          console.log("Gathered all candidates but not connected - may indicate NAT/firewall issues");
+        console.log('ICE gathering state:', pc.iceGatheringState);
+
+        if (
+          pc.iceGatheringState === 'complete' &&
+          pc.iceConnectionState !== 'connected' &&
+          pc.iceConnectionState !== 'completed'
+        ) {
+          console.log(
+            'Gathered all candidates but not connected - may indicate NAT/firewall issues'
+          );
         }
       };
-  
+
       pc.onsignalingstatechange = () => {
-        console.log("Signaling state:", pc.signalingState);
+        console.log('Signaling state:', pc.signalingState);
       };
-  
+
       pc.onicecandidate = (event) => {
         if (event.candidate) {
-          const candidateInfo = event.candidate.candidate || "unknown";
-          const candidateType = event.candidate.type || "unknown";
+          const candidateInfo = event.candidate.candidate || 'unknown';
+          const candidateType = event.candidate.type || 'unknown';
           console.log(`ICE candidate (${candidateType}): ${candidateInfo}`);
-          
-          socket?.emit('iceCandidate', { 
-            to: user.userId, 
-            candidate: event.candidate 
+
+          socket?.emit('iceCandidate', {
+            to: user.userId,
+            candidate: event.candidate,
           });
         } else {
-          console.log("End of ICE candidates gathering");
+          console.log('End of ICE candidates gathering');
         }
       };
-  
+
       pc.ontrack = (event) => {
-        console.log("Received remote track:", event.track.kind);
-        
+        console.log('Received remote track:', event.track.kind);
+
         if (remoteVideoRef.current && event.streams[0]) {
-          console.log("Setting remote stream to video element");
+          console.log('Setting remote stream to video element');
           remoteVideoRef.current.srcObject = event.streams[0];
         }
       };
-  
+
       // Add local stream tracks if available
       if (localStream) {
         localStream.getTracks().forEach((track) => {
-          console.log("Adding local track to peer connection:", track.kind);
+          console.log('Adding local track to peer connection:', track.kind);
           pc.addTrack(track, localStream);
         });
       }
-  
+
       // Add stats collection for diagnostics (optional)
       if (pc.getStats) {
         // Periodically collect connection stats
@@ -255,79 +295,89 @@ const TechnicianCallView: React.FC<TechnicianCallViewProps> = ({
             try {
               const stats = await pc.getStats();
               let hasActiveCandidate = false;
-              
-              stats.forEach(report => {
-                if (report.type === 'candidate-pair' && report.state === 'succeeded') {
+
+              stats.forEach((report) => {
+                if (
+                  report.type === 'candidate-pair' &&
+                  report.state === 'succeeded'
+                ) {
                   hasActiveCandidate = true;
                   console.log('Active candidate pair found');
                 }
               });
-              
+
               if (!hasActiveCandidate && pc.connectionState === 'connected') {
-                console.log("Connected but no active candidate pair found - possible issue");
+                console.log(
+                  'Connected but no active candidate pair found - possible issue'
+                );
               }
             } catch (error) {
-              console.error("Error getting stats:", error);
+              console.error('Error getting stats:', error);
             }
           }
         }, 10000); // Every 10 seconds
-        
+
         // Clean up interval when connection closes
-        pc.onconnectionstatechange = function() {
-          if (pc.connectionState === 'closed' || pc.connectionState === 'failed') {
+        pc.onconnectionstatechange = function () {
+          if (
+            pc.connectionState === 'closed' ||
+            pc.connectionState === 'failed'
+          ) {
             clearInterval(statsInterval);
           }
         };
       }
-  
+
       return pc;
     } catch (error) {
-      console.error("Error creating peer connection:", error);
+      console.error('Error creating peer connection:', error);
       return null;
     }
   };
-  
+
   // Helper function to close connection properly
   const closePeerConnection = () => {
     if (peerConnection.current) {
       // Close all tracks
       if (peerConnection.current.getSenders) {
-        peerConnection.current.getSenders().forEach(sender => {
+        peerConnection.current.getSenders().forEach((sender) => {
           if (sender.track) {
             sender.track.stop();
           }
         });
       }
-      
+
       // Close connection
       peerConnection.current.close();
       peerConnection.current = null;
       setConnectionEstablished(false);
-      console.log("Peer connection closed properly");
+      console.log('Peer connection closed properly');
     }
   };
-  
+
   const createAndSendOffer = async () => {
     console.log('Starting createAndSendOffer');
-    
+
     if (!peerConnection.current) {
       console.error('Cannot create offer: Peer connection is null');
       return;
     }
-    
+
     if (!socket) {
       console.error('Cannot send offer: Socket is null');
       return;
     }
-    
+
     try {
       console.log('Adding local tracks to peer connection');
       if (localStream) {
         const tracks = localStream.getTracks();
         console.log(`Adding ${tracks.length} tracks from local stream`);
-        
+
         tracks.forEach((track, index) => {
-          console.log(`Adding track ${index + 1}/${tracks.length}: ${track.kind}`);
+          console.log(
+            `Adding track ${index + 1}/${tracks.length}: ${track.kind}`
+          );
           if (peerConnection.current) {
             peerConnection.current.addTrack(track, localStream);
           }
@@ -335,25 +385,26 @@ const TechnicianCallView: React.FC<TechnicianCallViewProps> = ({
       } else {
         console.warn('No local stream available when creating offer');
       }
-      
+
       console.log('Creating offer...');
       const offer = await peerConnection.current.createOffer({
         offerToReceiveAudio: true,
-        offerToReceiveVideo: true
+        offerToReceiveVideo: true,
       });
-      console.log('Offer created:', JSON.stringify(offer).substring(0, 100) + '...');
-      
+      console.log(
+        'Offer created:',
+        JSON.stringify(offer).substring(0, 100) + '...'
+      );
+
       console.log('Setting local description...');
       await peerConnection.current.setLocalDescription(offer);
- 
+
       socket.emit('offer', {
         to: user.userId,
-        offer: peerConnection.current.localDescription
+        offer: peerConnection.current.localDescription,
       });
       console.log('Offer sent to signaling server');
-      
     } catch (error) {
-
       if (error instanceof Error) {
         console.error('Error name:', error.name);
         console.error('Error message:', error.message);
@@ -362,11 +413,10 @@ const TechnicianCallView: React.FC<TechnicianCallViewProps> = ({
     }
   };
 
-
   const toggleMute = () => {
     if (localStream) {
       const audioTracks = localStream.getAudioTracks();
-      audioTracks.forEach(track => {
+      audioTracks.forEach((track) => {
         track.enabled = !track.enabled;
       });
       setIsMuted(!isMuted);
@@ -376,7 +426,7 @@ const TechnicianCallView: React.FC<TechnicianCallViewProps> = ({
   const toggleVideo = () => {
     if (localStream) {
       const videoTracks = localStream.getVideoTracks();
-      videoTracks.forEach(track => {
+      videoTracks.forEach((track) => {
         track.enabled = !track.enabled;
       });
       setIsVideoOff(!isVideoOff);
@@ -386,8 +436,11 @@ const TechnicianCallView: React.FC<TechnicianCallViewProps> = ({
   const toggleScreenShare = async () => {
     if (isScreenSharing) {
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-        
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: true,
+        });
+
         if (localVideoRef.current) {
           localVideoRef.current.srcObject = stream;
         }
@@ -395,11 +448,11 @@ const TechnicianCallView: React.FC<TechnicianCallViewProps> = ({
         if (peerConnection.current && stream) {
           const senders = peerConnection.current.getSenders();
           const videoTrack = stream.getVideoTracks()[0];
-          
-          const videoSender = senders.find(sender => 
-            sender.track?.kind === 'video'
+
+          const videoSender = senders.find(
+            (sender) => sender.track?.kind === 'video'
           );
-          
+
           if (videoSender && videoTrack) {
             videoSender.replaceTrack(videoTrack);
           }
@@ -423,11 +476,11 @@ const TechnicianCallView: React.FC<TechnicianCallViewProps> = ({
         if (peerConnection.current && stream) {
           const senders = peerConnection.current.getSenders();
           const videoTrack = stream.getVideoTracks()[0];
-          
-          const videoSender = senders.find(sender => 
-            sender.track?.kind === 'video'
+
+          const videoSender = senders.find(
+            (sender) => sender.track?.kind === 'video'
           );
-          
+
           if (videoSender && videoTrack) {
             videoSender.replaceTrack(videoTrack);
           }
@@ -437,10 +490,9 @@ const TechnicianCallView: React.FC<TechnicianCallViewProps> = ({
           await toggleScreenShare();
         };
 
-        setLocalStream(prev => {
-
+        setLocalStream((prev) => {
           if (prev) {
-            prev.getAudioTracks().forEach(track => {
+            prev.getAudioTracks().forEach((track) => {
               stream.addTrack(track);
             });
           }
@@ -503,96 +555,192 @@ const endCall = () => {
     }
   };
 
+  const ControlButton: React.FC<{
+    onClick: () => void;
+    active?: boolean;
+    activeColor: string;
+    tooltip: string;
+    children: React.ReactNode;
+  }> = ({ onClick, active, activeColor, tooltip, children }) => (
+    <button
+      onClick={onClick}
+      className={`p-6 rounded-full transition-all transform hover:scale-110 relative group ${
+        active ? activeColor : 'bg-gray-100 hover:bg-gray-200'
+      }`}
+    >
+      <span className={`${active ? 'text-white' : 'text-gray-700'}`}>
+        {children}
+      </span>
+      <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs px-3 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
+        {tooltip}
+      </span>
+    </button>
+  );
+
   return (
-    <div className="bg-white rounded-lg shadow-lg p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold">Support Session with {user.username}</h2>
-        <button 
-          onClick={endCall} 
-          className="p-2 rounded-full bg-red-100 text-red-500 hover:bg-red-200"
-        >
-          <X size={20} />
-        </button>
-      </div>
+    <>
+      <div className="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen p-8">
+        <div className="max-w-7xl mx-auto bg-white rounded-2xl shadow-xl p-8">
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-800">
+                Support Session with{' '}
+                <span className="text-blue-600">{user.username}</span>
+              </h1>
+              <p className="text-gray-500 mt-1">
+                Session ID: {technicianId.slice(0, 8)}
+              </p>
+            </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div 
-          ref={techVideoContainerRef}
-          className="relative bg-gray-800 rounded-lg overflow-hidden aspect-video"
-        >
-          <video 
-            ref={localVideoRef} 
-            autoPlay 
-            muted 
-            playsInline
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute bottom-4 left-4 bg-black bg-opacity-50 text-white px-3 py-1 rounded-full">
-            You {isScreenSharing ? '(Screen)' : ''}
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => setShowPaymentModal(true)}
+                className="px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white rounded-xl transition-all flex items-center gap-3 shadow-lg hover:shadow-green-100"
+              >
+                <FaPlus className="text-lg" />
+                <span className="font-semibold">Request Payment</span>
+              </button>
+
+              <button
+                onClick={endCall}
+                className="p-3 rounded-xl bg-red-500 hover:bg-red-600 text-white transition-all shadow-lg hover:shadow-red-100 group"
+              >
+                <X
+                  size={24}
+                  className="group-hover:scale-110 transition-transform"
+                />
+              </button>
+            </div>
           </div>
-          <button 
-            onClick={toggleTechFullScreen}
-            className="absolute top-4 right-4 bg-black bg-opacity-50 text-white p-2 rounded-full"
-          >
-            {techFullScreen ? <Minimize size={16} /> : <Maximize size={16} />}
-          </button>
-        </div>
 
-        <div 
-          ref={userVideoContainerRef}
-          className="relative bg-gray-800 rounded-lg overflow-hidden aspect-video"
-        >
-          <video 
-            ref={remoteVideoRef} 
-            autoPlay 
-            playsInline
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute bottom-4 left-4 bg-black bg-opacity-50 text-white px-3 py-1 rounded-full">
-            {user.username}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            {/* Technician Video Feed */}
+            <div
+              ref={techVideoContainerRef}
+              className="relative bg-gray-900 rounded-2xl overflow-hidden aspect-video border-4 border-gray-200"
+            >
+              <video
+                ref={localVideoRef}
+                autoPlay
+                muted
+                playsInline
+                className="w-full h-full object-cover transform mirror"
+              />
+              <div className="absolute bottom-4 left-4 bg-gray-800 bg-opacity-80 text-gray-100 px-4 py-2 rounded-xl text-sm font-medium">
+                Your Camera {isScreenSharing && '(Sharing Screen)'}
+              </div>
+              <button
+                onClick={toggleTechFullScreen}
+                className="absolute top-4 right-4 bg-gray-800 bg-opacity-80 text-white p-2 rounded-lg hover:bg-gray-700 transition-colors"
+              >
+                {techFullScreen ? (
+                  <Minimize size={20} />
+                ) : (
+                  <Maximize size={20} />
+                )}
+              </button>
+            </div>
+
+            {/* User Video Feed */}
+            <div
+              ref={userVideoContainerRef}
+              className="relative bg-gray-900 rounded-2xl overflow-hidden aspect-video border-4 border-gray-200"
+            >
+              <video
+                ref={remoteVideoRef}
+                autoPlay
+                playsInline
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute bottom-4 left-4 bg-gray-800 bg-opacity-80 text-gray-100 px-4 py-2 rounded-xl text-sm font-medium">
+                {user.username}
+              </div>
+              <button
+                onClick={toggleUserFullScreen}
+                className="absolute top-4 right-4 bg-gray-800 bg-opacity-80 text-white p-2 rounded-lg hover:bg-gray-700 transition-colors"
+              >
+                {userFullScreen ? (
+                  <Minimize size={20} />
+                ) : (
+                  <Maximize size={20} />
+                )}
+              </button>
+            </div>
           </div>
-          <button 
-            onClick={toggleUserFullScreen}
-            className="absolute top-4 right-4 bg-black bg-opacity-50 text-white p-2 rounded-full"
-          >
-            {userFullScreen ? <Minimize size={16} /> : <Maximize size={16} />}
-          </button>
-        </div>
-      </div>
 
-      <div className="flex justify-center mt-6 space-x-4">
-        <button 
-          onClick={toggleMute}
-          className={`p-4 rounded-full ${isMuted ? 'bg-red-500 text-white' : 'bg-gray-200 text-gray-700'}`}
-        >
-          {isMuted ? <MicOff size={20} /> : <Mic size={20} />}
-        </button>
-        <button 
-          onClick={toggleVideo}
-          className={`p-4 rounded-full ${isVideoOff ? 'bg-red-500 text-white' : 'bg-gray-200 text-gray-700'}`}
-        >
-          {isVideoOff ? <VideoOff size={20} /> : <Video size={20} />}
-        </button>
-        <button 
-          onClick={toggleScreenShare}
-          className={`p-4 rounded-full ${isScreenSharing ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'}`}
-        >
-          <Monitor size={20} />
-        </button>
-        <button 
-          onClick={endCall}
-          className="p-4 rounded-full bg-red-500 text-white"
-        >
-          <Phone size={20} />
-        </button>
-      </div>
-      
-      {!connectionEstablished && (
-        <div className="mt-4 text-center text-gray-600">
-          Establishing connection with {user.username}...
+          {/* Controls */}
+          <div className="flex justify-center gap-6">
+            <ControlButton
+              onClick={toggleMute}
+              active={isMuted}
+              activeColor="bg-red-500"
+              tooltip={isMuted ? 'Unmute' : 'Mute'}
+            >
+              {isMuted ? <MicOff size={24} /> : <Mic size={24} />}
+            </ControlButton>
+
+            <ControlButton
+              onClick={toggleVideo}
+              active={isVideoOff}
+              activeColor="bg-red-500"
+              tooltip={isVideoOff ? 'Enable Camera' : 'Disable Camera'}
+            >
+              {isVideoOff ? <VideoOff size={24} /> : <Video size={24} />}
+            </ControlButton>
+
+            <ControlButton
+              onClick={toggleScreenShare}
+              active={isScreenSharing}
+              activeColor="bg-blue-500"
+              tooltip={isScreenSharing ? 'Stop Sharing' : 'Share Screen'}
+            >
+              <Monitor size={24} />
+            </ControlButton>
+
+            <button
+              onClick={endCall}
+              className="p-6 bg-red-500 hover:bg-red-600 text-white rounded-full shadow-xl transition-all transform hover:scale-110 relative group"
+            >
+              <Phone size={24} className="rotate-135" />
+              <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs px-3 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                End Call
+              </span>
+            </button>
+          </div>
+
+          {!connectionEstablished && (
+            <div className="mt-8 text-center">
+              <div className="inline-flex items-center bg-blue-50 px-6 py-3 rounded-xl text-blue-600">
+                <svg
+                  className="animate-spin -ml-1 mr-3 h-5 w-5 text-blue-600"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  />
+                </svg>
+                Connecting to {user.username}...
+              </div>
+            </div>
+          )}
         </div>
+      </div>
+      {showPaymentModal && (
+        <RequestPayment onClose={() => setShowPaymentModal(false)} />
       )}
-    </div>
+    </>
   );
 };
 
