@@ -4,7 +4,6 @@ import {
   FaHome,
   FaBox,
   FaUsers,
-  FaTools,
   FaUser,
   FaComments,
   FaSignOutAlt,

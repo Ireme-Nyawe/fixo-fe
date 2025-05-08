@@ -3,7 +3,6 @@ import {
   FaSearch,
   FaSortAmountDown,
   FaSortAmountUp,
-  FaPlus,
   FaFilter,
   FaChevronDown,
 } from 'react-icons/fa';
