@@ -149,9 +149,9 @@ const TechnicianCallView: React.FC<TechnicianCallViewProps> = ({
       iceServers: [
         { urls: 'stun:stun.l.google.com:19302' },
         {
-          urls: 'turn:relay.metered.ca:80',
-          username: 'openrelayproject',
-          credential: 'openrelayproject',
+          urls: "turn:77.220.212.11",
+          username: "webrtcuser",
+          credential: "password123",
         },
       ],
 
@@ -465,10 +465,10 @@ const TechnicianCallView: React.FC<TechnicianCallViewProps> = ({
       }
     } else {
       try {
-        const stream = await navigator.mediaDevices.getDisplayMedia({
-          video: true,
-        });
-
+        const stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+        if (!navigator.mediaDevices.getDisplayMedia) {
+          alert("Screen sharing is not supported on this device, Try With Computer!");
+        }
         if (localVideoRef.current) {
           localVideoRef.current.srcObject = stream;
         }
@@ -505,16 +505,25 @@ const TechnicianCallView: React.FC<TechnicianCallViewProps> = ({
     }
   };
 
-  const endCall = () => {
-    socket?.emit('endSupport', { userId: user.userId });
-    if (peerConnection.current) {
-      peerConnection.current.close();
-      peerConnection.current = null;
-    }
-    localStream?.getTracks().forEach((track) => track.stop());
-    onEndCall();
-    closePeerConnection();
-  };
+
+const terminateCall = () => {
+  socket?.emit('endSupport', { userId: user.userId });
+  if (peerConnection.current) {
+    peerConnection.current.close();
+    peerConnection.current = null;
+  }
+  localStream?.getTracks().forEach(track => track.stop());
+  onEndCall();
+  closePeerConnection();
+};
+
+const endCall = () => {
+  const isConfirmed = window.confirm("Are you sure you want to end this support call?");
+  
+  if (isConfirmed) {
+    terminateCall();
+  }
+};
 
   const toggleUserFullScreen = () => {
     if (userVideoContainerRef.current) {
