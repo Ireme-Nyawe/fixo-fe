@@ -28,7 +28,7 @@ const StatusBadge = memo(({ status }: { status: string }) => {
   );
 });
 
-const Payments = () => {
+const TechniciansWithdrawals = () => {
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -87,9 +87,10 @@ const Payments = () => {
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await paymentSlice.findAllTechniciansPayments();
+      const response = await paymentSlice.findAllTechniciansWithdrawals();
+
       if (response.status === 200) {
-        setData(response.data.techniciansPayments);
+        setData(response.data.withdrawals);
       } else {
         setError('Failed to fetch payments data');
         toast.error('Payment data load failed');
@@ -112,7 +113,7 @@ const Payments = () => {
       <PaymentsManagmentNavbar />
       <div className="flex flex-col lg:flex-row justify-between gap-4 mb-6">
         <h1 className="text-2xl font-bold text-gray-800 hidden sm:block">
-          Technicians Payments
+          Technicians Withdrawals
         </h1>
 
         <div className="flex flex-col gap-3 w-full sm:w-auto">
@@ -163,14 +164,6 @@ const Payments = () => {
               </select>
               <FaSortAmountDown className="absolute left-3 top-3.5 text-gray-400" />
             </div>
-
-            <button
-              onClick={() => setShowPaymentModal(true)}
-              className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-all flex items-center justify-center gap-2"
-            >
-              <FaPlus className="text-lg" />
-              <span>New Payment</span>
-            </button>
           </div>
         </div>
       </div>
@@ -178,7 +171,7 @@ const Payments = () => {
         <table className="w-full table-auto">
           <thead className="bg-gray-100">
             <tr>
-              {['#', 'Technician', 'Payer', 'Amount', 'Note', 'Status'].map(
+              {['#', 'Technician', 'Phone', 'Amount', 'Status'].map(
                 (header, idx) => (
                   <th
                     key={idx}
@@ -197,7 +190,7 @@ const Payments = () => {
             ) : paginatedData.length > 0 ? (
               paginatedData.map((item, index) => (
                 <tr
-                  key={item.id}
+                  key={index}
                   className="hover:bg-gray-50 transition-colors"
                 >
                   <td className="px-6 py-4 text-sm text-gray-800">
@@ -207,13 +200,10 @@ const Payments = () => {
                     {item.technician?.firstName} {item.technician?.lastName}
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-800">
-                    {item.payer}
+                    {item.phone}
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-800">
                     {item.amount} RWF
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-800 max-w-xs truncate">
-                    {item.note}
                   </td>
                   <td className="px-6 py-4 text-sm">
                     <StatusBadge status={item.status} />
@@ -264,4 +254,4 @@ const Payments = () => {
   );
 };
 
-export default Payments;
+export default TechniciansWithdrawals;

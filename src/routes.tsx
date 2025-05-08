@@ -24,6 +24,8 @@ import SupportPage from './pages/SupportPage';
 import TechnicianDashboard from './components/dashboard/TechnicianDashboard';
 import Payments from './pages/dashboard/admin/Transactions';
 import TechnicianOwnPayments from './pages/dashboard/technician/TechnicianOwnPayments';
+import TechnicianBalance from './pages/dashboard/technician/TechnicianBalance';
+import TechniciansWithdrawals from './pages/dashboard/admin/TechniciansWithdrawals';
 
 const AppRouter = () => {
   return (
@@ -51,6 +53,7 @@ const AppRouter = () => {
             <Route path="manage-users" element={<AdminViewUsers />} />
             <Route path="manage-users/new" element={<NewUser />} />
             <Route path="payments" element={<Payments />} />
+            <Route path="withdrawals" element={<TechniciansWithdrawals />} />
           </Route>
 
           <Route element={<TechnicianRoute />}>
@@ -63,7 +66,7 @@ const AppRouter = () => {
           <Route path="profile" element={<Profile />} />
           <Route path="chat" element={<Chats />} />
           <Route path="my-payments" element={<TechnicianOwnPayments />} />
-
+          <Route path="balance" element={<TechnicianBalance />} />
           <Route path="logout" element={<Logout />} />
           <Route path="*" element={<h1>Page Not Found</h1>} />
         </Route>

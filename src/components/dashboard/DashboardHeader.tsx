@@ -66,7 +66,7 @@ const DashboardHeader = ({ sideBarToggle, profile }: DashboardHeaderProps) => {
             className={`${
               showBalance
                 ? 'bg-gray-100 hover:bg-gray-200 text-gray-600'
-                : 'bg-transparent hover:bg-gray-100 text-gray-400'
+                : 'bg-transparent hover:bg-gray-600 text-white'
             } rounded-full p-1 transition-colors duration-200`}
             aria-label={showBalance ? 'Hide balance' : 'Show balance'}
           >
@@ -77,13 +77,13 @@ const DashboardHeader = ({ sideBarToggle, profile }: DashboardHeaderProps) => {
             )}
           </button>
 
-          <span className="text-sm sm:text-base">
+          <Link to="balance" className="text-sm sm:text-base">
             {showBalance ? (
               formatCurrency(profile?.balance)
             ) : (
-              <span className="text-gray-500">••••••</span>
+              <span className="text-white">****</span>
             )}
-          </span>
+          </Link>
         </div>
 
         <button className="p-1.5 sm:p-2 hover:bg-secondary rounded-full">

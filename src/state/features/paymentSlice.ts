@@ -21,6 +21,15 @@ const findAllTechniciansPayments = async () => {
     }
 }
 
+const findAllTechniciansWithdrawals = async () => {
+    try {
+        const response = await axiosInstance.get("/api/payments/get-all-tech-withdraws");
+        return response.data;
+    } catch (error) {
+        return handleError(error);
+    }
+}
+
 const findTechOwnPayments = async () => {
     try {
         const response = await axiosInstance.get("/api/payments/get-tech-payments");
@@ -30,8 +39,29 @@ const findTechOwnPayments = async () => {
     }
 }
 
+const techWithdrawMoney = async (data: any) => {
+    try {
+        const response = await axiosInstance.put("/api/payments/tech-withdraw-money", data);
+        return response.data;
+    } catch (error) {
+        return handleError(error);
+    }
+}
+
+const techFindWithdrawals = async () => {
+    try {
+        const response = await axiosInstance.get("/api/payments/get-tech-withdrawals");
+        return response.data;
+    } catch (error) {
+        return handleError(error);
+    }
+}
+
 export default {
     technicianRequestPaypackPayment,
     findAllTechniciansPayments,
-    findTechOwnPayments
+    findTechOwnPayments,
+    techWithdrawMoney,
+    techFindWithdrawals,
+    findAllTechniciansWithdrawals
 }   

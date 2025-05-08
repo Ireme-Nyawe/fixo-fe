@@ -44,8 +44,6 @@ const DashboardSidebar = ({
   ];
   const technicianLinks = [
     { name: 'Tech Dashboard', icon: <FaHome /> },
-    { name: 'Tools', icon: <FaTools /> },
-    { name: 'My payments', icon: <FaExchangeAlt /> },
   ];
 
   let visibleLinks: any = [];

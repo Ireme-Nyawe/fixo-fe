@@ -12,6 +12,7 @@ import paymentSlice from '../../../state/features/paymentSlice';
 import RequestPayment from '../../../components/technician/payments/RequestPayment';
 import SkeletonLoader from '../../../components/dashboard/SkeletonLoader';
 import Pagination2 from '../../../components/Pagination2';
+import { formatDateTime } from '../../../helpers/time';
 
 const StatusBadge = memo(({ status }: { status: string }) => {
   const statusStyles: any = {
@@ -111,7 +112,7 @@ const TechnicianOwnPayments = () => {
 
       <div className="flex flex-col lg:flex-row justify-between gap-4 mb-6">
         <h1 className="text-2xl font-bold text-gray-800 hidden sm:block">
-          Payment Management
+          My Payments
         </h1>
 
         <div className="flex flex-col gap-3 w-full sm:w-auto">
@@ -176,16 +177,23 @@ const TechnicianOwnPayments = () => {
         <table className="w-full table-auto">
           <thead className="bg-gray-100">
             <tr>
-              {['#', 'Technician', 'Payer', 'Amount', 'Note', 'Status'].map(
-                (header, idx) => (
-                  <th
-                    key={idx}
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                  >
-                    {header}
-                  </th>
-                )
-              )}
+              {[
+                '#',
+                'Technician',
+                'Payer',
+                'Requested amount',
+                'Received amount',
+                'Note',
+                'Status',
+                'Date',
+              ].map((header, idx) => (
+                <th
+                  key={idx}
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  {header}
+                </th>
+              ))}
             </tr>
           </thead>
 
@@ -208,15 +216,21 @@ const TechnicianOwnPayments = () => {
                     {item.payer}
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-800">
-                    {item.amount} RWF
+                    {item.requestedAmount} RWF
                   </td>
+                  <td className="px-6 py-4 text-sm text-gray-800">
+                    {item.receivedAmount} RWF
+                  </td>
+
                   <td className="px-6 py-4 text-sm text-gray-800 max-w-xs truncate">
                     {item.note}
                   </td>
                   <td className="px-6 py-4 text-sm">
                     <StatusBadge status={item.status} />
                   </td>
-                  <td className="px-6 py-4 text-sm space-x-2"></td>
+                  <td className="px-6 py-4 text-sm space-x-2">
+                    {formatDateTime(item.createdAt)}
+                  </td>
                 </tr>
               ))
             ) : (
