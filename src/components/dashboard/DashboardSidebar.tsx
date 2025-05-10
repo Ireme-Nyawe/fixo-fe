@@ -4,10 +4,10 @@ import {
   FaHome,
   FaBox,
   FaUsers,
+  FaTools,
   FaUser,
   FaComments,
   FaSignOutAlt,
-  FaExchangeAlt,
 } from 'react-icons/fa';
 
 interface DashboardSidebarProps {
@@ -39,10 +39,10 @@ const DashboardSidebar = ({
     { name: 'Dashboard', icon: <FaHome /> },
     { name: 'Manage Users', icon: <FaUsers /> },
     { name: 'Products', icon: <FaBox /> },
-    { name: 'Payments', icon: <FaExchangeAlt /> },
   ];
   const technicianLinks = [
     { name: 'Tech Dashboard', icon: <FaHome /> },
+    { name: 'Tools', icon: <FaTools /> },
   ];
 
   let visibleLinks: any = [];
