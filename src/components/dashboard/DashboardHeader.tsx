@@ -1,39 +1,7 @@
 import { FaUserAlt } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
-import { formatCurrency } from '../../helpers/textFormatting';
-import { Bell } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import { FiEye, FiEyeOff } from 'react-icons/fi';
 
-interface DashboardHeaderProps {
-  sideBarToggle: () => void;
-  profile: any;
-}
-
-const DashboardHeader = ({ sideBarToggle, profile }: DashboardHeaderProps) => {
-  const usePersistedState = (key: string, defaultValue: boolean) => {
-    const [state, setState] = useState(() => {
-      const storedValue =
-        typeof window !== 'undefined' ? localStorage.getItem(key) : null;
-      return storedValue ? JSON.parse(storedValue) : defaultValue;
-    });
-
-    useEffect(() => {
-      localStorage.setItem(key, JSON.stringify(state));
-    }, [key, state]);
-
-    return [state, setState];
-  };
-
-  const [showBalance, setShowBalance] = usePersistedState(
-    'balanceVisibility',
-    true
-  );
-
-  const toggleVisibility = () => {
-    setShowBalance(!showBalance);
-  };
-
+const DashboardHeader = ({ sideBarToggle }: { sideBarToggle: () => void }) => {
   return (
     <header className="bg-primary text-white shadow-lg px-4 py-3 sm:p-4 flex items-center justify-between z-10">
       <div className="flex items-center gap-2 sm:gap-4">
@@ -60,34 +28,37 @@ const DashboardHeader = ({ sideBarToggle, profile }: DashboardHeaderProps) => {
       </div>
 
       <div className="flex items-center gap-3 sm:gap-6">
-        <div className="hidden sm:flex items-center gap-2 bg-secondary py-2 px-3 sm:px-4 rounded-lg select-none">
-          <button
-            onClick={toggleVisibility}
-            className={`${
-              showBalance
-                ? 'bg-gray-100 hover:bg-gray-200 text-gray-600'
-                : 'bg-transparent hover:bg-gray-600 text-white'
-            } rounded-full p-1 transition-colors duration-200`}
-            aria-label={showBalance ? 'Hide balance' : 'Show balance'}
+        <div className="hidden sm:flex items-center gap-2 bg-secondary py-2 px-3 sm:px-4 rounded-lg">
+          <span className="text-sm sm:text-base">300k RWF</span>
+          <svg
+            className="w-4 h-4 sm:w-5 sm:h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
           >
-            {showBalance ? (
-              <FiEyeOff size={18} className="text-current" />
-            ) : (
-              <FiEye size={18} className="text-current" />
-            )}
-          </button>
-
-          <Link to="balance" className="text-sm sm:text-base">
-            {showBalance ? (
-              formatCurrency(profile?.balance)
-            ) : (
-              <span className="text-white">****</span>
-            )}
-          </Link>
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+            />
+          </svg>
         </div>
 
         <button className="p-1.5 sm:p-2 hover:bg-secondary rounded-full">
-          <Bell />
+          <svg
+            className="w-5 h-5 sm:w-6 sm:h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+            />
+          </svg>
         </button>
 
         <Link
