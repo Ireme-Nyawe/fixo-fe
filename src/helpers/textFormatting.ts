@@ -5,6 +5,7 @@ export const truncateText = (text: string | undefined, length: number): string =
 
 
 export const formatCurrency = (amount: number): string => {
+  if (isNaN(amount)) return '0 RWF';
   if (amount >= 1000000) {
     const millions = (amount / 1000000).toFixed(1);
     return `${millions.replace(/\.0$/, '')}M RWF`;

@@ -12,6 +12,7 @@ import RequestPayment from '../../../components/technician/payments/RequestPayme
 import SkeletonLoader from '../../../components/dashboard/SkeletonLoader';
 import Pagination2 from '../../../components/Pagination2';
 import PaymentsManagmentNavbar from '../../../components/Admin/Payments/PaymentsManagmentNavbar';
+import { formatCurrency } from '../../../helpers/textFormatting';
 
 const StatusBadge = memo(({ status }: { status: string }) => {
   const statusStyles: any = {
@@ -170,16 +171,22 @@ const TechniciansWithdrawals = () => {
         <table className="w-full table-auto">
           <thead className="bg-gray-100">
             <tr>
-              {['#', 'Technician', 'Phone', 'Amount', 'Status'].map(
-                (header, idx) => (
-                  <th
-                    key={idx}
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                  >
-                    {header}
-                  </th>
-                )
-              )}
+              {[
+                '#',
+                'Technician',
+                'Phone',
+                'Amount',
+                'Old balance',
+                'New balance',
+                'Status',
+              ].map((header, idx) => (
+                <th
+                  key={idx}
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  {header}
+                </th>
+              ))}
             </tr>
           </thead>
 
@@ -188,10 +195,7 @@ const TechniciansWithdrawals = () => {
               <SkeletonLoader rows={PER_PAGE} cols={TABLE_COLUMNS} />
             ) : paginatedData.length > 0 ? (
               paginatedData.map((item, index) => (
-                <tr
-                  key={index}
-                  className="hover:bg-gray-50 transition-colors"
-                >
+                <tr key={index} className="hover:bg-gray-50 transition-colors">
                   <td className="px-6 py-4 text-sm text-gray-800">
                     {(currentPage - 1) * PER_PAGE + index + 1}
                   </td>
@@ -203,6 +207,12 @@ const TechniciansWithdrawals = () => {
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-800">
                     {item.amount} RWF
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-800">
+                    {item.oldBalance} RWF
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-800">
+                    {item.newBalance} RWF
                   </td>
                   <td className="px-6 py-4 text-sm">
                     <StatusBadge status={item.status} />

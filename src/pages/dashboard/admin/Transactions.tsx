@@ -13,6 +13,7 @@ import RequestPayment from '../../../components/technician/payments/RequestPayme
 import SkeletonLoader from '../../../components/dashboard/SkeletonLoader';
 import Pagination2 from '../../../components/Pagination2';
 import PaymentsManagmentNavbar from '../../../components/Admin/Payments/PaymentsManagmentNavbar';
+import { formatCurrency } from '../../../helpers/textFormatting';
 
 const StatusBadge = memo(({ status }: { status: string }) => {
   const statusStyles: any = {
@@ -45,7 +46,9 @@ const Payments = () => {
   const searchColumnLabels: any = {
     technician: 'Technician Name',
     payer: 'Payer',
-    amount: 'Amount',
+    requestedAmount: 'Requested amount',
+    receivedAmount: 'Received amount',
+    Fees: 'Fees',
     note: 'Note',
     status: 'Status',
   };
@@ -125,7 +128,7 @@ const Payments = () => {
               >
                 <option value="technician">Technician Name</option>
                 <option value="payer">Payer</option>
-                <option value="amount">Amount</option>
+                <option value="requested Amount">Amount</option>
                 <option value="note">Note</option>
                 <option value="status">Status</option>
               </select>
@@ -178,16 +181,23 @@ const Payments = () => {
         <table className="w-full table-auto">
           <thead className="bg-gray-100">
             <tr>
-              {['#', 'Technician', 'Payer', 'Amount', 'Note', 'Status'].map(
-                (header, idx) => (
-                  <th
-                    key={idx}
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                  >
-                    {header}
-                  </th>
-                )
-              )}
+              {[
+                '#',
+                'Technician',
+                'Payer',
+                'Requested amount',
+                'Received amount',
+                'Fees',
+                'Note',
+                'Status',
+              ].map((header, idx) => (
+                <th
+                  key={idx}
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  {header}
+                </th>
+              ))}
             </tr>
           </thead>
 
@@ -210,7 +220,13 @@ const Payments = () => {
                     {item.payer}
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-800">
-                    {item.amount} RWF
+                    {formatCurrency(item.requestedAmount)}
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-800">
+                    {formatCurrency(item.receivedAmount)}
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-800">
+                    {formatCurrency(item.serviceFee * 100)}
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-800 max-w-xs truncate">
                     {item.note}

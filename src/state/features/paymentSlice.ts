@@ -57,11 +57,21 @@ const techFindWithdrawals = async () => {
     }
 }
 
+const getSystemsIncomes = async () => {
+    try {
+        const response = await axiosInstance.get("/api/payments/get-system-incomes");
+        return response.data;
+    } catch (error) {
+        return handleError(error);
+    }
+}
+
 export default {
     technicianRequestPaypackPayment,
     findAllTechniciansPayments,
     findTechOwnPayments,
     techWithdrawMoney,
     techFindWithdrawals,
-    findAllTechniciansWithdrawals
-}   
+    findAllTechniciansWithdrawals,
+    getSystemsIncomes
+}
