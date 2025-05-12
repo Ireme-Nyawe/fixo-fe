@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { format, subMonths, startOfMonth, endOfMonth } from 'date-fns';
+import { format } from 'date-fns';
 import paymentSlice from '../../state/features/paymentSlice';
 import {
   LineChart,
@@ -59,15 +59,9 @@ const Dashboard = () => {
   const [error, setError] = useState('');
   const [totalIns, setTotalIns] = useState(0);
   const [totalOuts, setTotalOuts] = useState(0);
-  const [remainingIncome, setRemainingIncome] = useState(0);
   const [selectedYear, setSelectedYear] = useState(DEFAULT_YEAR);
-  const [percentageChanges, setPercentageChanges] = useState({
-    income: 0,
-    outcome: 0,
-  });
   const [techBalance, setTechBalance] = useState<any>(0);
   const [showWithdrawModal, setShowWithdrawModal] = useState(false);
-  const [totalPays, setTotalPays] = useState(0);
 
   const chartData = useMemo(() => {
     const processed = processChartData(data);
@@ -107,42 +101,6 @@ const Dashboard = () => {
     });
   }, [chartData, selectedYear]);
 
-  const calculatePercentageChanges = (currentData: any[]) => {
-    const now = new Date();
-    const lastMonthStart = startOfMonth(subMonths(now, 1));
-    const lastMonthEnd = endOfMonth(subMonths(now, 1));
-
-    const lastMonthData = currentData.filter((item) => {
-      try {
-        const date = new Date(item.createdAt);
-        return date >= lastMonthStart && date <= lastMonthEnd;
-      } catch {
-        return false;
-      }
-    });
-
-    const lastMonthIncome = lastMonthData
-      .filter((item) => item.type === 'in')
-      .reduce((acc, item) => acc + item.netIncome, 0);
-
-    const lastMonthOutcome = lastMonthData
-      .filter((item) => item.type === 'out')
-      .reduce((acc, item) => acc + item.netIncome, 0);
-
-    const incomeChange = lastMonthIncome
-      ? ((totalIns - lastMonthIncome) / lastMonthIncome) * 100
-      : 0;
-
-    const outcomeChange = lastMonthOutcome
-      ? ((totalOuts - lastMonthOutcome) / lastMonthOutcome) * 100
-      : 0;
-
-    return {
-      income: Number(incomeChange.toFixed(1)),
-      outcome: Number(outcomeChange.toFixed(1)),
-    };
-  };
-
   const fetchData = async () => {
     setLoading(true);
     try {
@@ -169,23 +127,7 @@ const Dashboard = () => {
 
       setTotalIns(ins);
       setTotalOuts(outs);
-      setPercentageChanges(calculatePercentageChanges(systemIncomes));
 
-      const totalPaysRes = await paymentSlice.findAllTechniciansPayments();
-      const totalPays = totalPaysRes?.data?.techniciansPayments
-        .filter((item: any) => item.status === 'paid')
-        .reduce(
-          (acc: any, item: any) =>
-            acc +
-            (item.requestedAmount -
-              item.requestedAmount * (PAYPACK_TRANSACTION_FEE / 100)),
-          0
-        );
-      setTotalPays(ins);
-
-      setRemainingIncome(totalPays - totalOuts - techBalance);
-
-      console.log(totalIns, totalOuts, techBalance);
     } catch (err) {
       console.error('Fetch Error:', err);
       setError('Failed to load dashboard data');

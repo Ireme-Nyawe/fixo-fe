@@ -12,7 +12,6 @@ import RequestPayment from '../../../components/technician/payments/RequestPayme
 import SkeletonLoader from '../../../components/dashboard/SkeletonLoader';
 import Pagination2 from '../../../components/Pagination2';
 import PaymentsManagmentNavbar from '../../../components/Admin/Payments/PaymentsManagmentNavbar';
-import { formatCurrency } from '../../../helpers/textFormatting';
 
 const StatusBadge = memo(({ status }: { status: string }) => {
   const statusStyles: any = {
