@@ -68,3 +68,12 @@ export interface SignalData {
   answer?: RTCSessionDescriptionInit;
   candidate?: RTCIceCandidateInit;
 }
+
+
+export interface Transaction {
+  id: string;
+  type: 'in' | 'out';
+  netIncome: number;
+  description: string;
+  createdAt: string;
+}
