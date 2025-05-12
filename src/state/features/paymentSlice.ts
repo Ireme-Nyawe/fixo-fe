@@ -66,6 +66,24 @@ const getSystemsIncomes = async () => {
     }
 }
 
+const getTechniciansBalances = async () => {
+    try {
+        const response = await axiosInstance.get("/api/payments/get-tech-balances");
+        return response.data
+    }
+    catch (error) {
+        return handleError(error);
+    }
+}
+
+const adminWithdrawMoney = async (data: any) => {
+    try {
+        const response = await axiosInstance.put("/api/payments/admin-withdraw-money", data);
+        return response.data;
+    } catch (error) {
+        return handleError(error);
+    }
+}
 export default {
     technicianRequestPaypackPayment,
     findAllTechniciansPayments,
@@ -73,5 +91,7 @@ export default {
     techWithdrawMoney,
     techFindWithdrawals,
     findAllTechniciansWithdrawals,
-    getSystemsIncomes
+    getSystemsIncomes,
+    getTechniciansBalances,
+    adminWithdrawMoney
 }

@@ -12,7 +12,8 @@ import {
 } from 'recharts';
 import { FiRefreshCw } from 'react-icons/fi';
 import Pagination2 from '../../components/Pagination2';
-
+import AdminWithdrawMoney from '../../components/dashboard/AdminWithdrawMoney';
+export const PAYPACK_TRANSACTION_FEE = 2.3;
 const CURRENCY = 'RWF';
 const DEFAULT_YEAR = new Date().getFullYear();
 
@@ -64,6 +65,9 @@ const Dashboard = () => {
     income: 0,
     outcome: 0,
   });
+  const [techBalance, setTechBalance] = useState<any>(0);
+  const [showWithdrawModal, setShowWithdrawModal] = useState(false);
+  const [totalPays, setTotalPays] = useState(0);
 
   const chartData = useMemo(() => {
     const processed = processChartData(data);
@@ -144,6 +148,15 @@ const Dashboard = () => {
     try {
       const res = await paymentSlice.getSystemsIncomes();
       const systemIncomes = res?.data?.systemIncomes || [];
+
+      const balancesRes = await paymentSlice.getTechniciansBalances();
+      const techBalanceData = balancesRes?.data?.techniciansBalances || [];
+      const techBalance = techBalanceData.reduce(
+        (acc: any, item: any) => acc + item.balance,
+        0
+      );
+      setTechBalance(techBalance);
+
       setData(systemIncomes);
 
       const ins = systemIncomes
@@ -156,8 +169,23 @@ const Dashboard = () => {
 
       setTotalIns(ins);
       setTotalOuts(outs);
-      setRemainingIncome(ins - outs);
       setPercentageChanges(calculatePercentageChanges(systemIncomes));
+
+      const totalPaysRes = await paymentSlice.findAllTechniciansPayments();
+      const totalPays = totalPaysRes?.data?.techniciansPayments
+        .filter((item: any) => item.status === 'paid')
+        .reduce(
+          (acc: any, item: any) =>
+            acc +
+            (item.requestedAmount -
+              item.requestedAmount * (PAYPACK_TRANSACTION_FEE / 100)),
+          0
+        );
+      setTotalPays(ins);
+
+      setRemainingIncome(totalPays - totalOuts - techBalance);
+
+      console.log(totalIns, totalOuts, techBalance);
     } catch (err) {
       console.error('Fetch Error:', err);
       setError('Failed to load dashboard data');
@@ -174,6 +202,7 @@ const Dashboard = () => {
     const start = (currentPage - 1) * PER_PAGE;
     return firstDatas.slice(0, 40).slice(start, start + PER_PAGE);
   }, [firstDatas, currentPage]);
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -212,51 +241,49 @@ const Dashboard = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
         {[
           {
-            title: 'Total Income',
-            value: totalIns,
-            change: percentageChanges.income,
-            type: 'income',
-          },
-          {
-            title: 'Total Withdrawals',
-            value: totalOuts,
-            change: percentageChanges.outcome,
-            type: 'outcome',
-          },
-          {
-            title: 'Net Profit',
-            value: remainingIncome,
-            change: (remainingIncome / totalIns) * 100 || 0,
+            title: 'Total Tech Balance',
+            value: techBalance + techBalance * (PAYPACK_TRANSACTION_FEE / 100),
             type: 'net',
           },
-        ].map((stat) => (
+          {
+            title: 'Company Balance',
+            value:
+              totalIns -
+              totalOuts -
+              techBalance * (PAYPACK_TRANSACTION_FEE / 100),
+            type: 'net',
+          },
+        ].map((stat: any) => (
           <div
             key={stat.title}
             className="bg-white p-6 rounded-xl shadow-sm border border-gray-100"
           >
             <h3 className="text-gray-500 text-sm font-medium">{stat.title}</h3>
             <p className="text-2xl font-bold text-primary mt-2">
-              {stat.value.toLocaleString()} {CURRENCY}
+              {Math.max(stat.value, 0).toLocaleString()} {CURRENCY}
             </p>
-            {stat.value > 0 && (
-              <span
-                className={`text-sm ${
-                  stat.type === 'income'
-                    ? 'text-green-500'
-                    : stat.type === 'outcome'
-                    ? 'text-red-500'
-                    : 'text-blue-500'
-                }`}
+            {stat.title === 'Company Balance' && (
+              <button
+                onClick={() => setShowWithdrawModal(true)}
+                className="mt-4 w-full bg-primary text-white py-2 px-4 rounded-lg hover:bg-primary-dark disabled:bg-gray-300 transition-colors"
+                disabled={stat.value <= 0}
               >
-                {stat.change > 0 ? '↑' : '↓'} {Math.abs(stat.change)}%{' '}
-                {stat.type === 'net' ? 'margin' : 'from last month'}
-              </span>
+                Withdraw
+              </button>
+            )}
+            {stat.title === 'System Balance' && (
+              <button
+                onClick={() => setShowWithdrawModal(true)}
+                className="mt-4 w-full bg-primary text-white py-2 px-4 rounded-lg hover:bg-primary-dark disabled:bg-gray-300 transition-colors"
+                disabled={stat.value <= 0}
+              >
+                Withdraw
+              </button>
             )}
           </div>
         ))}
       </div>
 
-      {/* Chart Section */}
       <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-lg font-semibold text-gray-700">
@@ -392,6 +419,17 @@ const Dashboard = () => {
           )}
         </div>
       </div>
+      {showWithdrawModal && (
+        <AdminWithdrawMoney
+          data={{
+            max:
+              totalIns -
+              totalOuts -
+              techBalance * (PAYPACK_TRANSACTION_FEE / 100),
+          }}
+          onClose={() => setShowWithdrawModal(false)}
+        />
+      )}
     </div>
   );
 };
