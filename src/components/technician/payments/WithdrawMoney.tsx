@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 type PaymentStatus = 'idle' | 'processing' | 'success' | 'error';
 
 interface WithdrawMoneyData {
-  phone: string;
+  phone: any;
 }
 
 interface WithdrawMoneyProps {

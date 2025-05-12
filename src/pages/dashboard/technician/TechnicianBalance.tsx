@@ -234,7 +234,7 @@ const TechnicianBalance = () => {
             )}
           </div>
         </div>
-        {showWithdrawModal && profile?.phone && (
+        {showWithdrawModal && (
           <WithdrawMoney
             onClose={() => setShowWithdrawModal(false)}
             data={{ phone: profile.phone }}
