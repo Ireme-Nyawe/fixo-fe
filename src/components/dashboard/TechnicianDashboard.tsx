@@ -22,11 +22,7 @@ const TechnicianDashboard: React.FC<any> = () => {
   const [showPaymentModal, setShowPaymentModal] = useState(false);
 
   const SOCKET_URL = import.meta.env.VITE_API_BASE_URL;
-  const playNotificationSound = () => {
-    const audio = new Audio('https://www.soundjay.com/buttons/sounds/beep-05.mp3');
-    audio.play()
-      .catch(err => console.error('Failed to play notification sound:', err));
-  };
+
   useEffect(() => {
     const newSocket = io(SOCKET_URL);
     setSocket(newSocket);
@@ -48,7 +44,6 @@ const TechnicianDashboard: React.FC<any> = () => {
     });
 
     socket.on("newSupportRequest", (request: SupportRequest) => {
-      playNotificationSound()
       console.log("New support request:", request);
       setSupportRequests((prev) => [...prev, request]);
     });
@@ -61,14 +56,32 @@ const TechnicianDashboard: React.FC<any> = () => {
         setActiveCall(null);
       }
     });
-
+    
+    socket.on("supportEnded", (data: any) => {
+      const userId = typeof data === 'object' && data.userId ? data.userId : data;
+      
+      console.log("Support ended for user:", userId);
+      console.log("Current requests before removal:", supportRequests);
+      
+      setSupportRequests((prev) => {
+        const updated = prev.filter((req) => req.userId !== userId);
+        console.log("Updated requests after removal:", updated);
+        return updated;
+      });
+      
+      if (activeCall && activeCall.userId === userId) {
+        setActiveCall(null);
+      }
+    });
+    
     return () => {
       socket.off('connect');
       socket.off('newSupportRequest');
       socket.off('supportRequestEnded');
+      socket.off('supportEnded');
     };
-  }, [socket, activeCall]);
-
+  }, [socket, activeCall]); 
+  
   const handleAcceptCall = (request: SupportRequest) => {
     setActiveCall(request);
     console.log('request', request);
