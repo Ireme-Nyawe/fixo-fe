@@ -35,7 +35,7 @@ export default function RatingModal({ isOpen, onClose, onSubmit, onAskLater }: R
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm" onClick={onClose}></div>
-      <div className="bg-white rounded-lg shadow-lg w-full max-w-lg mx-4 z-10">
+      <div className="bg-white rounded-lg shadow-2lg w-full max-w-lg mx-4 z-10 p-10">
         <div className="relative p-6">
           <button 
             onClick={onClose}
