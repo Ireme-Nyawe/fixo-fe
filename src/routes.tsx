@@ -1,7 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import Login from './pages/Login';
-import Dashboard from './pages/dashboard/Dashboard';
+import Dashboard from './pages/dashboard/admin/Dashboard';
 import Products from './pages/Products';
 import SingleProduct from './pages/SingleProduct';
 import DashboardLayout from './pages/dashboard/DashboardLayout';
@@ -21,11 +21,12 @@ import Services from './pages/Services';
 import Chats from './pages/dashboard/Chats';
 import Logout from './components/dashboard/Logout';
 import SupportPage from './pages/SupportPage';
-import TechnicianDashboard from './components/dashboard/TechnicianDashboard';
 import Payments from './pages/dashboard/admin/Transactions';
 import TechnicianOwnPayments from './pages/dashboard/technician/TechnicianOwnPayments';
 import TechnicianBalance from './pages/dashboard/technician/TechnicianBalance';
 import TechniciansWithdrawals from './pages/dashboard/admin/TechniciansWithdrawals';
+import TechClientSupport from './components/dashboard/TechClientSupport';
+import TechnicianDashboard from './pages/dashboard/technician/TechDashboard';
 
 const AppRouter = () => {
   return (
@@ -57,12 +58,13 @@ const AppRouter = () => {
           </Route>
 
           <Route element={<TechnicianRoute />}>
+            <Route path="tech" element={<TechnicianDashboard />} />
             <Route
               path="technician-tools"
               element={<h1>Technician Tools Page</h1>}
             />
           </Route>
-          <Route path="support" element={<TechnicianDashboard />} />
+          <Route path="support" element={<TechClientSupport />} />
           <Route path="profile" element={<Profile />} />
           <Route path="chat" element={<Chats />} />
           <Route path="my-payments" element={<TechnicianOwnPayments />} />
