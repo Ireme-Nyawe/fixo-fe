@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { format } from 'date-fns';
-import paymentSlice from '../../state/features/paymentSlice';
+import paymentSlice from '../../../state/features/paymentSlice';
 import {
   LineChart,
   Line,
@@ -11,8 +11,8 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { FiRefreshCw } from 'react-icons/fi';
-import Pagination2 from '../../components/Pagination2';
-import AdminWithdrawMoney from '../../components/dashboard/AdminWithdrawMoney';
+import Pagination2 from '../../../components/Pagination2';
+import AdminWithdrawMoney from '../../../components/dashboard/AdminWithdrawMoney';
 export const PAYPACK_TRANSACTION_FEE = 2.3;
 const CURRENCY = 'RWF';
 const DEFAULT_YEAR = new Date().getFullYear();

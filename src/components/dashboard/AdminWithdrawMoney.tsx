@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { FaCheckCircle, FaSpinner, FaTimes } from 'react-icons/fa';
 import { toast } from 'sonner';
 import paymentSlice from '../../state/features/paymentSlice';
-import { PAYPACK_TRANSACTION_FEE } from '../../pages/dashboard/Dashboard';
+import { PAYPACK_TRANSACTION_FEE } from '../../pages/dashboard/admin/Dashboard';
 
 type PaymentStatus = 'idle' | 'processing' | 'success' | 'error';
 
