@@ -628,7 +628,7 @@ const endCall = () => {
             <div className={`absolute ${techFullScreen ? 'top-2 left-1/2 -translate-x-1/2' : 'bottom-2 sm:bottom-4 left-2 sm:left-4'} bg-gray-800 bg-opacity-80 text-gray-100 px-2 py-1 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium`}>
               Your Camera {isScreenSharing && '(Sharing Screen)'}
             </div>
-            <button
+            {!isScreenSharing&&<button
               onClick={toggleTechFullScreen}
               className="absolute top-2 sm:top-4 right-2 sm:right-4 bg-gray-800 bg-opacity-80 text-white p-1 sm:p-2 rounded-md sm:rounded-lg hover:bg-gray-700 transition-colors"
             >
@@ -637,7 +637,7 @@ const endCall = () => {
               ) : (
                 <Maximize size={16} className="sm:w-5 sm:h-5" />
               )}
-            </button>
+            </button>}
           </div>
           <div
             ref={userVideoContainerRef}
@@ -657,9 +657,9 @@ const endCall = () => {
               className="absolute top-2 sm:top-4 right-2 sm:right-4 bg-gray-800 bg-opacity-80 text-white p-1 sm:p-2 rounded-md sm:rounded-lg hover:bg-gray-700 transition-colors"
             >
               {userFullScreen ? (
-                <Minimize size={16} className="sm:w-5 sm:h-5" />
+                <Minimize size={14} className="sm:w-4 sm:h-4" />
               ) : (
-                <Maximize size={16} className="sm:w-5 sm:h-5" />
+                <Maximize size={14} className="sm:w-4 sm:h-4" />
               )}
             </button>
           </div>
