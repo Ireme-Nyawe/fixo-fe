@@ -12,6 +12,7 @@ import {
   Minimize,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import RatingModal from "../components/clients/RatingModal";
 
 const SupportPage: React.FC<any> = () => {
   const navigate = useNavigate();
@@ -31,6 +32,7 @@ const SupportPage: React.FC<any> = () => {
   const [connectionState, setConnectionState] = useState<string>(
     "Waiting for support..."
   );
+  const [isRateModalOpen,openRateModal] = useState<boolean>(false);
 
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
@@ -405,7 +407,8 @@ const SupportPage: React.FC<any> = () => {
     }
     localStream?.getTracks().forEach((track) => track.stop());
     setIsConnected(false);
-    navigate("/");
+    // navigate("/");
+    openRateModal(true);
   };
   
   const endCall = () => {
@@ -451,6 +454,10 @@ const SupportPage: React.FC<any> = () => {
     }
   };
   console.log("stream remote", remoteStream?.getTracks());
+
+  const handleCloseRatingModal=()=>{
+    navigate("/");
+  }
 
   return (
     <div className="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
@@ -559,6 +566,7 @@ const SupportPage: React.FC<any> = () => {
           </button>
         </div>
       </div>
+      <RatingModal isOpen={isRateModalOpen} onClose={handleCloseRatingModal} onSubmit={handleCloseRatingModal} onAskLater={handleCloseRatingModal}/>
     </div>
   );
 };
