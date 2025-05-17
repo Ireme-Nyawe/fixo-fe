@@ -503,6 +503,35 @@ const SupportPage: React.FC<any> = () => {
     navigate("/");
   };
 
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  useEffect(() => {
+    if (!isConnected) {
+      if (!audioRef.current) {
+        audioRef.current = new Audio('/audio/suport_here.mp3');
+      }
+
+      const audio = audioRef.current;
+
+      const playLoop = () => {
+        audio.currentTime = 0;
+        audio.play().catch(err => console.error('Failed to play notification sound:', err));
+      };
+
+      audio.addEventListener('ended', playLoop);
+      playLoop();
+
+      return () => {
+        audio.pause();
+        audio.removeEventListener('ended', playLoop);
+      };
+    } else {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
+    }
+  }, [isConnected]);
+
   return (
     <div className="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 p-2 sm:p-4">
       <div className="bg-white rounded-lg shadow-lg p-3 sm:p-4 md:p-6 w-full max-w-6xl max-h-screen overflow-auto">
