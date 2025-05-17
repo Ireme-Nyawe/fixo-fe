@@ -579,168 +579,170 @@ const endCall = () => {
 
   return (
     <>
-      <div className="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen p-8">
-        <div className="max-w-7xl mx-auto bg-white rounded-2xl shadow-xl p-8">
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-800">
-                Support Session with{' '}
-                <span className="text-blue-600">{user.username}</span>
-              </h1>
-              <p className="text-gray-500 mt-1">
-                Session ID: {technicianId.slice(0, 8)}
-              </p>
-            </div>
-
-            <div className="flex items-center gap-4">
-              <button
-                onClick={() => setShowPaymentModal(true)}
-                className="px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white rounded-xl transition-all flex items-center gap-3 shadow-lg hover:shadow-green-100"
-              >
-                <FaPlus className="text-lg" />
-                <span className="font-semibold">Request Payment</span>
-              </button>
-
-              <button
-                onClick={endCall}
-                className="p-3 rounded-xl bg-red-500 hover:bg-red-600 text-white transition-all shadow-lg hover:shadow-red-100 group"
-              >
-                <X
-                  size={24}
-                  className="group-hover:scale-110 transition-transform"
-                />
-              </button>
-            </div>
+    <div className="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen p-2 sm:p-4 md:p-6 lg:p-8">
+      <div className="max-w-7xl mx-auto bg-white rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-6 md:p-8">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4 sm:mb-8">
+          <div>
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 break-words">
+              Support Session with{' '}
+              <span className="text-blue-600">{user.username}</span>
+            </h1>
+            <p className="text-sm text-gray-500 mt-1">
+              Session ID: {technicianId.slice(0, 8)}
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-            {/* Technician Video Feed */}
-            <div
-              ref={techVideoContainerRef}
-              className="relative bg-gray-900 rounded-2xl overflow-hidden aspect-video border-4 border-gray-200"
+          <div className="flex items-center gap-2 sm:gap-4">
+            <button
+              onClick={() => setShowPaymentModal(true)}
+              className="px-3 py-2 sm:px-4 md:px-6 md:py-3 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white rounded-lg sm:rounded-xl transition-all flex items-center gap-2 sm:gap-3 shadow-lg hover:shadow-green-100 text-sm sm:text-base"
             >
-              <video
-                ref={localVideoRef}
-                autoPlay
-                muted
-                playsInline
-                className="w-full h-full object-cover transform mirror"
-              />
-              <div className="absolute bottom-4 left-4 bg-gray-800 bg-opacity-80 text-gray-100 px-4 py-2 rounded-xl text-sm font-medium">
-                Your Camera {isScreenSharing && '(Sharing Screen)'}
-              </div>
-              <button
-                onClick={toggleTechFullScreen}
-                className="absolute top-4 right-4 bg-gray-800 bg-opacity-80 text-white p-2 rounded-lg hover:bg-gray-700 transition-colors"
-              >
-                {techFullScreen ? (
-                  <Minimize size={20} />
-                ) : (
-                  <Maximize size={20} />
-                )}
-              </button>
-            </div>
-
-            {/* User Video Feed */}
-            <div
-              ref={userVideoContainerRef}
-              className="relative bg-gray-900 rounded-2xl overflow-hidden aspect-video border-4 border-gray-200"
-            >
-              <video
-                ref={remoteVideoRef}
-                autoPlay
-                playsInline
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute bottom-4 left-4 bg-gray-800 bg-opacity-80 text-gray-100 px-4 py-2 rounded-xl text-sm font-medium">
-                {user.username}
-              </div>
-              <button
-                onClick={toggleUserFullScreen}
-                className="absolute top-4 right-4 bg-gray-800 bg-opacity-80 text-white p-2 rounded-lg hover:bg-gray-700 transition-colors"
-              >
-                {userFullScreen ? (
-                  <Minimize size={20} />
-                ) : (
-                  <Maximize size={20} />
-                )}
-              </button>
-            </div>
-          </div>
-
-          {/* Controls */}
-          <div className="flex justify-center gap-6">
-            <ControlButton
-              onClick={toggleMute}
-              active={isMuted}
-              activeColor="bg-red-500"
-              tooltip={isMuted ? 'Unmute' : 'Mute'}
-            >
-              {isMuted ? <MicOff size={24} /> : <Mic size={24} />}
-            </ControlButton>
-
-            <ControlButton
-              onClick={toggleVideo}
-              active={isVideoOff}
-              activeColor="bg-red-500"
-              tooltip={isVideoOff ? 'Enable Camera' : 'Disable Camera'}
-            >
-              {isVideoOff ? <VideoOff size={24} /> : <Video size={24} />}
-            </ControlButton>
-
-            <ControlButton
-              onClick={toggleScreenShare}
-              active={isScreenSharing}
-              activeColor="bg-blue-500"
-              tooltip={isScreenSharing ? 'Stop Sharing' : 'Share Screen'}
-            >
-              <Monitor size={24} />
-            </ControlButton>
+              <FaPlus className="text-base sm:text-lg flex-shrink-0" />
+              <span className="font-medium sm:font-semibold whitespace-nowrap">Request Payment</span>
+            </button>
 
             <button
               onClick={endCall}
-              className="p-6 bg-red-500 hover:bg-red-600 text-white rounded-full shadow-xl transition-all transform hover:scale-110 relative group"
+              className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-red-500 hover:bg-red-600 text-white transition-all shadow-lg hover:shadow-red-100 group"
             >
-              <Phone size={24} className="rotate-135" />
-              <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs px-3 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
-                End Call
-              </span>
+              <X
+                size={20}
+                className="group-hover:scale-110 transition-transform"
+              />
             </button>
           </div>
-
-          {!connectionEstablished && (
-            <div className="mt-8 text-center">
-              <div className="inline-flex items-center bg-blue-50 px-6 py-3 rounded-xl text-blue-600">
-                <svg
-                  className="animate-spin -ml-1 mr-3 h-5 w-5 text-blue-600"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  />
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  />
-                </svg>
-                Connecting to {user.username}...
-              </div>
-            </div>
-          )}
         </div>
+
+        <div className={`grid grid-cols-1 ${!techFullScreen && !userFullScreen ? 'md:grid-cols-2' : ''} gap-4 sm:gap-6 md:gap-8 mb-6 sm:mb-8`}>
+          <div
+            ref={techVideoContainerRef}
+            className={`relative bg-gray-900 rounded-xl sm:rounded-2xl overflow-hidden aspect-video border-2 sm:border-4 border-gray-200 ${techFullScreen ? 'col-span-full' : ''} ${userFullScreen ? 'hidden' : ''}`}
+          >
+            <video
+              ref={localVideoRef}
+              autoPlay
+              muted
+              playsInline
+              className={`w-full h-full ${techFullScreen ? 'object-contain' : 'object-cover'} transform mirror`}
+            />
+            <div className={`absolute ${techFullScreen ? 'top-2 left-1/2 -translate-x-1/2' : 'bottom-2 sm:bottom-4 left-2 sm:left-4'} bg-gray-800 bg-opacity-80 text-gray-100 px-2 py-1 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium`}>
+              Your Camera {isScreenSharing && '(Sharing Screen)'}
+            </div>
+            {!isScreenSharing&&<button
+              onClick={toggleTechFullScreen}
+              className="absolute top-2 sm:top-4 right-2 sm:right-4 bg-gray-800 bg-opacity-80 text-white p-1 sm:p-2 rounded-md sm:rounded-lg hover:bg-gray-700 transition-colors"
+            >
+              {techFullScreen ? (
+                <Minimize size={16} className="sm:w-5 sm:h-5" />
+              ) : (
+                <Maximize size={16} className="sm:w-5 sm:h-5" />
+              )}
+            </button>}
+          </div>
+          <div
+            ref={userVideoContainerRef}
+            className={`relative bg-gray-900 rounded-xl sm:rounded-2xl overflow-hidden aspect-video border-2 sm:border-4 border-gray-200 ${userFullScreen ? 'col-span-full' : ''} ${techFullScreen ? 'hidden' : ''}`}
+          >
+            <video
+              ref={remoteVideoRef}
+              autoPlay
+              playsInline
+              className={`w-full h-full ${userFullScreen ? 'object-contain' : 'object-cover'}`}
+            />
+            <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 bg-gray-800 bg-opacity-80 text-gray-100 px-2 py-1 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium">
+              {user.username}
+            </div>
+            <button
+              onClick={toggleUserFullScreen}
+              className="absolute top-2 sm:top-4 right-2 sm:right-4 bg-gray-800 bg-opacity-80 text-white p-1 sm:p-2 rounded-md sm:rounded-lg hover:bg-gray-700 transition-colors"
+            >
+              {userFullScreen ? (
+                <Minimize size={14} className="sm:w-4 sm:h-4" />
+              ) : (
+                <Maximize size={14} className="sm:w-4 sm:h-4" />
+              )}
+            </button>
+          </div>
+        </div>
+
+        <div className="flex justify-center gap-3 sm:gap-6">
+          <ControlButton
+            onClick={toggleMute}
+            active={isMuted}
+            activeColor="bg-red-500"
+            tooltip={isMuted ? 'Unmute' : 'Mute'}
+          >
+            {isMuted ? 
+              <MicOff size={18} className="sm:w-6 sm:h-6" /> : 
+              <Mic size={18} className="sm:w-6 sm:h-6" />
+            }
+          </ControlButton>
+
+          <ControlButton
+            onClick={toggleVideo}
+            active={isVideoOff}
+            activeColor="bg-red-500"
+            tooltip={isVideoOff ? 'Enable Camera' : 'Disable Camera'}
+          >
+            {isVideoOff ? 
+              <VideoOff size={18} className="sm:w-6 sm:h-6" /> : 
+              <Video size={18} className="sm:w-6 sm:h-6" />
+            }
+          </ControlButton>
+
+          <ControlButton
+            onClick={toggleScreenShare}
+            active={isScreenSharing}
+            activeColor="bg-blue-500"
+            tooltip={isScreenSharing ? 'Stop Sharing' : 'Share Screen'}
+          >
+            <Monitor size={18} className="sm:w-6 sm:h-6" />
+          </ControlButton>
+
+          <button
+            onClick={endCall}
+            className="p-4 sm:p-6 bg-red-500 hover:bg-red-600 text-white rounded-full shadow-xl transition-all transform hover:scale-110 relative group"
+          >
+            <Phone size={18} className="sm:w-6 sm:h-6 rotate-135" />
+            <span className="absolute -bottom-6 sm:-bottom-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs px-2 py-1 sm:px-3 sm:py-1 rounded-md sm:rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+              End Call
+            </span>
+          </button>
+        </div>
+
+        {!connectionEstablished && (
+          <div className="mt-4 sm:mt-8 text-center">
+            <div className="inline-flex items-center bg-blue-50 px-3 py-2 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl text-blue-600 text-sm sm:text-base">
+              <svg
+                className="animate-spin -ml-1 mr-2 sm:mr-3 h-4 w-4 sm:h-5 sm:w-5 text-blue-600"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                />
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                />
+              </svg>
+              Connecting to {user.username}...
+            </div>
+          </div>
+        )}
       </div>
-      {showPaymentModal && (
-        <RequestPayment onClose={() => setShowPaymentModal(false)} />
-      )}
-    </>
+    </div>
+    {showPaymentModal && (
+      <RequestPayment onClose={() => setShowPaymentModal(false)} />
+    )}
+  </>
   );
 };
 

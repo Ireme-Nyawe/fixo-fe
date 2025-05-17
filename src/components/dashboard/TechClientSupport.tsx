@@ -43,8 +43,8 @@ const TechClientSupport: React.FC<any> = () => {
       });
     });
 
-    socket.on('newSupportRequest', (request: SupportRequest) => {
-      console.log('New support request:', request);
+    socket.on("newSupportRequest", (request: SupportRequest) => {
+      console.log("New support request:", request);
       setSupportRequests((prev) => [...prev, request]);
     });
 
@@ -56,33 +56,45 @@ const TechClientSupport: React.FC<any> = () => {
         setActiveCall(null);
       }
     });
-
-    socket.on('supportEnded', (data: any) => {
-      const userId =
-        typeof data === 'object' && data.userId ? data.userId : data;
-
-      console.log('Support ended for user:', userId);
-      console.log('Current requests before removal:', supportRequests);
-
+    
+    socket.on("supportEnded", (data: any) => {
+      const userId = typeof data === 'object' && data.userId ? data.userId : data;
+      
+      console.log("Support ended for user:", userId);
+      console.log("Current requests before removal:", supportRequests);
+      
       setSupportRequests((prev) => {
         const updated = prev.filter((req) => req.userId !== userId);
-        console.log('Updated requests after removal:', updated);
+        console.log("Updated requests after removal:", updated);
         return updated;
       });
-
+      
       if (activeCall && activeCall.userId === userId) {
         setActiveCall(null);
       }
     });
-
+    socket.on("requestCanceled", (data: any) => {
+      const userId = typeof data === 'object' && data.userId ? data.userId : data;
+      
+      console.log("Support ended for user:", userId);
+      console.log("Current requests before removal:", supportRequests);
+      
+      setSupportRequests((prev) => {
+        const updated = prev.filter((req) => req.userId !== userId);
+        console.log("Updated requests after removal:", updated);
+        return updated;
+      });
+      
+    });
+    
     return () => {
       socket.off('connect');
       socket.off('newSupportRequest');
       socket.off('supportRequestEnded');
       socket.off('supportEnded');
     };
-  }, [socket, activeCall]);
-
+  }, [socket, activeCall]); 
+  
   const handleAcceptCall = (request: SupportRequest) => {
     setActiveCall(request);
     console.log('request', request);
