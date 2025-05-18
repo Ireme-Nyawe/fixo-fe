@@ -13,7 +13,7 @@ const Services = () => {
       >
         <div className="flex items-center justify-center h-full bg-black/50">
           <h1 className="text-[#1DCE5F] text-3xl font-bold">
-            Explore Our Services
+            {lang==="en"?'Explore Our Services':'Reba Serivisi Dutanga'}
           </h1>
         </div>
       </div>

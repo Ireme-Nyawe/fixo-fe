@@ -22,10 +22,10 @@ const Header = () => {
         <h1 className="text-center font-bold text-sm md:text-lg">
           {lang === 'en'
             ? 'For any assistance call directly'
-            : 'Wifuza ubufasha waduhamagara kuri'}
-          <Link to="tel:+25078123456" className="text-white">
+            : 'Wifuza ubufasha bwihuse waduhamagara kuri'}
+          <Link to="tel:+250782986810" className="text-white">
             {' '}
-            +25078123456
+            (250) 782986810
           </Link>
         </h1>
       </div>

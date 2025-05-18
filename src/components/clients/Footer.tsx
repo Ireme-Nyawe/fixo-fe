@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from 'react-icons/fa';
 
 const Footer = ({ lang }: any) => {
+  lang = localStorage.getItem('lang');
   const quickLinks = [
     { path: '/', label: { en: 'Home', rw: 'Ahabanza' } },
     { path: '/services', label: { en: 'Services', rw: 'Serivisi' } },
