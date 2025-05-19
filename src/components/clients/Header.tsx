@@ -22,16 +22,16 @@ const Header = () => {
         <h1 className="text-center font-bold text-sm md:text-lg">
           {lang === 'en'
             ? 'For any assistance call directly'
-            : 'Wifuza ubufasha waduhamagara kuri'}
-          <Link to="tel:+25078123456" className="text-white">
+            : 'Wifuza ubufasha bwihuse waduhamagara kuri'}
+          <Link to="tel:+250782986810" className="text-white">
             {' '}
-            +25078123456
+            (250) 782986810
           </Link>
         </h1>
       </div>
 
       <nav className="container mx-auto flex justify-between items-center p-4">
-        <div>
+        <div className=''>
           <Link to="/" className="text-primary text-xl md:text-2xl font-bold">
             Fixo
           </Link>
@@ -62,13 +62,13 @@ const Header = () => {
         </div>
 
         <div className="hidden md:flex items-center gap-8">
-          <ul className="flex gap-6">
+          <ul className="flex gap-6 font-bold">
             <li>
               <Link
                 to="/"
                 className="text-gray-700 hover:text-primary transition duration-300"
               >
-                {lang === 'en' ? 'Home' : 'Ahabanza'}
+                {lang === 'en' ? 'HOME' : 'AHABANZA'}
               </Link>
             </li>
             <li>
@@ -76,7 +76,7 @@ const Header = () => {
                 to="/services"
                 className="text-gray-700 hover:text-primary transition duration-300"
               >
-                {lang === 'en' ? 'Services' : 'Serivise'}
+                {lang === 'en' ? 'SERVICES' : 'SERIVISE'}
               </Link>
             </li>
             <li>
@@ -84,7 +84,15 @@ const Header = () => {
                 to="/products"
                 className="text-gray-700 hover:text-primary transition duration-300"
               >
-                {lang === 'en' ? 'Products' : 'Ibicuruzwa'}
+                {lang === 'en' ? 'PRODUCTS' : 'IBICURUZWA'}
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/contact"
+                className="text-gray-700 hover:text-primary transition duration-300"
+              >
+                {lang === 'en' ? 'CONTACT US' : 'TWANDIKIRE'}
               </Link>
             </li>
           </ul>
@@ -143,6 +151,15 @@ const Header = () => {
                   onClick={toggleMenu}
                 >
                   {lang === 'en' ? 'Products' : 'Ibicuruzwa'}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/contact"
+                  className="text-gray-700 hover:text-primary transition duration-300"
+                  onClick={toggleMenu}
+                >
+                  {lang === 'en' ? 'Contact Us' : 'Twandikire'}
                 </Link>
               </li>
               <li>

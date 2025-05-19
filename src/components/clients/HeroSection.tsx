@@ -6,7 +6,7 @@ const HeroSection = ({ lang }: any) => {
     <div
       className="relative h-screen flex items-center justify-start bg-cover bg-center"
       style={{
-        backgroundImage: `linear-gradient(to right, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2)), url('https://res.cloudinary.com/dpu6ljn5c/image/upload/v1737899203/pexels-pavel-danilyuk-7658385_1_tpzzsv.png')`,
+        backgroundImage: `linear-gradient(to right, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2)), url('/hero-bg.png')`,
       }}
     >
       <div className="container mx-auto px-4">
@@ -14,11 +14,11 @@ const HeroSection = ({ lang }: any) => {
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
             {lang === 'en' ? (
               <p>
-                Fast tech help,
+                Fast tech Support,
                 <br />
-                Any where,
+                Anywhere,
                 <br />
-                Everytime
+                Anytime
               </p>
             ) : (
               <p>

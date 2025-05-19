@@ -27,6 +27,7 @@ import TechnicianBalance from './pages/dashboard/technician/TechnicianBalance';
 import TechniciansWithdrawals from './pages/dashboard/admin/TechniciansWithdrawals';
 import TechClientSupport from './components/dashboard/TechClientSupport';
 import TechnicianDashboard from './pages/dashboard/technician/TechDashboard';
+import Contact from './pages/Contact';
 
 const AppRouter = () => {
   return (
@@ -35,6 +36,7 @@ const AppRouter = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/services" element={<Services />} />
       <Route path="/products" element={<Products />} />
+      <Route path="/contact" element={<Contact />} />
       <Route path="/product/:id" element={<SingleProduct />} />
       <Route path="/direct-support" element={<SupportPage />} />
 
