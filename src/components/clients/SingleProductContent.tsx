@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { IProduct } from '../../types/store';
 import productService from '../../state/features/auth/productSlice';
 import { useParams, Link } from 'react-router-dom';
-import { PhoneCall } from 'lucide-react';
+import { FaWhatsapp } from 'react-icons/fa';
 
 const SingleProductContent = () => {
   const [productData, setProductData] = useState<IProduct | null>(null);
@@ -98,9 +98,9 @@ const SingleProductContent = () => {
           <div className="flex gap-4 mt-6">
             <Link
               className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg transition hover:bg-green-500"
-              to={'tel: +250781234567'}
+              to={'tel: +250782986810'}
             >
-              <PhoneCall className="mr-2" /> Call Now
+              <FaWhatsapp className="mr-2" /> Chat Now
             </Link>
           </div>
         </div>
