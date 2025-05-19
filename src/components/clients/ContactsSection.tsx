@@ -25,6 +25,7 @@ const ContactsSection = ({ lang }: any) => {
     faqTitle: string;
     findUsTitle: string;
   };
+  const [isThankYou, setThankyou] = useState<boolean>(false);
 
   const faqs: FAQ[] = [
     {
@@ -133,12 +134,22 @@ const ContactsSection = ({ lang }: any) => {
 
   const currentLang = lang === "rw" ? "rw" : "en";
   const content = contactInfo[currentLang];
-
+// handle send message
+  const handleSendMessage = (e: any) => {
+    e.preventDefault();
+    
+    setThankyou(true);
+  const form = e.target as HTMLFormElement;
+  form.reset();
+    setTimeout(() => {
+      setThankyou(false);
+    }, 3000);
+  };
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex flex-col lg:flex-row gap-8">
         <div className="w-full lg:w-1/2">
-        <h1 className="text-3xl font-bold mb-2">{content.title}</h1>
+          <h1 className="text-3xl font-bold mb-2">{content.title}</h1>
           <p className="text-gray-600 mb-6">{content.subtitle}</p>
 
           <div className="bg-primary text-white p-6 rounded-lg mb-8">
@@ -153,7 +164,7 @@ const ContactsSection = ({ lang }: any) => {
             </div>
           </div>
 
-          <form className="mb-8">
+          <form className="mb-8" onSubmit={handleSendMessage}>
             <div className="mb-4">
               <label className="block text-gray-700 mb-2" htmlFor="name">
                 {content.formName}
@@ -161,6 +172,7 @@ const ContactsSection = ({ lang }: any) => {
               <input
                 type="text"
                 id="name"
+                required
                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-secondary"
               />
             </div>
@@ -171,6 +183,7 @@ const ContactsSection = ({ lang }: any) => {
               <input
                 type="email"
                 id="email"
+                required
                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-secondary"
               />
             </div>
@@ -181,6 +194,7 @@ const ContactsSection = ({ lang }: any) => {
               <input
                 type="text"
                 id="subject"
+                required
                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-secondary"
               />
             </div>
@@ -191,9 +205,15 @@ const ContactsSection = ({ lang }: any) => {
               <textarea
                 id="message"
                 rows={4}
+                required
                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-secondary"
               ></textarea>
             </div>
+            {isThankYou && (
+              <div className="bg- text-primary p-3 mb-8">
+                <p>Thank You For Your Message, We Are Getting Back Soon !</p>
+              </div>
+            )}
             <button
               type="submit"
               className="bg-secondary text-white font-semibold py-2 px-6 rounded-lg hover:bg-primary transition-colors"
