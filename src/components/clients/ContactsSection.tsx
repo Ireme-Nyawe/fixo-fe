@@ -44,7 +44,7 @@ const ContactsSection = ({ lang }: any) => {
       en: {
         question: 'How does the Fixo support process work?',
         answer:
-          "Just click the 'Call Support' button and you’ll be connected to a technician via video. You explain your issue, they guide you through solutions, and at the end, they send a payment request directly to your phone.",
+          "Just click the 'Call now' button and you’ll be connected to a technician via video. You explain your issue, they guide you through solutions, and at the end, they send a payment request directly to your phone.",
       },
       rw: {
         question: 'Uburyo bwo gufashwa kuri Fixo bukora gute?',
