@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from 'react';
 
 const ContactsSection = ({ lang }: any) => {
   type LangContent = {
@@ -30,63 +30,62 @@ const ContactsSection = ({ lang }: any) => {
   const faqs: FAQ[] = [
     {
       en: {
-        question: "What technologies do you specialize in?",
+        question: 'What kind of issues can I get help with on Fixo?',
         answer:
-          "We specialize in web development (React, Node.js), mobile app development (React Native, Flutter), cloud solutions (AWS, Azure), and AI/ML integration.",
+          "Fixo helps you solve a wide range of tech-related problems. Whether your phone, computer, or system isn't working, or you need help with government services or online platforms — our technicians are ready to assist you via video call.",
       },
       rw: {
-        question: "Ni izihe tekinoloji mwihariye?",
+        question: 'Ni ibihe bibazo nshobora gufashwamo kuri Fixo?',
         answer:
-          "Twihariye muri web development (React, Node.js), mobile app development (React Native, Flutter), cloud solutions (AWS, Azure), na AI/ML integration.",
+          "Fixo igufasha gukemura ibibazo bitandukanye bijyanye n'ikoranabuhanga. Niba telefone yawe, mudasobwa cyangwa sisitemu bitagikora, cyangwa ukeneye ubufasha mu gukoresha serivisi za leta cyangwa imbuga za interineti — abatekinisiye bacu baba biteguye kugufasha biciye kuri videwo.",
       },
     },
     {
       en: {
-        question: "How can I request a quote for my project?",
+        question: 'How does the Fixo support process work?',
         answer:
-          "You can request a quote by filling out the contact form on this page or by emailing us directly at info@techcompany.com with your project details.",
+          "Just click the 'Call now' button and you’ll be connected to a technician via video. You explain your issue, they guide you through solutions, and at the end, they send a payment request directly to your phone.",
       },
       rw: {
-        question: "Ni gute nasaba igiciro cy'umushinga wanjye?",
+        question: 'Uburyo bwo gufashwa kuri Fixo bukora gute?',
         answer:
-          "Ushobora gusaba igiciro wuzuza ifishi yo kwiyandikisha kuri iyi paji cyangwa utwohereza imeyili kuri info@techcompany.com n'ibisobanuro by'umushinga wawe.",
+          "Uhitamo 'Saba Ubufasha', uhuzwa n'umutekinisiye biciye kuri videwo. Ubusobanurira ikibazo cyawe, aguhereza ibisubizo, hanyuma akohereza ubusabe bwo kwishyura kuri telefone yawe.",
       },
     },
     {
       en: {
-        question: "What is your typical development timeline?",
+        question: 'Is the support available 24/7?',
         answer:
-          "Project timelines vary based on complexity. Small projects typically take 2-4 weeks, medium projects 1-3 months, and larger enterprise solutions 3-6 months or more.",
+          'Support availability depends on technician availability. Most of our support is offered from 6:00 AM to 10:00 PM, but we’re working to extend hours soon.',
       },
       rw: {
-        question:
-          "Ni igihe kingana iki gisanzwe mufata mu guteza imbere umushinga?",
+        question: 'Ese ubufasha buboneka amasaha yose?',
         answer:
-          "Igihe cy'imishinga kiba gitandukanye bitewe n'uburyo umushinga uteye. Imishinga mito ifata ibyumweru 2-4, imishinga yo hagati ifata amezi 1-3, n'imishinga minini ifata amezi 3-6 cyangwa irenga.",
+          'Ubufasha bushingira ku kuboneka kw’abatekinisiye. Akenshi tuboneka kuva saa mbiri za mu gitondo (6:00 AM) kugeza saa yine z’ijoro (10:00 PM), ariko turateganya kongera amasaha vuba.',
       },
     },
     {
       en: {
-        question: "Do you provide ongoing support after project completion?",
+        question: 'How do I pay after getting help?',
         answer:
-          "Yes, we offer various support packages tailored to your needs. These include regular maintenance, security updates, feature enhancements, and technical support.",
+          'After your video session, the technician will request a payment by entering your phone number and amount. A payment popup will appear on your phone so you can confirm and complete it easily.',
       },
       rw: {
-        question: "Mutanga ubufasha buhoraho nyuma yo kurangiza umushinga?",
+        question: 'Nigute nishyura nyuma yo gufashwa?',
         answer:
-          "Yego, dutanga amapaki y'ubufasha atandukanye akwiranye n'ibyo ukeneye. Harimo gusana bisanzwe, kuvugurura umutekano, kunoza ibiranga, n'ubufasha bwa tekiniki.",
+          'Nyuma yo kurangiza kuvugana n’umutekinisiye, akwandikira ubusabe bwo kwishyura akoresheje numero ya telefone yawe n’amafaranga. Urahita ubona ubutumwa bugufasha kwishyura byoroshye kuri telefone yawe.',
       },
     },
     {
       en: {
-        question: "What technologies do you use for secure payment processing?",
+        question: 'Is my information safe when using Fixo?',
         answer:
-          "We integrate secure payment solutions like Stripe, PayPal, and local payment gateways. All implementations follow PCI DSS compliance standards to ensure your customers' data is protected.",
+          'Yes. All video sessions and payment processes are secure and private. We do not store your payment details or share your data with anyone.',
       },
       rw: {
-        question: "Ni izihe tekinoloji mukoresha mu kwishyura umutekano?",
+        question: 'Ese amakuru yanjye aba afite umutekano ukoresheje Fixo?',
         answer:
-          "Dushyira hamwe ibisubizo by'ubwishyu bifite umutekano nka Stripe, PayPal,Paypack n'amarembo y'ubwishyu by'ahantu. Ishyirwa mu bikorwa byose bikurikiza amabwiriza ya PCI DSS kugira ngo amakuru y'abakiriya bawe arindwe.",
+          "Yego. Ibiganiro bya videwo n'uburyo bwo kwishyura birinzwe kandi bigirwa ibanga. Ntitubika amakuru y'ubwishyu cyangwa ngo tuyasangize undi muntu uwo ari we wese.",
       },
     },
   ];
@@ -103,44 +102,44 @@ const ContactsSection = ({ lang }: any) => {
 
   const contactInfo: Record<string, ContactContent> = {
     en: {
-      title: "Contact Us",
+      title: 'Contact Us',
       subtitle: "We're here to help with your technology needs",
-      address: "Makuza Peace Plaza, Kigali, Rwanda",
-      phone: "(250) 782986810",
-      email: "support@fixo.rw",
-      formName: "Name",
-      formEmail: "Email",
-      formSubject: "Subject",
-      formMessage: "Message",
-      formButton: "Send Message",
-      faqTitle: "Frequently Asked Questions",
-      findUsTitle: "Find Us On Map",
+      address: 'Makuza Peace Plaza, Kigali, Rwanda',
+      phone: '(250) 782986810',
+      email: 'support@fixo.rw',
+      formName: 'Name',
+      formEmail: 'Email',
+      formSubject: 'Subject',
+      formMessage: 'Message',
+      formButton: 'Send Message',
+      faqTitle: 'Frequently Asked Questions',
+      findUsTitle: 'Find Us On Map',
     },
     rw: {
-      title: "Twandikire",
-      subtitle: "Turi hano kugira ngo tugufashe mu byo ukeneye muri tekinoloji",
-      address: "Makuza Peace Plaza, Kigali, Rwanda",
-      phone: "(250) 782986810",
-      email: "support@fixo.rw",
-      formName: "Izina",
-      formEmail: "Imeyili",
-      formSubject: "Impamvu",
-      formMessage: "Ubutumwa",
-      formButton: "Ohereza Ubutumwa",
-      faqTitle: "Ibibazo Bibazwa Kenshi",
-      findUsTitle: "Dushake kuri Map",
+      title: 'Twandikire',
+      subtitle: 'Turi hano kugira ngo tugufashe mu byo ukeneye muri tekinoloji',
+      address: 'Makuza Peace Plaza, Kigali, Rwanda',
+      phone: '(250) 782986810',
+      email: 'support@fixo.rw',
+      formName: 'Izina',
+      formEmail: 'Imeyili',
+      formSubject: 'Impamvu',
+      formMessage: 'Ubutumwa',
+      formButton: 'Ohereza Ubutumwa',
+      faqTitle: 'Ibibazo Bibazwa Kenshi',
+      findUsTitle: 'Dushake kuri Map',
     },
   };
 
-  const currentLang = lang === "rw" ? "rw" : "en";
+  const currentLang = lang === 'rw' ? 'rw' : 'en';
   const content = contactInfo[currentLang];
-// handle send message
+  // handle send message
   const handleSendMessage = (e: any) => {
     e.preventDefault();
-    
+
     setThankyou(true);
-  const form = e.target as HTMLFormElement;
-  form.reset();
+    const form = e.target as HTMLFormElement;
+    form.reset();
     setTimeout(() => {
       setThankyou(false);
     }, 3000);
@@ -233,7 +232,7 @@ const ContactsSection = ({ lang }: any) => {
                   onClick={() => toggleFaq(index)}
                 >
                   <span>{faq[currentLang].question}</span>
-                  <span>{expandedFaqs.includes(index) ? "−" : "+"}</span>
+                  <span>{expandedFaqs.includes(index) ? '−' : '+'}</span>
                 </button>
                 {expandedFaqs.includes(index) && (
                   <div className="mt-2 text-gray-600">

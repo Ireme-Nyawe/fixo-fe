@@ -80,13 +80,13 @@ const Footer = ({ lang }: any) => {
             </h3>
             <p className="text-sm">
               {lang === 'en'
-                ? 'Email: support@fixo.com'
-                : 'Imeli: support@fixo.com'}
+                ? 'Email: support@fixo.rw'
+                : 'Imeli: support@fixo.rw'}
             </p>
             <p className="text-sm">
               {lang === 'en'
-                ? 'Phone: +250 781 234 567'
-                : 'Telefone: +250 781 234 567'}
+                ? 'Phone: (250) 782986810'
+                : 'Telefone: (250) 782986810'}
             </p>
           </address>
         </div>
