@@ -58,12 +58,10 @@ const SupportPage: React.FC<any> = () => {
   useEffect(() => {
     if (!socket) return;
     socket.on("connect", () => {
-      console.log("Connected to signaling server");
       socket.emit("requestSupport", { userId: userId.current, username });
     });
 
     socket.on("supportAccepted", ({ technicianId, technicianName }) => {
-      console.log("Support accepted by technician:", technicianName);
       setTechnician(technicianName);
       setTechnicianId(technicianId);
       setIsConnected(true);
@@ -72,19 +70,16 @@ const SupportPage: React.FC<any> = () => {
     });
 
     socket.on("iceCandidate", ({ candidate }) => {
-      console.log("Received ICE candidate from technician");
       if (!peerConnection.current || !candidate) return;
 
       peerConnection.current
         .addIceCandidate(new RTCIceCandidate(candidate))
         .then(() => {
-          console.log("Successfully added ICE candidate");
         })
         .catch((e) => console.error("Error adding ice candidate:", e));
     });
 
     socket.on("offer", async ({ offer }) => {
-      console.log("Received offer from technician");
 
       try {
         if (!peerConnection.current) {
@@ -94,16 +89,13 @@ const SupportPage: React.FC<any> = () => {
         await peerConnection.current.setRemoteDescription(
           new RTCSessionDescription(offer)
         );
-        console.log("Remote description set successfully after offer");
         const answer = await peerConnection.current.createAnswer();
         await peerConnection.current.setLocalDescription(answer);
-        console.log("Created and set local description (answer)");
         socket.emit("answer", {
           to: technicianId,
           answer,
         });
       } catch (error) {
-        console.error("Error handling offer:", error);
       }
     });
 
@@ -175,7 +167,6 @@ const SupportPage: React.FC<any> = () => {
         setConnectionState(pc.connectionState);
 
         if (pc.connectionState === "connected") {
-          console.log("WebRTC connection established successfully!");
           setConnectionState("Connected");
           clearTimeout(connectionTimeout);
         } else if (
@@ -190,7 +181,6 @@ const SupportPage: React.FC<any> = () => {
       };
 
       pc.oniceconnectionstatechange = () => {
-        console.log("ICE connection state:", pc.iceConnectionState);
 
         if (
           pc.iceConnectionState === "connected" ||
@@ -206,7 +196,6 @@ const SupportPage: React.FC<any> = () => {
           }
         } else if (pc.iceConnectionState === "disconnected") {
           console.log("ICE connection disconnected, monitoring for recovery");
-          // Start a timer to check if it recovers on its own
           setTimeout(() => {
             if (pc.iceConnectionState === "disconnected") {
               console.log(
@@ -218,7 +207,7 @@ const SupportPage: React.FC<any> = () => {
                 console.error("Error during ICE restart:", error);
               }
             }
-          }, 5000); // Wait 5 seconds before attempting restart
+          }, 5000);
         }
       };
 
@@ -246,18 +235,13 @@ const SupportPage: React.FC<any> = () => {
 
       if (localStream) {
         localStream.getTracks().forEach((track) => {
-          console.log("Adding local track to peer connection:", track.kind);
           pc.addTrack(track, localStream);
         });
       }
 
       pc.onicecandidate = (event) => {
         if (event.candidate) {
-          const candidateInfo = event.candidate.candidate || "unknown";
-          const candidateType = event.candidate.type || "unknown";
-          console.log(`ICE candidate (${candidateType}): ${candidateInfo}`);
-
-          socket?.emit("iceCandidate", {
+            socket?.emit("iceCandidate", {
             to: techId,
             candidate: event.candidate,
           });
@@ -267,7 +251,6 @@ const SupportPage: React.FC<any> = () => {
       };
 
       pc.ontrack = (event) => {
-        console.log("Received remote track:", event.track.kind);
 
         if (remoteVideoRef.current && event.streams[0]) {
           console.log("Setting remote stream to video element");
@@ -276,7 +259,6 @@ const SupportPage: React.FC<any> = () => {
         }
       };
 
-      // Add stats collection for diagnostics (optional)
       if (pc.getStats) {
         // Periodically collect connection stats
         const statsInterval = setInterval(async () => {
@@ -291,7 +273,6 @@ const SupportPage: React.FC<any> = () => {
                   report.state === "succeeded"
                 ) {
                   hasActiveCandidate = true;
-                  console.log("Active candidate pair:", report);
                 }
               });
 
@@ -304,9 +285,7 @@ const SupportPage: React.FC<any> = () => {
               console.error("Error getting stats:", error);
             }
           }
-        }, 10000); // Every 10 seconds
-
-        // Clean up interval when connection closes
+        }, 10000); 
         pc.onconnectionstatechange = function () {
           if (
             pc.connectionState === "closed" ||
@@ -319,14 +298,12 @@ const SupportPage: React.FC<any> = () => {
 
       return pc;
     } catch (error) {
-      console.error("Error creating peer connection:", error);
       setConnectionState("Error creating connection");
       return null;
     }
   };
 
   const stopAllMediaTracks = () => {
-    // Stop local tracks (your camera/mic)
     if (localVideoRef.current && localVideoRef.current.srcObject) {
       const streams = localVideoRef.current.srcObject;
       if (streams instanceof MediaStream) {
@@ -335,8 +312,6 @@ const SupportPage: React.FC<any> = () => {
         });
       }
     }
-
-    // Stop remote tracks (other person's camera/mic)
     if (remoteVideoRef.current && remoteVideoRef.current.srcObject) {
       const streams = remoteVideoRef.current.srcObject;
       if (streams instanceof MediaStream) {
@@ -497,7 +472,6 @@ const SupportPage: React.FC<any> = () => {
       setTechFullScreen(!techFullScreen);
     }
   };
-  console.log("stream remote", remoteStream?.getTracks());
 
   const handleCloseRatingModal = () => {
     navigate("/");
