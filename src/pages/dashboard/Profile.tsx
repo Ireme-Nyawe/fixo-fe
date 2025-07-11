@@ -152,7 +152,7 @@ const Profile = () => {
                   onBlur={formik.handleBlur}
                   value={formik.values.firstName}
                   disabled={!isEditing}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm disabled:bg-gray-50"
+                  className="mt-1 block w-full p-2 rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm disabled:bg-gray-50"
                 />
                 {formik.touched.firstName && formik.errors.firstName && (
                   <p className="mt-1 text-sm text-red-600">
@@ -176,7 +176,7 @@ const Profile = () => {
                   onBlur={formik.handleBlur}
                   value={formik.values.lastName}
                   disabled={!isEditing}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm disabled:bg-gray-50"
+                  className="mt-1 block w-full p-2 rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm disabled:bg-gray-50"
                 />
                 {formik.touched.lastName && formik.errors.lastName && (
                   <p className="mt-1 text-sm text-red-600">
@@ -200,7 +200,7 @@ const Profile = () => {
                   onBlur={formik.handleBlur}
                   value={formik.values.email}
                   disabled={!isEditing}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm disabled:bg-gray-50"
+                  className="mt-1 block w-full p-2 rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm disabled:bg-gray-50"
                 />
                 {formik.touched.email && formik.errors.email && (
                   <p className="mt-1 text-sm text-red-600">
@@ -224,7 +224,7 @@ const Profile = () => {
                   onBlur={formik.handleBlur}
                   value={formik.values.phone}
                   disabled={!isEditing}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm disabled:bg-gray-50"
+                  className="mt-1 block w-full p-2 rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm disabled:bg-gray-50"
                 />
                 {formik.touched.phone && formik.errors.phone && (
                   <p className="mt-1 text-sm text-red-600">
