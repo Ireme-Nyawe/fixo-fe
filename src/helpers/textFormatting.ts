@@ -5,14 +5,21 @@ export const truncateText = (text: string | undefined, length: number): string =
 
 
 export const formatCurrency = (amount: number): string => {
-  if (isNaN(amount)) return '0 RWF';
-  if (amount >= 1000000) {
-    const millions = (amount / 1000000).toFixed(1);
-    return `${millions.replace(/\.0$/, '')}M RWF`;
+  if (isNaN(amount)) return '0.00 RWF';
+
+  const roundUpTwoDecimals = (num: number) => {
+    return (Math.ceil(num * 100) / 100).toFixed(2);
+  };
+
+  if (amount >= 1_000_000) {
+    const millions = Math.ceil((amount / 1_000_000) * 100) / 100;
+    return `${millions.toFixed(2).replace(/\.00$/, '')}M RWF`;
   }
-  if (amount >= 1000) {
-    const thousands = (amount / 1000).toFixed(1);
-    return `${thousands.replace(/\.0$/, '')}K RWF`;
+
+  if (amount >= 1_000) {
+    const thousands = Math.ceil((amount / 1_000) * 100) / 100;
+    return `${thousands.toFixed(2).replace(/\.00$/, '')}K RWF`;
   }
-  return `${amount} RWF`;
+
+  return `${roundUpTwoDecimals(amount)} RWF`;
 };

@@ -28,6 +28,7 @@ import TechniciansWithdrawals from './pages/dashboard/admin/TechniciansWithdrawa
 import TechClientSupport from './components/dashboard/TechClientSupport';
 import TechnicianDashboard from './pages/dashboard/technician/TechDashboard';
 import Contact from './pages/Contact';
+import PaymentSettings from './pages/dashboard/admin/PaymentSettings';
 
 const AppRouter = () => {
   return (
@@ -57,6 +58,7 @@ const AppRouter = () => {
             <Route path="manage-users/new" element={<NewUser />} />
             <Route path="payments" element={<Payments />} />
             <Route path="withdrawals" element={<TechniciansWithdrawals />} />
+            <Route path="payments-settings" element={<PaymentSettings />} />
           </Route>
 
           <Route element={<TechnicianRoute />}>

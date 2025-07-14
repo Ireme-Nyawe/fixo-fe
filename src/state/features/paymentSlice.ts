@@ -4,7 +4,6 @@ import { handleError } from "./auth/authService";
 const technicianRequestPaypackPayment = async (
     data: any) => {
     try {
-        console.log("data", data);
         const response = await axiosInstance.post("/api/payments/request-payment", data);
         return response.data;
     } catch (error) {
@@ -84,6 +83,27 @@ const adminWithdrawMoney = async (data: any) => {
         return handleError(error);
     }
 }
+
+const findPaymentSettings = async () => {
+    try {
+        const response = await axiosInstance.get("/api/payments/get-payment-settings");
+        return response.data;
+    }
+    catch (error) {
+        return handleError(error);
+    }
+}
+
+const savePaymentSettings = async (data: any) => {
+    try {
+        const response = await axiosInstance.post("/api/payments/save-payment-settings", data);
+        return response.data;
+    }
+    catch (error) {
+        return handleError(error);
+    }
+}
+
 export default {
     technicianRequestPaypackPayment,
     findAllTechniciansPayments,
@@ -93,5 +113,7 @@ export default {
     findAllTechniciansWithdrawals,
     getSystemsIncomes,
     getTechniciansBalances,
-    adminWithdrawMoney
+    adminWithdrawMoney,
+    findPaymentSettings,
+    savePaymentSettings
 }

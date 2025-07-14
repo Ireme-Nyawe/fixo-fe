@@ -108,7 +108,28 @@ const Payments = () => {
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+  const [latestSetting, setLatestSetting] = useState<any>();
+  const fetchPaymentSettings = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await paymentSlice.findPaymentSettings();
+      if (response.status === 200) {
+        setLatestSetting(response.data.settings[0]);
+      } else {
+        setError('Failed to fetch payments data');
+        toast.error('Payment data load failed');
+      }
+    } catch (err) {
+      setError('Network error - please check your connection');
+      toast.error('Failed to connect to server');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
+  useEffect(() => {
+    fetchPaymentSettings();
+  }, []);
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       <Toaster position="top-center" richColors />
@@ -263,6 +284,7 @@ const Payments = () => {
 
       {showPaymentModal && (
         <RequestPayment
+          setting={latestSetting}
           onClose={() => setShowPaymentModal(false)}
           onSuccess={async () => {
             await fetchData();

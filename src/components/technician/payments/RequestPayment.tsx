@@ -9,11 +9,13 @@ interface RequestPaymentProps {
   onClose: () => void;
   userId?: string;
   onSuccess?: () => any;
+  setting?: any;
 }
 
 const RequestPayment: React.FC<RequestPaymentProps> = ({
   onClose,
   onSuccess,
+  setting,
 }) => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [amount, setAmount] = useState<any>(null);
@@ -221,12 +223,17 @@ const RequestPayment: React.FC<RequestPaymentProps> = ({
                         • You are requesting:{' '}
                         <strong>{formatCurrency(amount)}</strong>
                         <br />• You will receive:{' '}
-                        <strong>{formatCurrency(amount * 0.6)}</strong>
+                        <strong>
+                          {formatCurrency(
+                            amount * (1 - Number(setting?.serviceFee) / 100)
+                          )}
+                        </strong>
                       </p>
                       <p className="text-xs italic">
-                        The 40% difference covers processing fees, service
-                        charges, and applicable taxes. For detailed breakdown or
-                        assistance, please contact our support team.
+                        The {setting?.serviceFee}% difference covers processing
+                        fees, service charges, and applicable taxes. For a
+                        detailed breakdown or assistance, please contact our
+                        support team.
                       </p>
                     </div>
                   </div>

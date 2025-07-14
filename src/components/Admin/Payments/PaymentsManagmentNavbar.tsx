@@ -4,6 +4,7 @@ const PaymentsManagmentNavbar = () => {
   const navItems = [
     { label: 'Payments', path: '/dashboard/payments' },
     { label: 'Withdrawals', path: '/dashboard/withdrawals' },
+    { label: 'Settings', path: '/dashboard/payments-settings' },
   ];
 
   return (

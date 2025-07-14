@@ -55,11 +55,21 @@ const updateProfile = async (data: IUser) => {
   }
 }
 
+const updatePassword = async (data: any) => {
+  try {
+    const response = await axiosInstance.put("/api/auth/update-password", data);
+    return response.data;
+  } catch (error) {
+    return handleError(error);
+  }
+}
+
 const authService = {
   login,
   verifyOTP,
   getProfile,
-  updateProfile
+  updateProfile,
+  updatePassword
 };
 
 export default authService;
