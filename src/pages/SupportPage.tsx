@@ -134,15 +134,17 @@ const SupportPage: React.FC<any> = () => {
 
     const configuration = {
       iceServers: [
-        { urls: "stun:stun.l.google.com:19302" },
         {
-          urls: "turn:77.220.212.11",
-          username: "webrtcuser",
-          credential: "password123",
-        },
+          urls: [
+            "stun:178.128.152.244:3478",
+            "turn:178.128.152.244:3478?transport=udp"
+          ],
+          username: "webrtcdo",
+          credential: "webrtc1pass2"
+        }
       ],
       iceCandidatePoolSize: 10,
-      sdpSemantics: "unified-plan",
+      sdpSemantics: 'unified-plan',
     };
 
     try {
