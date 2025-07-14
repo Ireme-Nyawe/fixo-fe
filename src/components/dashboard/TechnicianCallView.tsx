@@ -149,13 +149,13 @@ const TechnicianCallView: React.FC<TechnicianCallViewProps> = ({
       iceServers: [
         {
           urls: [
-            "stun:178.128.152.244:3478",
-            "turn:178.128.152.244:3478?transport=udp"
+            "stun:68.183.102.224:3478",
+            "turn:68.183.102.224:3478?transport=udp"
           ],
           username: "webrtcdo",
           credential: "webrtc1pass2"
         }
-      ],
+      ],      
       iceCandidatePoolSize: 10,
       sdpSemantics: 'unified-plan',
     };
