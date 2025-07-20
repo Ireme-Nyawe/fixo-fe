@@ -530,6 +530,20 @@ const tryReconnect = async () => {
   }
 };
 
+useEffect(() => {
+  if (!socket) return;
+
+  const handleNetworkLost = () => {
+    setConnectionState("Reconnecting");
+  };
+
+  socket.on('network-lost', handleNetworkLost);
+
+  return () => {
+    socket.off('network-lost', handleNetworkLost); // cleanup
+  };
+}, [socket]);
+
 
 useEffect(() => {
   const handleOffline = () => {

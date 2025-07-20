@@ -96,7 +96,20 @@ const TechnicianCallView: React.FC<TechnicianCallViewProps> = ({
       socket.off('answer');
     };
   }, [socket]);
-
+  useEffect(() => {
+    if (!socket) return;
+  
+    const handleNetworkLost = () => {
+      setConnectionEstablished(false);
+    };
+  
+    socket.on('network-lost', handleNetworkLost);
+  
+    return () => {
+      socket.off('network-lost', handleNetworkLost); // cleanup
+    };
+  }, [socket]);
+  
   useEffect(() => {
     if (
       localStream &&
