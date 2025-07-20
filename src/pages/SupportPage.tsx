@@ -163,25 +163,6 @@ const SupportPage: React.FC<any> = () => {
           setConnectionState("Connection timeout");
         }
       }, 200000);
-
-      pc.onconnectionstatechange = () => {
-        console.log("Connection state changed:", pc.connectionState);
-        setConnectionState(pc.connectionState);
-
-        if (pc.connectionState === "connected") {
-          setConnectionState("Connected");
-          clearTimeout(connectionTimeout);
-        } else if (
-          pc.connectionState === "failed" ||
-          pc.connectionState === "disconnected" ||
-          pc.connectionState === "closed"
-        ) {
-          setConnectionState("Connection failed or closed");
-          // Consider attempting reconnection here
-          console.log("Connection failed or closed, may need to reconnect");
-        }
-      };
-
       pc.oniceconnectionstatechange = () => {
 
         if (
@@ -288,14 +269,24 @@ const SupportPage: React.FC<any> = () => {
             }
           }
         }, 10000); 
-        pc.onconnectionstatechange = function () {
-          if (
-            pc.connectionState === "closed" ||
-            pc.connectionState === "failed"
+        pc.onconnectionstatechange = () => {
+          console.log("Connection state changed:", pc.connectionState);
+          setConnectionState(pc.connectionState);
+        
+          if (pc.connectionState === "connected") {
+            setConnectionState("Connected");
+            clearTimeout(connectionTimeout);
+          } else if (
+            pc.connectionState === "failed" ||
+            pc.connectionState === "disconnected" ||
+            pc.connectionState === "closed"
           ) {
-            clearInterval(statsInterval);
+            setConnectionState("Connection failed or closed");
+            console.log("Connection failed or closed, may need to reconnect");
+            clearInterval(statsInterval); // <- add this here
           }
         };
+        
       }
 
       return pc;
@@ -511,6 +502,57 @@ useEffect(() => {
     }
   }
 }, [isConnected]);
+
+const tryReconnect = async () => {
+  console.log("Attempting to reconnect...");
+  
+  if (peerConnection.current) {
+    peerConnection.current.close();
+    peerConnection.current = null;
+  }
+
+  const newPc = createPeerConnection(technicianId);
+  
+  if (!newPc) {
+    console.error("Failed to create new peer connection.");
+    return;
+  }
+
+  peerConnection.current = newPc;
+
+  try {
+    const offer = await newPc.createOffer();
+    await newPc.setLocalDescription(offer);
+    socket?.emit("offer", { to: technicianId, offer });
+    setConnectionState("reconnecting");
+  } catch (err) {
+    console.error("Reconnect failed:", err);
+  }
+};
+
+
+useEffect(() => {
+  const handleOffline = () => {
+    console.log("You are offline");
+    setConnectionState("offline");
+    socket?.emit("network-lost", { to: technicianId });
+  };
+
+  const handleOnline = () => {
+    console.log("Back online");
+    setConnectionState("reconnecting");
+    tryReconnect(); // Function you'll define
+  };
+
+  window.addEventListener("offline", handleOffline);
+  window.addEventListener("online", handleOnline);
+
+  return () => {
+    window.removeEventListener("offline", handleOffline);
+    window.removeEventListener("online", handleOnline);
+  };
+}, []);
+
   return (
     <div className="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 p-2 sm:p-4">
       <div className="bg-white rounded-lg shadow-lg p-3 sm:p-4 md:p-6 w-full max-w-6xl max-h-screen overflow-auto">
@@ -654,6 +696,12 @@ useEffect(() => {
           >
             <Phone size={16} className="sm:w-5 sm:h-5" />
           </button>
+          {connectionState !== "connected" && (
+  <button onClick={tryReconnect} className="bg-blue-500 text-white p-2 rounded">
+    Reconnect
+  </button>
+)}
+
         </div>
       </div>
       <RatingModal
