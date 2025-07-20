@@ -555,7 +555,7 @@ useEffect(() => {
   const handleOnline = () => {
     console.log("Back online");
     setConnectionState("reconnecting");
-    tryReconnect(); // Function you'll define
+    tryReconnect();
   };
 
   window.addEventListener("offline", handleOffline);
@@ -710,7 +710,7 @@ useEffect(() => {
           >
             <Phone size={16} className="sm:w-5 sm:h-5" />
           </button>
-          {connectionState !== "connected" && (
+          {connectionState == "offline" && (
   <button onClick={tryReconnect} className="bg-blue-500 text-white p-2 rounded">
     Reconnect
   </button>
