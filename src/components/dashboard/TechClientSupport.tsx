@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 import TechnicianCallView from './TechnicianCallView';
 import RequestPayment from '../technician/payments/RequestPayment';

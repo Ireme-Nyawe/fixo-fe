@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect} from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { io } from 'socket.io-client';
 
