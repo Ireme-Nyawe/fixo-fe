@@ -1,7 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 import TechnicianCallView from './TechnicianCallView';
 import RequestPayment from '../technician/payments/RequestPayment';
+import paymentSlice from '../../state/features/paymentSlice';
+import { toast } from 'sonner';
 
 interface SupportRequest {
   userId: string;
@@ -20,6 +22,9 @@ const TechClientSupport: React.FC<any> = () => {
   const [activeCall, setActiveCall] = useState<SupportRequest | null>(null);
 
   const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [setting, setSetting] = useState<any>();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const SOCKET_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -43,8 +48,8 @@ const TechClientSupport: React.FC<any> = () => {
       });
     });
 
-    socket.on("newSupportRequest", (request: SupportRequest) => {
-      console.log("New support request:", request);
+    socket.on('newSupportRequest', (request: SupportRequest) => {
+      console.log('New support request:', request);
       setSupportRequests((prev) => [...prev, request]);
     });
 
@@ -56,45 +61,71 @@ const TechClientSupport: React.FC<any> = () => {
         setActiveCall(null);
       }
     });
-    
-    socket.on("supportEnded", (data: any) => {
-      const userId = typeof data === 'object' && data.userId ? data.userId : data;
-      
-      console.log("Support ended for user:", userId);
-      console.log("Current requests before removal:", supportRequests);
-      
+
+    socket.on('supportEnded', (data: any) => {
+      const userId =
+        typeof data === 'object' && data.userId ? data.userId : data;
+
+      console.log('Support ended for user:', userId);
+      console.log('Current requests before removal:', supportRequests);
+
       setSupportRequests((prev) => {
         const updated = prev.filter((req) => req.userId !== userId);
-        console.log("Updated requests after removal:", updated);
+        console.log('Updated requests after removal:', updated);
         return updated;
       });
-      
+
       if (activeCall && activeCall.userId === userId) {
         setActiveCall(null);
       }
     });
-    socket.on("requestCanceled", (data: any) => {
-      const userId = typeof data === 'object' && data.userId ? data.userId : data;
-      
-      console.log("Support ended for user:", userId);
-      console.log("Current requests before removal:", supportRequests);
-      
+    socket.on('requestCanceled', (data: any) => {
+      const userId =
+        typeof data === 'object' && data.userId ? data.userId : data;
+
+      console.log('Support ended for user:', userId);
+      console.log('Current requests before removal:', supportRequests);
+
       setSupportRequests((prev) => {
         const updated = prev.filter((req) => req.userId !== userId);
-        console.log("Updated requests after removal:", updated);
+        console.log('Updated requests after removal:', updated);
         return updated;
       });
-      
     });
-    
+
     return () => {
       socket.off('connect');
       socket.off('newSupportRequest');
       socket.off('supportRequestEnded');
       socket.off('supportEnded');
     };
-  }, [socket, activeCall]); 
-  
+  }, [socket, activeCall]);
+
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await paymentSlice.findPaymentSettings();
+
+      if (response.status === 200) {
+        setSetting(response.data.settings[0]);
+      } else {
+        setError('Failed to fetch payments data');
+        toast.error('Payment data load failed');
+      }
+    } catch (err) {
+      setError('Network error - please check your connection');
+      toast.error('Failed to connect to server');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  console.log(setting);
+
   const handleAcceptCall = (request: SupportRequest) => {
     setActiveCall(request);
     console.log('request', request);
@@ -173,7 +204,10 @@ const TechClientSupport: React.FC<any> = () => {
       )}
 
       {showPaymentModal && (
-        <RequestPayment onClose={() => setShowPaymentModal(false)} />
+        <RequestPayment
+          onClose={() => setShowPaymentModal(false)}
+          setting={setting}
+        />
       )}
     </div>
   );
