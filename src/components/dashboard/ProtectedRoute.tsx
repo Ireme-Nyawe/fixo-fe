@@ -11,7 +11,7 @@ const ProtectedRoute = () => {
   const SOCKET_URL = import.meta.env.VITE_API_BASE_URL;
 
   const technicianName = user?.lastName;
-  const technicianId = useRef<string>(crypto.randomUUID());
+  const technicianId = useRef<string>(user._id);
 
 
   const playNotificationSound = () => {
@@ -25,7 +25,7 @@ useEffect(() => {
    socket.on('connect', () => {
       console.log('Connected to signaling server');
       socket.emit('technicianOnline', {
-        technicianId: technicianId.current,
+        technicianId,
         technicianName,
       });
     });
