@@ -23,8 +23,6 @@ const TechClientSupport: React.FC<any> = () => {
 
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [setting, setSetting] = useState<any>();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
 
   const SOCKET_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -102,22 +100,17 @@ const TechClientSupport: React.FC<any> = () => {
   }, [socket, activeCall]);
 
   const fetchData = useCallback(async () => {
-    setLoading(true);
     try {
       const response = await paymentSlice.findPaymentSettings();
 
       if (response.status === 200) {
         setSetting(response.data.settings[0]);
       } else {
-        setError('Failed to fetch payments data');
         toast.error('Payment data load failed');
       }
     } catch (err) {
-      setError('Network error - please check your connection');
       toast.error('Failed to connect to server');
-    } finally {
-      setLoading(false);
-    }
+    } 
   }, []);
 
   useEffect(() => {
