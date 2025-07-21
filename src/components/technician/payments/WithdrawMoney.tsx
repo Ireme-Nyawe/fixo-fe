@@ -43,7 +43,6 @@ const WithdrawMoney: React.FC<WithdrawMoneyProps> = ({
       };
 
       const response = await paymentSlice.techWithdrawMoney(paymentData);
-      console.log('Payment response:', response);
       if (response.status === 200) {
         setStatus('success');
         onSuccess?.();
