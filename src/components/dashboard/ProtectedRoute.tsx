@@ -11,7 +11,7 @@ const ProtectedRoute = () => {
   const SOCKET_URL = import.meta.env.VITE_API_BASE_URL;
 
   const technicianName = user?.lastName;
-  const technicianId = useRef<string>(user._id);
+  const technicianId = user?._id;
 
 
   const playNotificationSound = () => {
