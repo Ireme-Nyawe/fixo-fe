@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 import TechnicianCallView from './TechnicianCallView';
 import RequestPayment from '../technician/payments/RequestPayment';
-import { Check, Copy } from "lucide-react"; // install lucide-react
+import { Check, Copy } from "lucide-react";
 
 interface SupportRequest {
   userId: string;
@@ -36,6 +36,12 @@ const TechClientSupport: React.FC<any> = () => {
         console.error("Failed to copy:", err);
       }
     }
+    const playNotificationSound = () => {
+      const audio = new Audio('https://www.soundjay.com/buttons/sounds/beep-05.mp3');
+      audio.play()
+        .catch(err => console.error('Failed to play notification sound:', err));
+    };
+  
 
   useEffect(() => {
     const newSocket = io(SOCKET_URL);
@@ -59,6 +65,10 @@ const TechClientSupport: React.FC<any> = () => {
 
     socket.on("newSupportRequest", (request: SupportRequest) => {
       console.log("New support request:", request);
+      if(profile.role === 'technician'||profile.role === 'admin'){
+        playNotificationSound()
+        console.log("New support request:", request);
+      }
       setSupportRequests((prev) => [...prev, request]);
     });
 
