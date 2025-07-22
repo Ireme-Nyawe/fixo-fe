@@ -36,14 +36,7 @@ const TechClientSupport: React.FC<any> = () => {
         console.error("Failed to copy:", err);
       }
     }
-    const playNotificationSound = () => {
-      const audio = new Audio('https://www.soundjay.com/buttons/sounds/beep-05.mp3');
-      audio.play()
-        .catch(err => console.error('Failed to play notification sound:', err));
-    };
-  
-
-  useEffect(() => {
+   useEffect(() => {
     const newSocket = io(SOCKET_URL);
     setSocket(newSocket);
 
@@ -65,10 +58,6 @@ const TechClientSupport: React.FC<any> = () => {
 
     socket.on("newSupportRequest", (request: SupportRequest) => {
       console.log("New support request:", request);
-      if(profile.role === 'technician'||profile.role === 'admin'){
-        playNotificationSound()
-        console.log("New support request:", request);
-      }
       setSupportRequests((prev) => [...prev, request]);
     });
 
@@ -84,9 +73,7 @@ const TechClientSupport: React.FC<any> = () => {
     socket.on("supportEnded", (data: any) => {
       const userId = typeof data === 'object' && data.userId ? data.userId : data;
       
-      console.log("Support ended for user:", userId);
-      console.log("Current requests before removal:", supportRequests);
-      
+            
       setSupportRequests((prev) => {
         const updated = prev.filter((req) => req.userId !== userId);
         console.log("Updated requests after removal:", updated);
