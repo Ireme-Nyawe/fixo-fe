@@ -77,3 +77,4 @@ export interface Transaction {
   description: string;
   createdAt: string;
 }
+
