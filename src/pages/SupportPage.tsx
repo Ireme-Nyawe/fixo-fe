@@ -11,7 +11,7 @@ import {
   Maximize,
   Minimize,
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import RatingModal from "../components/clients/RatingModal";
 
 const SupportPage: React.FC<any> = () => {
@@ -40,7 +40,7 @@ const SupportPage: React.FC<any> = () => {
   const userVideoContainerRef = useRef<HTMLDivElement>(null);
   const techVideoContainerRef = useRef<HTMLDivElement>(null);
   const SOCKET_URL = import.meta.env.VITE_API_BASE_URL;
-
+  const { techId } = useParams<{ techId: string }>();
   useEffect(() => {
     const newSocket = io(SOCKET_URL);
     setSocket(newSocket);
@@ -58,7 +58,13 @@ const SupportPage: React.FC<any> = () => {
   useEffect(() => {
     if (!socket) return;
     socket.on("connect", () => {
-      socket.emit("requestSupport", { userId: userId.current, username });
+      if(!techId){
+
+        socket.emit("requestSupport", { userId: userId.current, username });
+      }
+      else{
+        socket.emit("requestSupport", { userId: userId.current, username:"Specific Support",techId });
+      }
     });
 
     socket.on("supportAccepted", ({ technicianId, technicianName }) => {
@@ -484,7 +490,7 @@ const SupportPage: React.FC<any> = () => {
 
 
 useEffect(() => {
-  if (!isConnected) {
+  if (connectionState=="Waiting for support...") {
     if (!audioRef.current) {
       audioRef.current = new Audio('/audio/phone-dialing-1.mp3');
       audioRef.current.volume = 0.4;

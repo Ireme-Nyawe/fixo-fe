@@ -39,6 +39,8 @@ const AppRouter = () => {
       <Route path="/contact" element={<Contact />} />
       <Route path="/product/:id" element={<SingleProduct />} />
       <Route path="/direct-support" element={<SupportPage />} />
+      <Route path="/direct-support/:techId" element={<SupportPage />} />
+
 
       <Route element={<ProtectedRoute />}>
         <Route path="/dashboard" element={<DashboardLayout />}>

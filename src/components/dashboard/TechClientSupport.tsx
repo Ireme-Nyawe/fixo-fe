@@ -1,7 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 import TechnicianCallView from './TechnicianCallView';
 import RequestPayment from '../technician/payments/RequestPayment';
+import { Check, Copy } from "lucide-react";
 
 interface SupportRequest {
   userId: string;
@@ -13,7 +14,7 @@ const TechClientSupport: React.FC<any> = () => {
   const profileString = localStorage.getItem('profile');
   const profile = profileString ? JSON.parse(profileString) : null;
   const technicianName = profile?.lastName;
-  const technicianId = useRef<string>(crypto.randomUUID());
+  const technicianId = profile?._id
 
   const [socket, setSocket] = useState<Socket | null>(null);
   const [supportRequests, setSupportRequests] = useState<SupportRequest[]>([]);
@@ -22,8 +23,20 @@ const TechClientSupport: React.FC<any> = () => {
   const [showPaymentModal, setShowPaymentModal] = useState(false);
 
   const SOCKET_URL = import.meta.env.VITE_API_BASE_URL;
-
-  useEffect(() => {
+    const [copied, setCopied] = useState(false);
+  
+    const supportLink = `${window.location.origin}/direct-support/${technicianId}`;
+  
+    const handleCopy = async () => {
+      try {
+        await navigator.clipboard.writeText(supportLink);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      } catch (err) {
+        console.error("Failed to copy:", err);
+      }
+    }
+   useEffect(() => {
     const newSocket = io(SOCKET_URL);
     setSocket(newSocket);
 
@@ -38,7 +51,7 @@ const TechClientSupport: React.FC<any> = () => {
     socket.on('connect', () => {
       console.log('Connected to signaling server');
       socket.emit('technicianOnline', {
-        technicianId: technicianId.current,
+        technicianId: technicianId,
         technicianName,
       });
     });
@@ -60,9 +73,7 @@ const TechClientSupport: React.FC<any> = () => {
     socket.on("supportEnded", (data: any) => {
       const userId = typeof data === 'object' && data.userId ? data.userId : data;
       
-      console.log("Support ended for user:", userId);
-      console.log("Current requests before removal:", supportRequests);
-      
+            
       setSupportRequests((prev) => {
         const updated = prev.filter((req) => req.userId !== userId);
         console.log("Updated requests after removal:", updated);
@@ -101,7 +112,7 @@ const TechClientSupport: React.FC<any> = () => {
 
     socket?.emit('acceptSupport', {
       userId: request.userId,
-      technicianId: technicianId.current,
+      technicianId: technicianId,
       technicianName,
     });
 
@@ -123,7 +134,7 @@ const TechClientSupport: React.FC<any> = () => {
         <TechnicianCallView
           socket={socket}
           user={activeCall}
-          technicianId={technicianId.current}
+          technicianId={technicianId}
           technicianName={technicianName}
           onEndCall={handleEndCall}
         />
@@ -131,6 +142,30 @@ const TechClientSupport: React.FC<any> = () => {
         <>
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-2xl font-bold">Clients support requests</h1>
+            <div className="w-full max-w-md mx-auto">
+      <label className="block text-sm font-medium text-gray-700 mb-1">
+        My Support Link
+      </label>
+      <div className="relative">
+        <input
+          type="text"
+          value={supportLink}
+          readOnly
+          className="w-full pr-12 pl-4 py-2 border border-gray-300 rounded-2xl shadow-sm text-sm text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <button
+          onClick={handleCopy}
+          className="absolute right-2 top-1/2 -translate-y-1/2 bg-transparent p-1 text-gray-600 hover:text-blue-600 transition"
+        >
+          {copied ? <Check size={20} className="text-green-600" /> : <Copy size={20} />}
+        </button>
+      </div>
+      {copied && (
+        <p className="text-green-600 text-sm mt-1 animate-pulse">Copied to clipboard!</p>
+      )}
+    </div>
+
+
             <button
               onClick={() => setShowPaymentModal(true)}
               className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
