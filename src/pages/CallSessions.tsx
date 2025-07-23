@@ -27,6 +27,8 @@ interface TechnicianGroup {
 
 const CallSessions: React.FC = () => {
   const [sessions, setSessions] = useState<TechnicianGroup[]>([]);
+  const [filtered, setFiltered] = useState<TechnicianGroup[]>([]);
+  const [filterText, setFilterText] = useState('');
   const [startDate, setStartDate] = useState<string>(getDefaultMonday());
   const [endDate, setEndDate] = useState<string>(dayjs().format('YYYY-MM-DD'));
   const [loading, setLoading] = useState<boolean>(false);
@@ -35,13 +37,18 @@ const CallSessions: React.FC = () => {
     fetchCallSessions();
   }, [startDate, endDate]);
 
-  async function fetchCallSessions() {
+  useEffect(() => {
+    applyFilter();
+  }, [filterText, sessions]);
+
+  const fetchCallSessions = async () => {
     setLoading(true);
     try {
       const response = await getCallsessionsByDateRange(startDate, endDate);
-      if (response.status === 200 && Array.isArray(response.data)) {
-        const grouped = groupByTechnician(response.data);
+      if (response && Array.isArray(response)) {
+        const grouped = groupByTechnician(response);
         setSessions(grouped);
+        setFiltered(grouped);
       } else {
         toast.error(response.message || 'Unexpected response');
       }
@@ -51,7 +58,7 @@ const CallSessions: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   function getDefaultMonday(): string {
     const today = dayjs();
@@ -79,6 +86,21 @@ const CallSessions: React.FC = () => {
     return Object.values(grouped);
   }
 
+  function applyFilter() {
+    const keyword = filterText.trim().toLowerCase();
+    if (!keyword) return setFiltered(sessions);
+
+    const filteredList = sessions.filter((group) => {
+      return (
+        group.technicianId.toLowerCase().includes(keyword) ||
+        group.technicianName.toLowerCase().includes(keyword) ||
+        (group.phone?.toLowerCase() || '').includes(keyword)
+      );
+    });
+
+    setFiltered(filteredList);
+  }
+
   function formatDateTime(date: string) {
     return dayjs(date).format('YYYY-MM-DD HH:mm:ss');
   }
@@ -93,7 +115,7 @@ const CallSessions: React.FC = () => {
     <div className="p-4">
       <h2 className="text-xl font-semibold mb-4">Call Session Reports</h2>
 
-      <div className="flex gap-4 mb-6">
+      <div className="flex flex-wrap gap-4 mb-6">
         <div>
           <label className="block mb-1">Start Date</label>
           <input
@@ -110,6 +132,16 @@ const CallSessions: React.FC = () => {
             value={endDate}
             onChange={e => setEndDate(e.target.value)}
             className="border px-2 py-1 rounded"
+          />
+        </div>
+        <div className="flex-1 min-w-[200px]">
+          <label className="block mb-1">Filter by Technician</label>
+          <input
+            type="text"
+            placeholder="Name, ID, or phone"
+            value={filterText}
+            onChange={(e) => setFilterText(e.target.value)}
+            className="w-full border px-2 py-1 rounded"
           />
         </div>
       </div>
@@ -131,8 +163,10 @@ const CallSessions: React.FC = () => {
             </div>
           ))}
         </div>
+      ) : filtered.length === 0 ? (
+        <p className="text-center text-gray-600 mt-10">No sessions found for the selected date or filter.</p>
       ) : (
-        sessions.map((group) => (
+        filtered.map((group) => (
           <div key={group.technicianId} className="mb-10">
             <h3 className="font-bold text-lg mb-2">
               {group.technicianName} ({group.phone || 'No phone'}) — Total: {formatTotal(group.totalDuration)}
