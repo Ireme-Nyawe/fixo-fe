@@ -83,6 +83,42 @@ const Profile = () => {
     fetchProfile();
   }, []);
 
+  const [showChangePasswordForm, setShowChangePasswordForm] = useState(false);
+
+  const passwordFormik = useFormik({
+    initialValues: {
+      password: '',
+      newPassword: '',
+      confirmPassword: '',
+    },
+    validationSchema: Yup.object().shape({
+      password: Yup.string().required('Current password is required'),
+      newPassword: Yup.string()
+        .min(6, 'Password must be at least 6 characters')
+        .required('New password is required'),
+      confirmPassword: Yup.string()
+        .oneOf([Yup.ref('newPassword')], 'Passwords must match')
+        .required('Please confirm your new password'),
+    }),
+    onSubmit: async (values, { resetForm }) => {
+      try {
+        const response = await authService.updatePassword({
+          password: values.password,
+          newPassword: values.newPassword,
+        });
+        if (response.status === 200) {
+          toast.success('Password changed successfully');
+          resetForm();
+          setShowChangePasswordForm(false);
+        } else {
+          toast.error(response.message || 'Password change failed');
+        }
+      } catch (error: any) {
+        toast.error(error.message || 'An error occurred');
+      }
+    },
+  });
+
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
       <Toaster richColors position="top-center" />
@@ -282,11 +318,114 @@ const Profile = () => {
                 Last updated at, {formatDateToCustomString(updatedAt)}
               </p>
             </div>
-            <button className="text-primary hover:text-primary-dark text-sm font-medium">
-              Change Password
+            <button
+              onClick={() => setShowChangePasswordForm(!showChangePasswordForm)}
+              className="text-primary hover:text-primary-dark text-sm font-medium"
+            >
+              {showChangePasswordForm ? 'Hide Form' : 'Change Password'}
             </button>
           </div>
         </div>
+        {showChangePasswordForm && (
+          <form
+            onSubmit={passwordFormik.handleSubmit}
+            className="mt-6 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4"
+          >
+            <div className="sm:col-span-2">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Current Password
+              </label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                onChange={passwordFormik.handleChange}
+                onBlur={passwordFormik.handleBlur}
+                value={passwordFormik.values.password}
+                className="mt-1 block w-full p-2 rounded-md border border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
+              />
+              {passwordFormik.touched.password &&
+                passwordFormik.errors.password && (
+                  <p className="mt-1 text-sm text-red-600">
+                    {passwordFormik.errors.password}
+                  </p>
+                )}
+            </div>
+
+            <div>
+              <label
+                htmlFor="newPassword"
+                className="block text-sm font-medium text-gray-700"
+              >
+                New Password
+              </label>
+              <input
+                type="password"
+                id="newPassword"
+                name="newPassword"
+                onChange={passwordFormik.handleChange}
+                onBlur={passwordFormik.handleBlur}
+                value={passwordFormik.values.newPassword}
+                className="mt-1 block w-full p-2 rounded-md border border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
+              />
+              {passwordFormik.touched.newPassword &&
+                passwordFormik.errors.newPassword && (
+                  <p className="mt-1 text-sm text-red-600">
+                    {passwordFormik.errors.newPassword}
+                  </p>
+                )}
+            </div>
+
+            <div>
+              <label
+                htmlFor="confirmPassword"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Confirm New Password
+              </label>
+              <input
+                type="password"
+                id="confirmPassword"
+                name="confirmPassword"
+                onChange={passwordFormik.handleChange}
+                onBlur={passwordFormik.handleBlur}
+                value={passwordFormik.values.confirmPassword}
+                className="mt-1 block w-full p-2 rounded-md border border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
+              />
+              {passwordFormik.touched.confirmPassword &&
+                passwordFormik.errors.confirmPassword && (
+                  <p className="mt-1 text-sm text-red-600">
+                    {passwordFormik.errors.confirmPassword}
+                  </p>
+                )}
+            </div>
+
+            <div className="sm:col-span-2 flex justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowChangePasswordForm(false);
+                  passwordFormik.resetForm();
+                }}
+                className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-md"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={passwordFormik.isSubmitting}
+                className="px-4 py-2 bg-primary text-white text-sm font-medium rounded-md hover:bg-primary-dark disabled:opacity-50"
+              >
+                {passwordFormik.isSubmitting
+                  ? 'Changing...'
+                  : 'Change Password'}
+              </button>
+            </div>
+          </form>
+        )}
       </div>
     </div>
   );
