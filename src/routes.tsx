@@ -28,6 +28,7 @@ import TechniciansWithdrawals from './pages/dashboard/admin/TechniciansWithdrawa
 import TechClientSupport from './components/dashboard/TechClientSupport';
 import TechnicianDashboard from './pages/dashboard/technician/TechDashboard';
 import Contact from './pages/Contact';
+import CallSessions from './pages/CallSessions';
 
 const AppRouter = () => {
   return (
@@ -50,6 +51,7 @@ const AppRouter = () => {
             <Route path="products/new" element={<NewProduct />} />
             <Route path="products/edit/:id" element={<EditProduct />} />
             <Route path="categories" element={<Categories />} />
+            <Route path="call-sessions" element={<CallSessions />} />
             <Route path="categories/new" element={<NewProductCategory />} />
             <Route
               path="categories/edit/:id"
