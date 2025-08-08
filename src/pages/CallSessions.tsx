@@ -15,6 +15,7 @@ interface CallSession {
   startedAt: string;
   endedAt: string;
   duration: number;
+  createdAt:string;
 }
 
 interface TechnicianGroup {
@@ -29,8 +30,9 @@ interface MissedCall {
   _id: string;
   userId: string;
   technicianName: string;
-  startedAt: string;
-  endedAt: string;
+  createdAt: string;
+  startedAt:string;
+  endedAt:string;
 }
 
 type ActiveTab = "completed" | "missed";
@@ -91,17 +93,14 @@ const CallSessions: React.FC = () => {
     missedSessions: MissedCall[];
   } {
     const completedSessions: CallSession[] = [];
-    const missedSessions: MissedCall[] = [];
-console.log(data);
-
+    const missedSessions: any[] = [];
     data.forEach((session) => {
       if (session.duration == 0) {
-        // Handle missed calls (zero duration)
-        const technicianName = session.technicianId
+             const technicianName = session.technicianId
           ? `${session.technicianId.firstName || ""} ${
               session.technicianId.lastName || ""
             }`.trim()
-          : "Unknown Technician";
+          : "Not Taken";
 
         missedSessions.push({
           _id: session._id,
@@ -109,9 +108,9 @@ console.log(data);
           technicianName,
           startedAt: session.startedAt,
           endedAt: session.endedAt,
+          createdAt:session.createdAt,
         });
       } else {
-        // Only include completed sessions with valid technician data
         if (session.technicianId && session.technicianId._id) {
           completedSessions.push(session);
         }
@@ -120,12 +119,10 @@ console.log(data);
 
     return { completedSessions, missedSessions };
   }
-  console.log("missed",missedCalls);
   function groupByTechnician(data: CallSession[]): TechnicianGroup[] {
     const grouped: Record<string, TechnicianGroup> = {};
 
     data.forEach((session) => {
-      // Additional safety check
       if (!session.technicianId || !session.technicianId._id) return;
 
       const techId = session.technicianId._id;
@@ -194,14 +191,14 @@ console.log(data);
   const TabButton: React.FC<{
     tab: ActiveTab;
     label: string;
-    count: number;
+    count?: any;
     isActive: boolean;
   }> = ({ tab, label, count, isActive }) => (
     <button
       onClick={() => setActiveTab(tab)}
       className={`px-4 py-2 rounded-t-lg font-medium transition-colors ${
         isActive
-          ? "bg-blue-500 text-white border-b-2 border-blue-500"
+          ? "bg-green-900 text-white border-b-2 border-yellow-500"
           : "bg-gray-200 text-gray-700 hover:bg-gray-300"
       }`}
     >
@@ -219,12 +216,11 @@ console.log(data);
         <div className="overflow-x-auto">
           <table className="w-full table-auto border border-collapse">
             <thead>
-              <tr className="bg-red-50">
+              <tr className="bg-red-700">
                 <th className="border px-3 py-2">#No</th>
                 <th className="border px-3 py-2">User ID</th>
                 <th className="border px-3 py-2">Technician</th>
                 <th className="border px-3 py-2">Call Time</th>
-                <th className="border px-3 py-2">End Time</th>
               </tr>
             </thead>
             <tbody>
@@ -234,11 +230,9 @@ console.log(data);
                   <td className="border px-3 py-2">{call.userId}</td>
                   <td className="border px-3 py-2">{call.technicianName}</td>
                   <td className="border px-3 py-2">
-                    {formatDateTime(call.startedAt)}
+                    {formatDateTime(call.createdAt)}
                   </td>
-                  <td className="border px-3 py-2">
-                    {formatDateTime(call.endedAt)}
-                  </td>
+                  
                 </tr>
               ))}
             </tbody>
@@ -352,7 +346,7 @@ console.log(data);
         <TabButton
           tab="completed"
           label="Completed Sessions"
-          count={filtered.length}
+          count={"VFY"}
           isActive={activeTab === "completed"}
         />
         <TabButton
@@ -362,8 +356,6 @@ console.log(data);
           isActive={activeTab === "missed"}
         />
       </div>
-
-      {/* Tab Content */}
       {activeTab === "completed"
         ? renderCompletedSessions()
         : renderMissedCalls()}
