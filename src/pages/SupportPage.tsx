@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import { io, Socket } from "socket.io-client";
 import {
   X,
   Mic,
@@ -13,12 +12,12 @@ import {
 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import RatingModal from "../components/clients/RatingModal";
+import socket from "../utils/socket";
 
 const SupportPage: React.FC<any> = () => {
   const navigate = useNavigate();
   const userId = useRef<string>(crypto.randomUUID());
   const username = "Need-for-support";
-  const [socket, setSocket] = useState<Socket | null>(null);
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
   const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
   const [isConnected, setIsConnected] = useState<boolean>(false);
@@ -39,11 +38,8 @@ const SupportPage: React.FC<any> = () => {
   const peerConnection = useRef<RTCPeerConnection | null>(null);
   const userVideoContainerRef = useRef<HTMLDivElement>(null);
   const techVideoContainerRef = useRef<HTMLDivElement>(null);
-  const SOCKET_URL = import.meta.env.VITE_API_BASE_URL;
   const { techId } = useParams<{ techId: string }>();
   useEffect(() => {
-    const newSocket = io(SOCKET_URL);
-    setSocket(newSocket);
     initializeMedia();
     return () => {
       localStream?.getTracks().forEach((track) => track.stop());
@@ -51,13 +47,12 @@ const SupportPage: React.FC<any> = () => {
         peerConnection.current.close();
         peerConnection.current = null;
       }
-      newSocket.disconnect();
     };
   }, []);
 
   useEffect(() => {
+    socket.connect()
     if (!socket) return;
-    socket.on("connect", () => {
       if(!techId){
 
         socket.emit("requestSupport", { userId: userId.current, username });
@@ -65,8 +60,9 @@ const SupportPage: React.FC<any> = () => {
       else{
         socket.emit("requestSupport", { userId: userId.current, username:"Specific Support",techId });
       }
-    });
-
+      socket.on("rwa",(data)=>{
+        alert(data.message)
+            })
     socket.on("supportAccepted", ({ technicianId, technicianName }) => {
       setTechnician(technicianName);
       setTechnicianId(technicianId);
