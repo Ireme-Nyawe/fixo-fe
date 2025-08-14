@@ -1,38 +1,23 @@
-import React, { useEffect, useState ,useRef} from "react";
+import React, { useEffect, useState } from "react";
 import TechnicianCallView from "./TechnicianCallView";
 import RequestPayment from "../technician/payments/RequestPayment";
 import { Check, Copy } from "lucide-react";
 import socket from "../../utils/socket";
-const TechClientSupport: React.FC<any> = () => {
+import { useSupportRequests } from "../../context/SupportRequestsContext";
+
+const TechClientSupport: React.FC = () => {
   const profileString = localStorage.getItem("profile");
   const profile = profileString ? JSON.parse(profileString) : null;
   const technicianName = profile?.lastName;
   const technicianId = profile?._id;
 
-  const [supportRequests, setSupportRequests] = useState<any[]>([]);
+  const { supportRequests, setSupportRequests, setIsAcceptedCall } = useSupportRequests();
   const [activeCall, setActiveCall] = useState<any>(null);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [copied, setCopied] = useState(false);
 
   const supportLink = `${window.location.origin}/direct-support/${technicianId}`;
 
-  const ringtoneRef = useRef<HTMLAudioElement | null>(null);
-  const playRingtone = () => {
-    if (!ringtoneRef.current) {
-      ringtoneRef.current = new Audio("/audio/ringtone-fixo.wav");
-      ringtoneRef.current.loop = true;
-      ringtoneRef.current.play().catch((err) => console.log("Play blocked", err));
-    }
-  };
-  
-  const stopRingtone = () => {
-    if (ringtoneRef.current) {
-      ringtoneRef.current.pause();
-      ringtoneRef.current.currentTime = 0;
-      ringtoneRef.current = null;
-    }
-  };
-  
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(supportLink);
@@ -44,72 +29,31 @@ const TechClientSupport: React.FC<any> = () => {
   };
 
   useEffect(() => {
+    if (!profile) return;
     socket.emit("technicianOnline", {
-      technicianId: profile._id,
+      technicianId,
       technicianName: profile.lastName,
     });
-  }, [socket, profile._id]);
-  useEffect(() => {
-    if (!profile) return;
-    if (!socket) return;
-    socket.on("newSupportRequest", (request) => {
-      console.log("New support request:", request);
-      setSupportRequests((prev) => {
-        const exists = prev.some((req) => req.userId === request.userId);
-        if (exists) return prev;
-        return [...prev, request];
-      });
-    });
-
-    socket.on("supportRequestEnded", ({ userId }) => {
-      setSupportRequests((prev) => prev.filter((req) => req.userId !== userId));
-      if (activeCall?.userId === userId) setActiveCall(null);
-    });
-
-    socket.on("supportEnded", (data) => {
-      const userId = typeof data === "object" ? data.userId : data;
-      setSupportRequests((prev) => prev.filter((req) => req.userId !== userId));
-      if (activeCall?.userId === userId) setActiveCall(null);
-    });
-
-    socket.on("requestCanceled", (data) => {
-      const userId = typeof data === "object" ? data.userId : data;
-      setSupportRequests((prev) => prev.filter((req) => req.userId !== userId));
-    });
-
-    return () => {
-      socket.off("newSupportRequest");
-      socket.off("supportRequestEnded");
-      socket.off("supportEnded");
-      socket.off("requestCanceled");
-    };
-  }, [profile, activeCall]);
+  }, [profile]);
 
   const handleAcceptCall = (request: any) => {
     setActiveCall(request);
+    setIsAcceptedCall(true);
     socket.emit("acceptSupport", {
       userId: request.userId,
       technicianId,
       technicianName,
     });
-    setSupportRequests((prev) =>
-      prev.filter((req) => req.userId !== request.userId)
-    );
+    setSupportRequests((prev) => prev.filter((req) => req.userId !== request.userId));
   };
 
   const handleEndCall = () => {
     if (activeCall) {
       socket.emit("endSupport", { userId: activeCall.userId });
       setActiveCall(null);
+      setIsAcceptedCall(false);
     }
   };
-  useEffect(() => {
-    if (supportRequests.length > 0 && !activeCall) {
-      playRingtone();
-    } else {
-      stopRingtone();
-    }
-  }, [supportRequests, socket, activeCall]);
 
   return (
     <div className="container mx-auto p-6">

@@ -14,6 +14,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import RatingModal from "../components/clients/RatingModal";
 import socket from "../utils/socket";
 
+
 const SupportPage: React.FC<any> = () => {
   const navigate = useNavigate();
   const userId = useRef<string>(crypto.randomUUID());
@@ -54,15 +55,11 @@ const SupportPage: React.FC<any> = () => {
     socket.connect()
     if (!socket) return;
       if(!techId){
-
         socket.emit("requestSupport", { userId: userId.current, username });
       }
       else{
         socket.emit("requestSupport", { userId: userId.current, username:"Specific Support",techId });
       }
-      socket.on("rwa",(data)=>{
-        alert(data.message)
-            })
     socket.on("supportAccepted", ({ technicianId, technicianName }) => {
       setTechnician(technicianName);
       setTechnicianId(technicianId);
@@ -113,7 +110,7 @@ const SupportPage: React.FC<any> = () => {
       socket.off("offer");
       socket.off("supportEnded");
     };
-  }, [socket, technicianId, localStream]);
+  }, [socket, technicianId]);
 
   const initializeMedia = async () => {
     try {
