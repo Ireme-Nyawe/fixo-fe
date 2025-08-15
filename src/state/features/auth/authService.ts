@@ -1,7 +1,6 @@
 import { IUser } from "../../../types/store";
 import { axiosInstance } from "../../../utils/axios";
-
-
+import socket from "../../../utils/socket";
 
 export const handleError = (error: any) => {
   if (error.response) {
@@ -22,7 +21,6 @@ const login = async (userData: IUser) => {
   try {
     const response = await axiosInstance.post("/api/auth/login", userData);
     return response.data;
-
   } catch (error) {
     return handleError(error);
   }
@@ -35,16 +33,16 @@ const verifyOTP = async (data: any) => {
   } catch (error) {
     return handleError(error);
   }
-}
+};
 
 const getProfile = async () => {
   try {
-    const response = await axiosInstance.get("/api/auth/view-profile")
+    const response = await axiosInstance.get("/api/auth/view-profile");
     return response.data;
   } catch (error) {
     return handleError(error);
   }
-}
+};
 
 const updateProfile = async (data: IUser) => {
   try {
@@ -53,7 +51,7 @@ const updateProfile = async (data: IUser) => {
   } catch (error) {
     return handleError(error);
   }
-}
+};
 
 const updatePassword = async (data: any) => {
   try {
@@ -62,14 +60,28 @@ const updatePassword = async (data: any) => {
   } catch (error) {
     return handleError(error);
   }
-}
+};
+
+const connectSocket = () => {
+  if (!socket.connected) {
+    socket.connect();
+  }
+};
+
+const disconnectSocket = () => {
+  if (socket.connected) {
+    socket.disconnect();
+  }
+};
 
 const authService = {
   login,
   verifyOTP,
   getProfile,
   updateProfile,
-  updatePassword
+  updatePassword,
+  connectSocket,
+  disconnectSocket,
 };
 
 export default authService;
