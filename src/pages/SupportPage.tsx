@@ -14,7 +14,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import RatingModal from "../components/clients/RatingModal";
 import socket from "../utils/socket";
 
-
 const SupportPage: React.FC<any> = () => {
   const navigate = useNavigate();
   const userId = useRef<string>(crypto.randomUUID());
@@ -59,8 +58,12 @@ const SupportPage: React.FC<any> = () => {
   }, [isConnected]);
 
   const formatTime = (secs: number) => {
-    const h = Math.floor(secs / 3600).toString().padStart(2, "0");
-    const m = Math.floor((secs % 3600) / 60).toString().padStart(2, "0");
+    const h = Math.floor(secs / 3600)
+      .toString()
+      .padStart(2, "0");
+    const m = Math.floor((secs % 3600) / 60)
+      .toString()
+      .padStart(2, "0");
     const s = (secs % 60).toString().padStart(2, "0");
     return `${h}:${m}:${s}`;
   };
@@ -76,14 +79,17 @@ const SupportPage: React.FC<any> = () => {
   }, []);
 
   useEffect(() => {
-    socket.connect()
+    socket.connect();
     if (!socket) return;
-      if(!techId){
-        socket.emit("requestSupport", { userId: userId.current, username });
-      }
-      else{
-        socket.emit("requestSupport", { userId: userId.current, username:"Specific Support",techId });
-      }
+    if (!techId) {
+      socket.emit("requestSupport", { userId: userId.current, username });
+    } else {
+      socket.emit("requestSupport", {
+        userId: userId.current,
+        username: "Specific Support",
+        techId,
+      });
+    }
     socket.on("supportAccepted", ({ technicianId, technicianName }) => {
       setTechnician(technicianName);
       setTechnicianId(technicianId);
@@ -97,13 +103,11 @@ const SupportPage: React.FC<any> = () => {
 
       peerConnection.current
         .addIceCandidate(new RTCIceCandidate(candidate))
-        .then(() => {
-        })
+        .then(() => {})
         .catch((e) => console.error("Error adding ice candidate:", e));
     });
 
     socket.on("offer", async ({ offer }) => {
-
       try {
         if (!peerConnection.current) {
           console.error("No peer connection exists when offer received");
@@ -118,8 +122,7 @@ const SupportPage: React.FC<any> = () => {
           to: technicianId,
           answer,
         });
-      } catch (error) {
-      }
+      } catch (error) {}
     });
 
     socket.on("supportEnded", () => {
@@ -160,14 +163,14 @@ const SupportPage: React.FC<any> = () => {
         {
           urls: [
             "stun:68.183.102.224:3478",
-            "turn:68.183.102.224:3478?transport=udp"
+            "turn:68.183.102.224:3478?transport=udp",
           ],
           username: "webrtcdo",
-          credential: "webrtc1pass2"
-        }
-      ],      
+          credential: "webrtc1pass2",
+        },
+      ],
       iceCandidatePoolSize: 10,
-      sdpSemantics: 'unified-plan',
+      sdpSemantics: "unified-plan",
     };
 
     try {
@@ -206,7 +209,6 @@ const SupportPage: React.FC<any> = () => {
       };
 
       pc.oniceconnectionstatechange = () => {
-
         if (
           pc.iceConnectionState === "connected" ||
           pc.iceConnectionState === "completed"
@@ -266,7 +268,7 @@ const SupportPage: React.FC<any> = () => {
 
       pc.onicecandidate = (event) => {
         if (event.candidate) {
-            socket?.emit("iceCandidate", {
+          socket?.emit("iceCandidate", {
             to: techId,
             candidate: event.candidate,
           });
@@ -276,7 +278,6 @@ const SupportPage: React.FC<any> = () => {
       };
 
       pc.ontrack = (event) => {
-
         if (remoteVideoRef.current && event.streams[0]) {
           console.log("Setting remote stream to video element");
           remoteVideoRef.current.srcObject = event.streams[0];
@@ -310,7 +311,7 @@ const SupportPage: React.FC<any> = () => {
               console.error("Error getting stats:", error);
             }
           }
-        }, 10000); 
+        }, 10000);
         pc.onconnectionstatechange = function () {
           if (
             pc.connectionState === "closed" ||
@@ -455,7 +456,7 @@ const SupportPage: React.FC<any> = () => {
   };
 
   const endCall = () => {
-    if(audioRef.current){
+    if (audioRef.current) {
       audioRef.current.volume = 0.0;
     }
     const isConfirmed = window.confirm(
@@ -505,35 +506,38 @@ const SupportPage: React.FC<any> = () => {
     navigate("/");
   };
 
+  useEffect(() => {
+    if (connectionState == "Waiting for support...") {
+      if (!audioRef.current) {
+        audioRef.current = new Audio("/audio/phone-dialing-1.mp3");
+        audioRef.current.volume = 0.4;
+      }
 
-useEffect(() => {
-  if (connectionState=="Waiting for support...") {
-    if (!audioRef.current) {
-      audioRef.current = new Audio('/audio/phone-dialing-1.mp3');
-      audioRef.current.volume = 0.4;
+      const audio = audioRef.current;
+
+      const playLoop = () => {
+        audio.currentTime = 0;
+        audio
+          .play()
+          .catch((err) =>
+            console.error("Failed to play notification sound:", err)
+          );
+      };
+
+      audio.addEventListener("ended", playLoop);
+      playLoop();
+
+      return () => {
+        audio.pause();
+        audio.removeEventListener("ended", playLoop);
+      };
+    } else {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
     }
-
-    const audio = audioRef.current;
-
-    const playLoop = () => {
-      audio.currentTime = 0;
-      audio.play().catch(err => console.error('Failed to play notification sound:', err));
-    };
-
-    audio.addEventListener('ended', playLoop);
-    playLoop();
-
-    return () => {
-      audio.pause();
-      audio.removeEventListener('ended', playLoop);
-    };
-  } else {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-    }
-  }
-}, [isConnected]);
+  }, [isConnected]);
   return (
     <div className="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 p-2 sm:p-4">
       <div className="bg-white rounded-lg shadow-lg p-3 sm:p-4 md:p-6 w-full max-w-6xl max-h-screen overflow-auto">
@@ -678,7 +682,7 @@ useEffect(() => {
             <Phone size={16} className="sm:w-5 sm:h-5" />
           </button>
         </div>
-        {!isConnected? (
+        {!isConnected ? (
           <div className="mt-4 sm:mt-8 text-center">
             <div className="inline-flex items-center bg-blue-50 px-3 py-2 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl text-blue-600 text-sm sm:text-base">
               <svg
@@ -701,13 +705,21 @@ useEffect(() => {
                   d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                 />
               </svg>
-             
             </div>
           </div>
-        ):(
-          <div className="mt-4 sm:mt-8 text-center"><div className="inline-flex items-center bg-blue-50 px-3 py-2 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl text-blue-600 text-sm sm:text-base">
-          <p className="text-center">{formatTime(seconds) || "00:00:00"}</p>
-          </div></div>)}
+        ) : connectionState == "Connected" ? (
+          <div className="mt-4 sm:mt-8 text-center">
+            <div className="inline-flex items-center bg-blue-50 px-3 py-2 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl text-blue-600 text-sm sm:text-base">
+              <p className="text-center">{formatTime(seconds) || "00:00:00"}</p>
+            </div>
+          </div>
+        ) : (
+          <div className="mt-4 sm:mt-8 text-center">
+            <div className="inline-flex items-center bg-blue-50 px-3 py-2 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl text-blue-600 text-sm sm:text-base">
+              <p className="text-center">{formatTime(0) || "00:00:00"}</p>
+            </div>
+          </div>
+        )}
       </div>
       <RatingModal
         isOpen={isRateModalOpen}
