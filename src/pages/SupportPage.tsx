@@ -40,6 +40,30 @@ const SupportPage: React.FC<any> = () => {
   const userVideoContainerRef = useRef<HTMLDivElement>(null);
   const techVideoContainerRef = useRef<HTMLDivElement>(null);
   const { techId } = useParams<{ techId: string }>();
+  const [seconds, setSeconds] = useState(0);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    if (isConnected) {
+      intervalRef.current = setInterval(() => {
+        setSeconds((prev) => prev + 1);
+      }, 1000);
+    } else {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+      setSeconds(0);
+    }
+
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [isConnected]);
+
+  const formatTime = (secs: number) => {
+    const h = Math.floor(secs / 3600).toString().padStart(2, "0");
+    const m = Math.floor((secs % 3600) / 60).toString().padStart(2, "0");
+    const s = (secs % 60).toString().padStart(2, "0");
+    return `${h}:${m}:${s}`;
+  };
   useEffect(() => {
     initializeMedia();
     return () => {
@@ -654,6 +678,36 @@ useEffect(() => {
             <Phone size={16} className="sm:w-5 sm:h-5" />
           </button>
         </div>
+        {!isConnected? (
+          <div className="mt-4 sm:mt-8 text-center">
+            <div className="inline-flex items-center bg-blue-50 px-3 py-2 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl text-blue-600 text-sm sm:text-base">
+              <svg
+                className="animate-spin -ml-1 mr-2 sm:mr-3 h-4 w-4 sm:h-5 sm:w-5 text-blue-600"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                />
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                />
+              </svg>
+             
+            </div>
+          </div>
+        ):(
+          <div className="mt-4 sm:mt-8 text-center"><div className="inline-flex items-center bg-blue-50 px-3 py-2 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl text-blue-600 text-sm sm:text-base">
+          <p className="text-center">{formatTime(seconds) || "00:00:00"}</p>
+          </div></div>)}
       </div>
       <RatingModal
         isOpen={isRateModalOpen}

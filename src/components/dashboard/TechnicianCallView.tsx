@@ -54,12 +54,10 @@ const TechnicianCallView: React.FC<TechnicianCallViewProps> = ({
 
   useEffect(() => {
     if (connectionEstablished) {
-      // start counting
       intervalRef.current = setInterval(() => {
         setSeconds((prev) => prev + 1);
       }, 1000);
     } else {
-      // clear when call ends
       if (intervalRef.current) clearInterval(intervalRef.current);
       setSeconds(0);
     }
@@ -69,7 +67,6 @@ const TechnicianCallView: React.FC<TechnicianCallViewProps> = ({
     };
   }, [connectionEstablished]);
 
-  // Format HH:MM:SS
   const formatTime = (secs: number) => {
     const h = Math.floor(secs / 3600).toString().padStart(2, "0");
     const m = Math.floor((secs % 3600) / 60).toString().padStart(2, "0");
@@ -77,10 +74,8 @@ const TechnicianCallView: React.FC<TechnicianCallViewProps> = ({
     return `${h}:${m}:${s}`;
   };
   useEffect(() => {
-    // Initialize user media
     initializeMedia();
 
-    // Clean up on component unmount
     return () => {
       localStream?.getTracks().forEach((track) => track.stop());
       if (peerConnection.current) {
