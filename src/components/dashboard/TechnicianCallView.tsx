@@ -49,7 +49,33 @@ const TechnicianCallView: React.FC<TechnicianCallViewProps> = ({
   const peerConnection = useRef<RTCPeerConnection | null>(null);
   const userVideoContainerRef = useRef<HTMLDivElement>(null);
   const techVideoContainerRef = useRef<HTMLDivElement>(null);
+  const [seconds, setSeconds] = useState(0);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
+  useEffect(() => {
+    if (connectionEstablished) {
+      // start counting
+      intervalRef.current = setInterval(() => {
+        setSeconds((prev) => prev + 1);
+      }, 1000);
+    } else {
+      // clear when call ends
+      if (intervalRef.current) clearInterval(intervalRef.current);
+      setSeconds(0);
+    }
+
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [connectionEstablished]);
+
+  // Format HH:MM:SS
+  const formatTime = (secs: number) => {
+    const h = Math.floor(secs / 3600).toString().padStart(2, "0");
+    const m = Math.floor((secs % 3600) / 60).toString().padStart(2, "0");
+    const s = (secs % 60).toString().padStart(2, "0");
+    return `${h}:${m}:${s}`;
+  };
   useEffect(() => {
     // Initialize user media
     initializeMedia();
@@ -710,7 +736,7 @@ const endCall = () => {
           </button>
         </div>
 
-        {!connectionEstablished && (
+        {!connectionEstablished? (
           <div className="mt-4 sm:mt-8 text-center">
             <div className="inline-flex items-center bg-blue-50 px-3 py-2 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl text-blue-600 text-sm sm:text-base">
               <svg
@@ -736,7 +762,10 @@ const endCall = () => {
               Connecting to {user.username}...
             </div>
           </div>
-        )}
+        ):(
+          <div className="mt-4 sm:mt-8 text-center"><div className="inline-flex items-center bg-blue-50 px-3 py-2 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl text-blue-600 text-sm sm:text-base">
+          <p className="text-center">{formatTime(seconds) || "00:00:00"}</p>
+          </div></div>)}
       </div>
     </div>
     {showPaymentModal && (

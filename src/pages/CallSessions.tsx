@@ -194,9 +194,7 @@ const CallSessions: React.FC = () => {
     fetchCallSessions()
     try {
       const response = await deleteCallSession(id);
-      console.log(response);
-      
-      if (response.status==200) {
+          if (response.status==200) {
         await fetchCallSessions()
         toast.success(response.message || "Deleted Successfull response");
       } else {
