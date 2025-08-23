@@ -43,7 +43,7 @@ const SupportPage: React.FC<any> = () => {
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    if (isConnected) {
+    if (connectionState=="connected") {
       intervalRef.current = setInterval(() => {
         setSeconds((prev) => prev + 1);
       }, 1000);
@@ -55,7 +55,7 @@ const SupportPage: React.FC<any> = () => {
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, [isConnected]);
+  }, [connectionState]);
 
   const formatTime = (secs: number) => {
     const h = Math.floor(secs / 3600)
@@ -190,24 +190,6 @@ const SupportPage: React.FC<any> = () => {
         }
       }, 200000);
 
-      pc.onconnectionstatechange = () => {
-        console.log("Connection state changed:", pc.connectionState);
-        setConnectionState(pc.connectionState);
-
-        if (pc.connectionState === "connected") {
-          setConnectionState("Connected");
-          clearTimeout(connectionTimeout);
-        } else if (
-          pc.connectionState === "failed" ||
-          pc.connectionState === "disconnected" ||
-          pc.connectionState === "closed"
-        ) {
-          setConnectionState("Connection failed or closed");
-          // Consider attempting reconnection here
-          console.log("Connection failed or closed, may need to reconnect");
-        }
-      };
-
       pc.oniceconnectionstatechange = () => {
         if (
           pc.iceConnectionState === "connected" ||
@@ -312,14 +294,29 @@ const SupportPage: React.FC<any> = () => {
             }
           }
         }, 10000);
-        pc.onconnectionstatechange = function () {
-          if (
-            pc.connectionState === "closed" ||
-            pc.connectionState === "failed"
+        pc.onconnectionstatechange = () => {
+          console.log("Connection state changed:", pc.connectionState);
+          setConnectionState(pc.connectionState);
+        
+          if (pc.connectionState === "connected") {
+            setConnectionState("connected");
+            clearTimeout(connectionTimeout);
+          } else if (
+            pc.connectionState === "failed" ||
+            pc.connectionState === "disconnected" ||
+            pc.connectionState === "closed"
           ) {
-            clearInterval(statsInterval);
+            setConnectionState("Connection failed or closed");
+            console.log("Connection failed or closed, may need to reconnect");
+        
+            // cleanup stats interval
+            if (pc.connectionState === "closed" || pc.connectionState === "failed") {
+              clearInterval(statsInterval);
+            }
           }
         };
+        
+        
       }
 
       return pc;
@@ -538,6 +535,7 @@ const SupportPage: React.FC<any> = () => {
       }
     }
   }, [isConnected]);
+  
   return (
     <div className="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 p-2 sm:p-4">
       <div className="bg-white rounded-lg shadow-lg p-3 sm:p-4 md:p-6 w-full max-w-6xl max-h-screen overflow-auto">
@@ -707,7 +705,7 @@ const SupportPage: React.FC<any> = () => {
               </svg>
             </div>
           </div>
-        ) : isConnected && remoteStream  ? (
+        ) : isConnected &&remoteStream  ? (
           <div className="mt-4 sm:mt-8 text-center">
             <div className="inline-flex items-center bg-blue-50 px-3 py-2 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl text-blue-600 text-sm sm:text-base">
               <p className="text-center">{formatTime(seconds)}</p>
@@ -716,7 +714,7 @@ const SupportPage: React.FC<any> = () => {
         ) : (
           <div className="mt-4 sm:mt-8 text-center">
             <div className="inline-flex items-center bg-blue-50 px-3 py-2 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl text-blue-600 text-sm sm:text-base">
-              <p className="text-center">{formatTime(0) || "00:00:00"}</p>
+              <p className="text-center">Resolving stream issues</p>
             </div>
           </div>
         )}

@@ -206,25 +206,6 @@ const TechnicianCallView: React.FC<TechnicianCallViewProps> = ({
         direction: 'sendrecv',
       });
 
-      pc.onconnectionstatechange = () => {
-        console.log('Connection state:', pc.connectionState);
-
-        if (pc.connectionState === 'connected') {
-          console.log('WebRTC connection established successfully!');
-          setConnectionEstablished(true);
-          clearTimeout(connectionTimeout);
-        } else if (
-          pc.connectionState === 'failed' ||
-          pc.connectionState === 'disconnected' ||
-          pc.connectionState === 'closed'
-        ) {
-          console.log(
-            `Connection ${pc.connectionState} - may need to reconnect`
-          );
-          setConnectionEstablished(false);
-        }
-      };
-
       pc.oniceconnectionstatechange = () => {
         console.log('ICE connection state:', pc.iceConnectionState);
 
@@ -339,14 +320,28 @@ const TechnicianCallView: React.FC<TechnicianCallViewProps> = ({
         }, 10000); // Every 10 seconds
 
         // Clean up interval when connection closes
-        pc.onconnectionstatechange = function () {
-          if (
-            pc.connectionState === 'closed' ||
-            pc.connectionState === 'failed'
+        pc.onconnectionstatechange = () => {
+          console.log('Connection state:', pc.connectionState);
+        
+          if (pc.connectionState === 'connected') {
+            console.log('WebRTC connection established successfully!');
+            setConnectionEstablished(true);
+            clearTimeout(connectionTimeout);
+          } else if (
+            pc.connectionState === 'failed' ||
+            pc.connectionState === 'disconnected' ||
+            pc.connectionState === 'closed'
           ) {
-            clearInterval(statsInterval);
+            console.log(`Connection ${pc.connectionState} - may need to reconnect`);
+            setConnectionEstablished(false);
+        
+            // cleanup stats interval if closed/failed
+            if (pc.connectionState === 'closed' || pc.connectionState === 'failed') {
+              clearInterval(statsInterval);
+            }
           }
         };
+        
       }
 
       return pc;
