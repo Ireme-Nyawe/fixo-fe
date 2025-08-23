@@ -707,10 +707,10 @@ const SupportPage: React.FC<any> = () => {
               </svg>
             </div>
           </div>
-        ) : connectionState == "Connected" ? (
+        ) : isConnected && remoteStream  ? (
           <div className="mt-4 sm:mt-8 text-center">
             <div className="inline-flex items-center bg-blue-50 px-3 py-2 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl text-blue-600 text-sm sm:text-base">
-              <p className="text-center">{formatTime(seconds) || "00:00:00"}</p>
+              <p className="text-center">{formatTime(seconds)}</p>
             </div>
           </div>
         ) : (
