@@ -49,12 +49,33 @@ const TechnicianCallView: React.FC<TechnicianCallViewProps> = ({
   const peerConnection = useRef<RTCPeerConnection | null>(null);
   const userVideoContainerRef = useRef<HTMLDivElement>(null);
   const techVideoContainerRef = useRef<HTMLDivElement>(null);
+  const [seconds, setSeconds] = useState(0);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    // Initialize user media
+    if (connectionEstablished) {
+      intervalRef.current = setInterval(() => {
+        setSeconds((prev) => prev + 1);
+      }, 1000);
+    } else {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+      setSeconds(0);
+    }
+
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [connectionEstablished]);
+
+  const formatTime = (secs: number) => {
+    const h = Math.floor(secs / 3600).toString().padStart(2, "0");
+    const m = Math.floor((secs % 3600) / 60).toString().padStart(2, "0");
+    const s = (secs % 60).toString().padStart(2, "0");
+    return `${h}:${m}:${s}`;
+  };
+  useEffect(() => {
     initializeMedia();
 
-    // Clean up on component unmount
     return () => {
       localStream?.getTracks().forEach((track) => track.stop());
       if (peerConnection.current) {
@@ -185,25 +206,6 @@ const TechnicianCallView: React.FC<TechnicianCallViewProps> = ({
         direction: 'sendrecv',
       });
 
-      pc.onconnectionstatechange = () => {
-        console.log('Connection state:', pc.connectionState);
-
-        if (pc.connectionState === 'connected') {
-          console.log('WebRTC connection established successfully!');
-          setConnectionEstablished(true);
-          clearTimeout(connectionTimeout);
-        } else if (
-          pc.connectionState === 'failed' ||
-          pc.connectionState === 'disconnected' ||
-          pc.connectionState === 'closed'
-        ) {
-          console.log(
-            `Connection ${pc.connectionState} - may need to reconnect`
-          );
-          setConnectionEstablished(false);
-        }
-      };
-
       pc.oniceconnectionstatechange = () => {
         console.log('ICE connection state:', pc.iceConnectionState);
 
@@ -318,14 +320,28 @@ const TechnicianCallView: React.FC<TechnicianCallViewProps> = ({
         }, 10000); // Every 10 seconds
 
         // Clean up interval when connection closes
-        pc.onconnectionstatechange = function () {
-          if (
-            pc.connectionState === 'closed' ||
-            pc.connectionState === 'failed'
+        pc.onconnectionstatechange = () => {
+          console.log('Connection state:', pc.connectionState);
+        
+          if (pc.connectionState === 'connected') {
+            console.log('WebRTC connection established successfully!');
+            setConnectionEstablished(true);
+            clearTimeout(connectionTimeout);
+          } else if (
+            pc.connectionState === 'failed' ||
+            pc.connectionState === 'disconnected' ||
+            pc.connectionState === 'closed'
           ) {
-            clearInterval(statsInterval);
+            console.log(`Connection ${pc.connectionState} - may need to reconnect`);
+            setConnectionEstablished(false);
+        
+            // cleanup stats interval if closed/failed
+            if (pc.connectionState === 'closed' || pc.connectionState === 'failed') {
+              clearInterval(statsInterval);
+            }
           }
         };
+        
       }
 
       return pc;
@@ -710,7 +726,7 @@ const endCall = () => {
           </button>
         </div>
 
-        {!connectionEstablished && (
+        {!connectionEstablished? (
           <div className="mt-4 sm:mt-8 text-center">
             <div className="inline-flex items-center bg-blue-50 px-3 py-2 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl text-blue-600 text-sm sm:text-base">
               <svg
@@ -736,7 +752,10 @@ const endCall = () => {
               Connecting to {user.username}...
             </div>
           </div>
-        )}
+        ):(
+          <div className="mt-4 sm:mt-8 text-center"><div className="inline-flex items-center bg-blue-50 px-3 py-2 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl text-blue-600 text-sm sm:text-base">
+          <p className="text-center">{formatTime(seconds) || "00:00:00"}</p>
+          </div></div>)}
       </div>
     </div>
     {showPaymentModal && (

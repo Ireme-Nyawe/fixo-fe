@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
-import { getCallsessionsByDateRange } from "../state/features/call/CallSessions";
+import { deleteCallSession, getCallsessionsByDateRange } from "../state/features/call/CallSessions";
 import { toast } from "sonner";
+import { Delete } from "lucide-react";
 
 interface CallSession {
   _id: string;
@@ -79,7 +80,7 @@ const CallSessions: React.FC = () => {
     }
   };
 
-  function getDefaultMonday(): string {
+  function getDefaultMonday(): string{
     const today = dayjs();
     const monday =
       today.day() === 0
@@ -88,10 +89,10 @@ const CallSessions: React.FC = () => {
     return monday.format("YYYY-MM-DD");
   }
 
-  function separateSessions(data: CallSession[]): {
+  const separateSessions=(data: CallSession[]): {
     completedSessions: CallSession[];
     missedSessions: MissedCall[];
-  } {
+  }=> {
     const completedSessions: CallSession[] = [];
     const missedSessions: any[] = [];
     data.forEach((session) => {
@@ -119,7 +120,7 @@ const CallSessions: React.FC = () => {
 
     return { completedSessions, missedSessions };
   }
-  function groupByTechnician(data: CallSession[]): TechnicianGroup[] {
+  const  groupByTechnician=(data: CallSession[]): TechnicianGroup[]=> {
     const grouped: Record<string, TechnicianGroup> = {};
 
     data.forEach((session) => {
@@ -147,7 +148,7 @@ const CallSessions: React.FC = () => {
     return Object.values(grouped);
   }
 
-  function applyFilter() {
+  const  applyFilter=() =>{
     const keyword = filterText.trim().toLowerCase();
 
     // Filter completed sessions
@@ -178,16 +179,39 @@ const CallSessions: React.FC = () => {
     }
   }
 
-  function formatDateTime(date: string) {
+  const formatDateTime=(date: string)=> {
     return dayjs(date).format("YYYY-MM-DD HH:mm:ss");
   }
 
-  function formatTotal(seconds: number) {
+  const formatTotal=(seconds: number) =>{
     const minutes = (seconds / 60).toFixed(2);
     const hours = (seconds / 3600).toFixed(2);
     return `${seconds}s | ${minutes}min | ${hours}hr`;
   }
 
+  const deleteMissedSession = async (id:string) => {
+    setLoading(true);
+    fetchCallSessions()
+    try {
+      const response = await deleteCallSession(id);
+          if (response.status==200) {
+        await fetchCallSessions()
+        toast.success(response.message || "Deleted Successfull response");
+      } else {
+        toast.error(response.message || "Unexpected response");
+      }
+    } catch (error: any) {
+      console.error("Error fetching sessions:", error);
+      toast.error(error.message || "Failed to fetch sessions");
+    } finally {
+      setLoading(false);
+    }
+  };
+  const confirmDelete = async(id:any)=>{
+    const confirmDelete = window.confirm("Are you sure you want to delete this session?");
+    if (!confirmDelete) return;
+    await deleteMissedSession(id)
+  }
   const TabButton: React.FC<{
     tab: ActiveTab;
     label: string;
@@ -221,6 +245,8 @@ const CallSessions: React.FC = () => {
                 <th className="border px-3 py-2">User ID</th>
                 <th className="border px-3 py-2">Technician</th>
                 <th className="border px-3 py-2">Call Time</th>
+                <th className="border px-3 py-2">Action</th>
+
               </tr>
             </thead>
             <tbody>
@@ -232,6 +258,7 @@ const CallSessions: React.FC = () => {
                   <td className="border px-3 py-2">
                     {formatDateTime(call.createdAt)}
                   </td>
+                  <td title="click to remove from list" className="cursor-pointer" onClick={()=>{confirmDelete(call._id)}}><Delete></Delete></td>
                   
                 </tr>
               ))}

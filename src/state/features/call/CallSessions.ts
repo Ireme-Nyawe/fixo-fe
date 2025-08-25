@@ -11,3 +11,14 @@ export const getCallsessionsByDateRange = async (start:any,end:any) => {
         return handleError(error);
     }
 }
+export const deleteCallSession = async (id:string) => {
+    try {
+        const response = await axiosInstance.delete(`/api/call/delete/${id}`);
+        console.log(response.data);
+        
+        return response.data;
+    } catch (error) {
+        return handleError(error);
+    }
+}
+
