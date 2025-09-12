@@ -45,9 +45,8 @@ const TestimonialsSection = ({ lang }: any) => {
       stars.push(
         <FaStar
           key={i}
-          className={`text-lg ${
-            i <= rating ? 'text-yellow-400' : 'text-gray-300'
-          }`}
+          className={`text-lg ${i <= rating ? 'text-yellow-400' : 'text-gray-300'
+            }`}
         />
       );
     }
@@ -55,7 +54,7 @@ const TestimonialsSection = ({ lang }: any) => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-16">
+    <div className="max-w-7xl mx-auto px-6 py-16">
       <div className="text-left mb-12">
         <h1 className="text-4xl font-extrabold text-gray-900 mb-4">
           {lang === 'en' ? 'Clients Testimonials' : "Ubuhamya bw'abakiriya"}

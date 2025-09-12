@@ -20,7 +20,7 @@ const Footer = ({ lang }: any) => {
 
   return (
     <footer className="bg-primary text-white py-16">
-      <div className="container mx-auto px-6 md:px-12 lg:px-20">
+      <div className="max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-10">
           <div>
             <Link

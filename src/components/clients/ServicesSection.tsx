@@ -50,11 +50,11 @@ const ServicesSection = ({ lang }: any) => {
           ? 'Provide one-on-one guidance on using tools like email, Microsoft Teams, Zoom, online banking, and e-government platforms.'
           : "Dutanga ubufasha imbonankubone ku gukoresha ibikoresho ikoranabuhanga nka imeli, Microsoft Teams, Zoom, amabanki yo kuri interineti, hamwe na serivise za leta z'ikoranabunga.",
     },
-   
+
   ];
 
   return (
-    <section className="container mx-auto px-4 py-12" id="services">
+    <section className="max-w-7xl mx-auto px-6 py-12" id="services">
       <div className="text-left mb-12">
         <h1 className="text-4xl font-extrabold text-gray-900 mb-4">
           {lang === 'en' ? 'What We Do' : 'Ibyo Dukora'}
