@@ -10,13 +10,6 @@ const Footer = ({ lang }: { lang: string }) => {
     { path: '/login', label: { en: 'Sign In', rw: 'Injira' } },
   ];
 
-  const supportLinks = [
-    { path: '/privacy-policy', label: { en: 'Privacy Policy', rw: 'Politiki y\'Ubwoba' } },
-    { path: '/terms-of-service', label: { en: 'Terms of Service', rw: 'Amabwiriza ya Serivisi' } },
-    { path: '/support', label: { en: 'Support Center', rw: 'Ikigo cy\'Ubufasha' } },
-    { path: '/faq', label: { en: 'FAQ', rw: 'Ibibazo Bibazwa Kenshi' } },
-  ];
-
   const socialMediaLinks = [
     { href: 'https://facebook.com', icon: FaFacebook, label: 'Facebook', color: 'hover:text-blue-400' },
     { href: 'https://twitter.com', icon: FaTwitter, label: 'Twitter', color: 'hover:text-blue-300' },
@@ -27,24 +20,24 @@ const Footer = ({ lang }: { lang: string }) => {
   const features = [
     { icon: FaShieldAlt, text: { en: 'Secure & Reliable', rw: 'Umutekano n\'Uwizigirwa' } },
     { icon: FaClock, text: { en: '24/7 Support', rw: 'Ubufasha 24/7' } },
-    { icon: FaRocket, text: { en: 'Fast Response', rw: 'Gusubiza vuba' } },
-    { icon: FaHeart, text: { en: 'Customer First', rw: 'Umukiriya w\'ibanze' } },
+    { icon: FaRocket, text: { en: 'Fast Response', rw: 'ubufasha bwihuse' } },
+    { icon: FaHeart, text: { en: 'Citizen First', rw: 'umuturage kw\'isonga' } },
   ];
 
   return (
-    <footer className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-primary overflow-hidden">
+    <footer className="relative bg-primary overflow-hidden">
       {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-10 left-10 w-20 h-20 bg-secondary/10 rounded-full animate-float"></div>
+        <div className="absolute top-10 left-10 w-20 h-20 bg-secondary/20 rounded-full animate-float"></div>
         <div className="absolute bottom-10 right-10 w-24 h-24 bg-primary/10 rounded-full animate-bounce-gentle"></div>
-        <div className="absolute top-1/2 left-1/4 w-16 h-16 bg-secondary/15 rounded-full animate-pulse"></div>
-        <div className="absolute bottom-1/3 right-1/4 w-12 h-12 bg-primary/15 rounded-full animate-float"></div>
+        <div className="absolute top-1/3 right-20 w-16 h-16 bg-secondary/15 rounded-full animate-pulse"></div>
+        <div className="absolute bottom-1/3 right-1/4 w-16 h-16 bg-primary/15 rounded-full animate-float"></div>
       </div>
 
       <div className="relative z-10">
         {/* Main Footer Content */}
         <div className="max-w-7xl mx-auto px-6 py-16">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
             {/* Company Info */}
             <div className="lg:col-span-1">
               <Link
@@ -53,10 +46,10 @@ const Footer = ({ lang }: { lang: string }) => {
               >
                 Fixo
               </Link>
-              <p className="text-gray-300 text-sm leading-relaxed mb-6">
+              <p className="text-gray-300 text-sm leading-relaxed mb-6 text-justify">
                 {lang === 'en'
-                  ? 'Your trusted partner for expert technical support. We solve your tech problems quickly and efficiently, so you can focus on what matters most.'
-                  : "Umufatanyabikorwa wizigirwa wawe wo gufasha muri tekinoloji. Dukemura ibibazo byawe by\'ikoranabuhanga vuba kandi neza, kugira ngo wongere uhinduke ku byo bikunze."}
+                  ? 'We supports Rwanda’s NST II by bridging the digital divide — connecting citizens to technology, digital literacy, and opportunities. we bring access and learning directly to communities so everyone can explore, learn, and thrive.'
+                  : "Dufasha muri gahunda y'igihugu y'amajyambere (NST II) dukuraho icyuho mu ikoranabuhanga —  Tubinyujije mu bufatanye na leta n’ibigo byigenga, dutanga uburyo n’amahugurwa ku baturage ngo buri wese abashe kubaho mu is y'ikoranabuhanga."}
               </p>
               
               {/* Features */}
@@ -72,13 +65,12 @@ const Footer = ({ lang }: { lang: string }) => {
 
             {/* Quick Links */}
             <div>
-              <h3 className="text-lg font-semibold text-white mb-6 flex items-center gap-2">
-                <div className="w-2 h-2 bg-secondary rounded-full"></div>
+              <h3 className="text-lg font-semibold text-white mb-6 flex justify-center items-center gap-2">
                 {lang === 'en' ? 'Quick Links' : 'Amahuza yihuse'}
               </h3>
-              <ul className="space-y-3">
+              <ul className="space-y-3 ">
                 {quickLinks.map((link, index) => (
-                  <li key={index}>
+                  <li key={index} className='text-center'>
                     <Link
                       to={link.path}
                       className="text-gray-300 hover:text-secondary transition-colors duration-300 block text-sm"
@@ -90,31 +82,9 @@ const Footer = ({ lang }: { lang: string }) => {
               </ul>
             </div>
 
-            {/* Support Links */}
             <div>
               <h3 className="text-lg font-semibold text-white mb-6 flex items-center gap-2">
-                <div className="w-2 h-2 bg-secondary rounded-full"></div>
-                {lang === 'en' ? 'Support' : 'Ubufasha'}
-              </h3>
-              <ul className="space-y-3">
-                {supportLinks.map((link, index) => (
-                  <li key={index}>
-                    <Link
-                      to={link.path}
-                      className="text-gray-300 hover:text-secondary transition-colors duration-300 block text-sm"
-                    >
-                      {lang === 'en' ? link.label.en : link.label.rw}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Contact Info */}
-            <div>
-              <h3 className="text-lg font-semibold text-white mb-6 flex items-center gap-2">
-                <div className="w-2 h-2 bg-secondary rounded-full"></div>
-                {lang === 'en' ? 'Contact Info' : 'Amakuru yo Twandikire'}
+                {lang === 'en' ? 'Contact Info' : 'Aho wadusanga'}
               </h3>
               <div className="space-y-4">
                 <div className="flex items-center gap-3 text-gray-300 text-sm">
@@ -131,7 +101,7 @@ const Footer = ({ lang }: { lang: string }) => {
                 </div>
                 <div className="flex items-center gap-3 text-gray-300 text-sm">
                   <FaClock className="text-secondary text-sm" />
-                  <span>{lang === 'en' ? 'Mon - Fri: 6:00 AM - 10:00 PM' : 'Ku wa Gatanu: 6:00 AM - 10:00 PM'}</span>
+                  <span>{lang === 'en' ? '24/7 - all time' : '24/7 - igihe cyose'}</span>
                 </div>
               </div>
 
@@ -159,7 +129,7 @@ const Footer = ({ lang }: { lang: string }) => {
           </div>
 
           {/* Newsletter Signup */}
-          <div className="bg-gradient-to-r from-secondary/20 to-primary/20 rounded-2xl p-8 mb-12 border border-secondary/30">
+          <div className="bg-primary rounded-2xl p-8 mb-12 border border-secondary/30">
             <div className="text-center">
               <h3 className="text-2xl font-bold text-white mb-2">
                 {lang === 'en' ? 'Stay Updated' : 'Menya Amakuru'}
@@ -167,7 +137,7 @@ const Footer = ({ lang }: { lang: string }) => {
               <p className="text-gray-300 mb-6">
                 {lang === 'en' 
                   ? 'Get the latest tech tips and updates delivered to your inbox.'
-                  : 'Habwa amakuru y\'ikoranabuhanga n\'amakuru y\'ikoranabuhanga yoherezwa mu sanduku yawe y\'imeli.'}
+                  : 'Habwa amakuru mashya y\'ikoranabuhanga wakira ubutumwa kuri imeli yawe.'}
               </p>
               <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
                 <input
@@ -175,8 +145,8 @@ const Footer = ({ lang }: { lang: string }) => {
                   placeholder={lang === 'en' ? 'Enter your email' : 'Andika imeyili yawe'}
                   className="flex-1 px-4 py-3 rounded-xl border border-gray-600 bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20"
                 />
-                <button className="bg-secondary hover:bg-secondaryDark text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105">
-                  {lang === 'en' ? 'Subscribe' : 'Kwiyandikisha'}
+                <button disabled className="bg-secondary  text-white font-semibold py-3 px-6 rounded-xl">
+                  {lang === 'en' ? 'Subscribe' : 'iyandikishe'}
                 </button>
               </div>
             </div>
@@ -189,18 +159,12 @@ const Footer = ({ lang }: { lang: string }) => {
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
               <div className="text-center md:text-left">
                 <p className="text-gray-400 text-sm">
-                  &copy; {new Date().getFullYear()} Fixo. {lang === 'en' ? 'All rights reserved.' : 'Uburenganzira bwose burabitswe.'}
+                  &copy; {new Date().getFullYear()} Fixo. {lang === 'en' ? 'All rights reserved.' : 'yemewe n\'amategeko.'}
                 </p>
               </div>
               <div className="flex flex-wrap justify-center md:justify-end gap-6 text-sm">
                 <Link to="/privacy-policy" className="text-gray-400 hover:text-secondary transition-colors duration-300">
-                  {lang === 'en' ? 'Privacy Policy' : 'Politiki y\'Ubwoba'}
-                </Link>
-                <Link to="/terms-of-service" className="text-gray-400 hover:text-secondary transition-colors duration-300">
-                  {lang === 'en' ? 'Terms of Service' : 'Amabwiriza ya Serivisi'}
-                </Link>
-                <Link to="/cookies" className="text-gray-400 hover:text-secondary transition-colors duration-300">
-                  {lang === 'en' ? 'Cookie Policy' : 'Politiki y\'Amakuki'}
+                  {lang === 'en' ? 'Privacy Policy' : 'Amategeko n\'amabwiriza'}
                 </Link>
               </div>
             </div>

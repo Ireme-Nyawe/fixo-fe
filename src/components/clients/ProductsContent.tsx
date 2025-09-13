@@ -18,24 +18,24 @@ const ProductsContent = ({ lang }: ProductsCOntentsProps) => {
 
   const translations = {
     en: {
-      welcome: 'Welcome to Our Store',
-      ourProducts: 'Our Products',
+      welcome: 'Welcome to Our Digital Access Hub',
+      ourProducts: 'Our Access Tools',
       filterByCategory: 'Filter by Category',
       allCategories: 'All Categories',
-      noProducts: 'No related products available.',
-      loadAllProducts: 'Load All Products',
+      noProducts: 'No related Access Tool available.',
+      loadAllProducts: 'Load All Access Tools',
       previous: 'Previous',
       next: 'Next',
       page: 'Page',
       of: 'of',
     },
     kin: {
-      welcome: 'Murakaza neza mu iduka ryacu',
-      ourProducts: 'Ibicuruzwa byacu',
+      welcome: 'ikaze ku ibikoresho by\'ikoranabuhanga',
+      ourProducts: 'Ibikoresho By\'ikoranabuhanga',
       filterByCategory: 'Hitamo ubwoko',
       allCategories: 'Ubwoko bwose',
-      noProducts: 'Nta bicuruzwa bihari.',
-      loadAllProducts: 'Kureba ibicuruzwa byose',
+      noProducts: 'Nta bikoresho bihari.',
+      loadAllProducts: 'Kureba ibikoresho byose',
       previous: 'Ibibanza',
       next: 'Ibikurikira',
       page: 'Ipaji',
@@ -76,7 +76,7 @@ const ProductsContent = ({ lang }: ProductsCOntentsProps) => {
       const response = await productService.getProductsByCategory(categoryId);
       setProducts(response.data || []);
     } catch (error) {
-      console.error('Fetching category products failed:', error);
+      console.error('Fetching category Access Tools failed:', error);
       setProducts([]);
     } finally {
       setLoading(false);

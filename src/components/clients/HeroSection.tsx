@@ -19,22 +19,19 @@ const HeroSection = ({ lang }: { lang: string }) => {
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="max-w-3xl">
-          {/* Badge */}
           <div className="inline-flex items-center gap-2 bg-secondary/20 backdrop-blur-sm border border-secondary/30 rounded-full px-4 py-2 mb-6">
             <FaHeadset className="text-secondary text-sm" />
             <span className="text-secondary text-sm font-medium">
-              {lang === 'en' ? '24/7 Expert Support' : 'Ubufasha bw\'Abatekinisiye 24/7'}
+              {lang === 'en' ? '24/7 Expert Support' : 'Ubufasha bwizewe 24/7'}
             </span>
           </div>
 
-          {/* Main heading */}
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
             {lang === 'en' ? (
               <>
                 <span className="text-secondary">Fast</span> Tech Support,
                 <br />
                 <span className="text-secondary">Anywhere</span>,
-                <br />
                 <span className="text-secondary">Anytime</span>
               </>
             ) : (
@@ -42,17 +39,17 @@ const HeroSection = ({ lang }: { lang: string }) => {
                 <span className="text-secondary">Ubufasha</span> bwihuse,
                 <br />
                 <span className="text-secondary">Aho uri hose</span>,
-                <br />
-                <span className="text-secondary">Igihe Cyose</span>
+                <span className="text-secondary"> Igihe Cyose</span>
               </>
             )}
+           <br />
           </h1>
 
           {/* Subtitle */}
           <p className="text-lg md:text-xl text-gray-200 mb-8 max-w-2xl leading-relaxed">
             {lang === 'en' 
-              ? "Get instant help from certified technicians. We solve your tech problems quickly and efficiently, so you can get back to what matters most."
-              : "Habwa ubufasha bugezweho mu gihe gito kuva ku bakamenyi bafite ubwoba. Dukemura ibibazo byawe bya tekinoloji vuba kandi neza, kugira ngo wongere uhinduke ku byo bikunze."
+              ? "Get instant help from certified technicians. We solve your tech issues quickly and efficiently ."
+              : "Habwa ubufasha nabatekinisiye bemewe. Dukemura ibibazo byawe mu ikoranabuhanga vuba kandi neza."
             }
           </p>
 
@@ -61,19 +58,19 @@ const HeroSection = ({ lang }: { lang: string }) => {
             <div className="flex items-center gap-3 text-white/90">
               <FaClock className="text-secondary text-lg" />
               <span className="text-sm font-medium">
-                {lang === 'en' ? 'Instant Response' : 'Gusubiza vuba'}
+                {lang === 'en' ? 'Instant Response' : 'Tukwakira byihuse'}
               </span>
             </div>
             <div className="flex items-center gap-3 text-white/90">
               <FaShieldAlt className="text-secondary text-lg" />
               <span className="text-sm font-medium">
-                {lang === 'en' ? 'Secure & Reliable' : 'Umutekano'}
+                {lang === 'en' ? 'Secure & Reliable' : 'Umutekano usesuye'}
               </span>
             </div>
             <div className="flex items-center gap-3 text-white/90">
               <FaUsers className="text-secondary text-lg" />
               <span className="text-sm font-medium">
-                {lang === 'en' ? 'Expert Technicians' : 'Abatekinisiye'}
+                {lang === 'en' ? 'Expert Technicians' : 'Abatekinisiye bashoboye'}
               </span>
             </div>
           </div>
@@ -97,24 +94,24 @@ const HeroSection = ({ lang }: { lang: string }) => {
                 ))}
               </div>
               <span className="text-sm font-medium">
-                {lang === 'en' ? '4.9/5 Rating' : '4.9/5 Abatwemeza'}
+                {lang === 'en' ? '4.9/5' : '4.9/5 '}
               </span>
             </div>
           </div>
 
           {/* Trust indicators */}
-          <div className="mt-8 flex flex-wrap items-center gap-6 text-white/60 text-sm">
+          <div className="mt-20 pt-20 flex flex-wrap items-center gap-6 text-white/60 text-sm">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-secondary rounded-full animate-pulse"></div>
               <span>{lang === 'en' ? '500+ Happy Customers' : '500+ Abakiriya Bishimye'}</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-secondary rounded-full animate-pulse"></div>
-              <span>{lang === 'en' ? '99% Success Rate' : '99% Abatwemeza bw\'Intsinzi'}</span>
+              <span>{lang === 'en' ? '99% Success Rate' : '99% Baranyuzwe'}</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-secondary rounded-full animate-pulse"></div>
-              <span>{lang === 'en' ? '24/7 Available' : '24/7 Birashoboka'}</span>
+              <span>{lang === 'en' ? '24/7 Available' : '24/7 Turaboneka'}</span>
             </div>
           </div>
         </div>

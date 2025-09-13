@@ -3,7 +3,7 @@ import Footer from "../components/clients/Footer";
 import Header from "../components/clients/Header";
 const storeBg = "/store.jpg";
 const Contact = () => {
-    const lang = localStorage.getItem('lang');
+  const lang = localStorage.getItem('lang') || 'en';
   return (
     <div>
       <Header />
@@ -13,12 +13,12 @@ const Contact = () => {
       >
         <div className="flex items-center justify-center h-full bg-black/50">
           <h1 className="text-[#1DCE5F] text-3xl font-bold">
-            {lang==="en"?'Contact Us':'Twandikire'}
+            {lang==="en"?'Find Our Contacts':'Reba Aho Wadusanga'}
           </h1>
         </div>
       </div>
       <ContactsSection lang={lang}/>
-      <Footer />
+      <Footer lang={lang}/>
     </div>
   );
 };

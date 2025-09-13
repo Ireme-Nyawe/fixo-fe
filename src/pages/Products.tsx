@@ -3,7 +3,7 @@ import Header from '../components/clients/Header';
 import ProductsContent from '../components/clients/ProductsContent';
 import SEO from '../components/SEO'; 
 const Products = () => {
-  const lang = localStorage.getItem('lang');
+  const lang = localStorage.getItem('lang') || 'en';
 
   return (
     <div>
@@ -22,7 +22,7 @@ const Products = () => {
       />
       <Header />
       <ProductsContent lang={lang} />
-      <Footer />
+      <Footer lang={lang}/>
     </div>
   );
 };

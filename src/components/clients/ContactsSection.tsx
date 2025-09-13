@@ -127,11 +127,11 @@ const ContactsSection = ({ lang }: { lang: string }) => {
     },
     rw: {
       title: 'Twandikire',
-      subtitle: 'Turi hano kugira ngo tugufashe mu byo ukeneye muri tekinoloji',
+      subtitle: 'Turi hano kugira ngo tusibe icyuho mu ikoranabunga',
       address: 'Makuza Peace Plaza, Kigali, Rwanda',
       phone: '(250) 785 450 726',
       email: 'support@fixo.rw',
-      hours: 'Ku wa Gatanu: 6:00 AM - 10:00 PM',
+      hours: '24/7 - igihe cyose',
       formName: 'Izina',
       formEmail: 'Imeyili',
       formSubject: 'Impamvu',
@@ -139,9 +139,9 @@ const ContactsSection = ({ lang }: { lang: string }) => {
       formButton: 'Ohereza Ubutumwa',
       faqTitle: 'Ibibazo Bibazwa Kenshi',
       findUsTitle: 'Dushake kuri Map',
-      contactInfo: 'Amakuru yo Twandikire',
+      contactInfo: 'Aho wadusanga',
       getInTouch: 'Twandikire',
-      quickResponse: 'Tusubiza mu masaha 24',
+      quickResponse: 'dusubiza mu gihe gito',
     },
   };
 
@@ -188,17 +188,15 @@ const ContactsSection = ({ lang }: { lang: string }) => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Left Column - Contact Form & Info */}
           <div className="space-y-8">
-            {/* Contact Information Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
+                  <div className="w-12 h-12 bg-secondary rounded-xl flex items-center justify-center">
                     <FaMapMarkerAlt className="text-white text-lg" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-gray-900 text-sm">{lang === 'en' ? 'Address' : 'Aho Turi'}</h3>
+                    <h3 className="font-bold text-gray-900 text-sm">{lang === 'en' ? 'Address' : 'Aho dukorera'}</h3>
                     <p className="text-gray-600 text-sm">{content.address}</p>
                   </div>
                 </div>
@@ -206,7 +204,7 @@ const ContactsSection = ({ lang }: { lang: string }) => {
 
               <div className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-green-600 rounded-xl flex items-center justify-center">
+                  <div className="w-12 h-12 bg-secondary rounded-xl flex items-center justify-center">
                     <FaPhone className="text-white text-lg" />
                   </div>
                   <div>
@@ -218,7 +216,7 @@ const ContactsSection = ({ lang }: { lang: string }) => {
 
               <div className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl flex items-center justify-center">
+                  <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center">
                     <FaEnvelope className="text-white text-lg" />
                   </div>
                   <div>
@@ -230,7 +228,7 @@ const ContactsSection = ({ lang }: { lang: string }) => {
 
               <div className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl flex items-center justify-center">
+                  <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center">
                     <FaClock className="text-white text-lg" />
                   </div>
                   <div>
@@ -244,7 +242,7 @@ const ContactsSection = ({ lang }: { lang: string }) => {
             {/* Contact Form */}
             <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 bg-gradient-to-r from-secondary to-secondaryDark rounded-lg flex items-center justify-center">
+                <div className="w-10 h-10 bg-secondary rounded-lg flex items-center justify-center">
                   <FaPaperPlane className="text-white text-lg" />
                 </div>
                 <div>
@@ -318,7 +316,7 @@ const ContactsSection = ({ lang }: { lang: string }) => {
 
                 <button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-secondary to-secondaryDark text-white font-semibold py-4 px-6 rounded-xl hover:shadow-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2"
+                  className="w-full bg-secondary text-white font-semibold py-4 px-6 rounded-xl hover:shadow-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2"
                 >
                   <FaPaperPlane className="text-lg" />
                   {content.formButton}
@@ -332,7 +330,7 @@ const ContactsSection = ({ lang }: { lang: string }) => {
             {/* FAQ Section */}
             <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
+                <div className="w-10 h-10 bg-primary flex items-center justify-center">
                   <FaQuestionCircle className="text-white text-lg" />
                 </div>
                 <h2 className="text-xl font-bold text-gray-900">{content.faqTitle}</h2>
@@ -367,7 +365,7 @@ const ContactsSection = ({ lang }: { lang: string }) => {
             {/* Map Section */}
             <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-green-600 rounded-lg flex items-center justify-center">
+                <div className="w-10 h-10 bg-secondary rounded-lg flex items-center justify-center">
                   <FaMapMarkerAlt className="text-white text-lg" />
                 </div>
                 <h2 className="text-xl font-bold text-gray-900">{content.findUsTitle}</h2>
