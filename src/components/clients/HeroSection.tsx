@@ -23,7 +23,7 @@ const HeroSection = ({ lang }: { lang: string }) => {
           <div className="inline-flex items-center gap-2 bg-secondary/20 backdrop-blur-sm border border-secondary/30 rounded-full px-4 py-2 mb-6">
             <FaHeadset className="text-secondary text-sm" />
             <span className="text-secondary text-sm font-medium">
-              {lang === 'en' ? '24/7 Expert Support' : 'Ubufasha bw\'Abakamenyi 24/7'}
+              {lang === 'en' ? '24/7 Expert Support' : 'Ubufasha bw\'Abatekinisiye 24/7'}
             </span>
           </div>
 
@@ -67,13 +67,13 @@ const HeroSection = ({ lang }: { lang: string }) => {
             <div className="flex items-center gap-3 text-white/90">
               <FaShieldAlt className="text-secondary text-lg" />
               <span className="text-sm font-medium">
-                {lang === 'en' ? 'Secure & Reliable' : 'Umutekano n\'Uwizigirwa'}
+                {lang === 'en' ? 'Secure & Reliable' : 'Umutekano'}
               </span>
             </div>
             <div className="flex items-center gap-3 text-white/90">
               <FaUsers className="text-secondary text-lg" />
               <span className="text-sm font-medium">
-                {lang === 'en' ? 'Expert Technicians' : 'Abakamenyi'}
+                {lang === 'en' ? 'Expert Technicians' : 'Abatekinisiye'}
               </span>
             </div>
           </div>
@@ -97,7 +97,7 @@ const HeroSection = ({ lang }: { lang: string }) => {
                 ))}
               </div>
               <span className="text-sm font-medium">
-                {lang === 'en' ? '4.9/5 Rating' : '4.9/5 Ubwiyemezo'}
+                {lang === 'en' ? '4.9/5 Rating' : '4.9/5 Abatwemeza'}
               </span>
             </div>
           </div>
@@ -110,7 +110,7 @@ const HeroSection = ({ lang }: { lang: string }) => {
             </div>
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-secondary rounded-full animate-pulse"></div>
-              <span>{lang === 'en' ? '99% Success Rate' : '99% Ubwiyemezo bw\'Intsinzi'}</span>
+              <span>{lang === 'en' ? '99% Success Rate' : '99% Abatwemeza bw\'Intsinzi'}</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-secondary rounded-full animate-pulse"></div>
