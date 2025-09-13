@@ -29,6 +29,7 @@ import TechClientSupport from './components/dashboard/TechClientSupport';
 import TechnicianDashboard from './pages/dashboard/technician/TechDashboard';
 import Contact from './pages/Contact';
 import CallSessions from './pages/CallSessions';
+import PrivacyPolicy from './pages/PrivacyPolicy';
 
 const AppRouter = () => {
   return (
@@ -38,6 +39,7 @@ const AppRouter = () => {
       <Route path="/services" element={<Services />} />
       <Route path="/products" element={<Products />} />
       <Route path="/contact" element={<Contact />} />
+      <Route path="/privacy-policy" element={<PrivacyPolicy />} />
       <Route path="/product/:id" element={<SingleProduct />} />
       <Route path="/direct-support" element={<SupportPage />} />
       <Route path="/direct-support/:techId" element={<SupportPage />} />
