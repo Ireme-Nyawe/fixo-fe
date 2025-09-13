@@ -15,7 +15,7 @@ const PrivacyPolicy = () => {
           icon: FaShieldAlt,
           title: 'Information We Collect',
           content: [
-            'Personal Information: We collect information you provide directly to us, such as when you create an account, contact us for support, or use our services. This may include your name, email address, phone number, and payment information.',
+            'Personal Information: We collect information you provide directly to us, such as when you contact us for support, or use our services. This may include your name, email address, phone number, and payment information.',
             'Technical Information: We automatically collect certain technical information when you use our services, including your IP address, device information, browser type, and usage patterns.',
             'Support Data: When you request technical support, we may collect information about your device, software, and the issues you\'re experiencing to provide effective assistance.'
           ]
@@ -94,17 +94,17 @@ const PrivacyPolicy = () => {
       }
     },
     rw: {
-      title: 'Politiki y\'Ubwoba',
-      subtitle: 'Ubwoba bwawe n\'ubwoba bw\'amakuru ni ibyo twibanze cyane',
-      lastUpdated: 'Gusubira mu Nyakanga 2024',
+      title: 'Amategeko n\'amabwiriza',
+      subtitle: 'Amakuru y\'abatugna ni ingezi kuri twe',
+      lastUpdated: 'Yasubiwemo  muri mutarama 2024',
       sections: [
         {
           icon: FaShieldAlt,
           title: 'Amakuru Dukusanya',
           content: [
-            'Amakuru y\'umuntu: Dukusanya amakuru uhatanga neza, nk\'igihe ukora konti, utwandikira ubufasha, cyangwa ukoresha serivisi zacu. Ibi birashobora kuba izina ryawe, imeyili, numero ya telefone, n\'amakuru y\'ubwishyu.',
-            'Amakuru y\'ikoranabuhanga: Dukusanya amakuru y\'ikoranabuhanga mu gihe ukoresha serivisi zacu, harimo IP address yawe, amakuru y\'ikoresho, ubwoko bw\'umurongo, n\'imiterere y\'ukoresha.',
-            'Amakuru y\'Ubufasha: Igihe usaba ubufasha bw\'ikoranabuhanga, dushobora gukusanya amakuru ku bijyanye n\'ikoresho cyawe, software, n\'ibibazo ukeneye kugira ngo tugufashe neza.'
+            'Amakuru y\'umuntu: Dukusanya amakuru y\'utugana  nk\'igihe akora konti, utwandikira udusaba ubufasha, cyangwa ukoresha serivisi zacu. ayo makuru ashobora kuba kuba amazina , imeyili, numero ya telefone, n\'amakuru y\'ubwishyu.',
+            'Amakuru y\'ikoranabuhanga: Dukusanya amakuru y\'ikoranabuhanga mu gihe ukoresha serivisi zacu, harimo IP address yawe, amakuru y\'ikoresho, ubwoko bw\'umurongo, n\'imiterere y\'amakuru.',
+            'Amakuru y\'Ubufasha: Igihe usaba ubufasha bw\'ikoranabuhanga, dushobora gukusanya amakuru ku bijyanye n\'igikoresho cyawe, software, n\'ibibazo ushaka ko tugufasha gukemura kugira ngo tugufashe neza.'
           ]
         },
         {
@@ -112,9 +112,9 @@ const PrivacyPolicy = () => {
           title: 'Uburyo Dukoresha Amakuru yawe',
           content: [
             'Gutanga Serivisi: Dukoresha amakuru yawe kugira ngo dutange, dukomeze, kandi tunoze serivisi zacu z\'ubufasha bw\'ikoranabuhanga.',
-            'Kwiyandikisha: Dukoresha amakuru yo kwiyandikisha kugira ngo tuyandikane nawe ku bijyanye n\'ubusabe bwawe bw\'ubufasha, amakuru y\'amashyirahamwe, n\'amakuru akomeye.',
-            'Gutanga Ubwishyu: Dukoresha amakuru y\'ubwishyu kugira ngo dukore ibikorwa n\'ukomeza konti yawe.',
-            'Umutekano: Dukoresha amakuru y\'ikoranabuhanga kugira ngo dutabare ubwoba, gukoresha nabi, n\'ibibazo by\'umutekano.'
+            'Kwiyandikisha: Dukoresha amakuru yo kwiyandikisha kugira ngo tuyandikane nawe ku bijyanye n\'ubusabe bwawe bw\'ubufasha, amakuru ajyanye na serivisi, nandi yose yakenerwa.',
+            'Gutanga Ubwishyu: Dukoresha amakuru y\'ubwishyu kugira ngo ubwishyu bukorwe nibikorwa bindi bikomeze.',
+            'Umutekano: Dukoresha ikoranabuhanga muguhangana nibyaha ndetse nikoreshwa ribi ryamakuru yabatugana.'
           ]
         },
         {
@@ -122,59 +122,59 @@ const PrivacyPolicy = () => {
           title: 'Gusangiza Amakuru',
           content: [
             'Ntitugurisha, tugurana, cyangwa tugura amakuru yawe y\'umuntu ku bandi bantu.',
-            'Dushobora gusangiza amakuru n\'abantu bafite ubwoba batufasha mu gukoresha uruganda rwacu, gukora ubucuruzi bwacu, cyangwa gufasha abakoresha bacu.',
-            'Dushobora kwerekana amakuru igihe byatangajwe n\'amategeko cyangwa kugira ngo dutabare uburenganzira bwacu, umutungo, cyangwa umutekano, cyangwa w\'abakoresha bacu.',
-            'Mu gihe cyo guhindura ubucuruzi, amakuru y\'umukoresha arashobora kwimurwa nk\'umutungo.'
+            'Dushobora gusangiza amakuru n\'abantu bafite ububasha badufasha mu gutnga serivisi cyangwa gufasha abakoresha bacu.',
+            'Dushobora kwerekana amakuru igihe byatangajwe n\'amategeko cyangwa kugira ngo dutabare uburenganzira bwacu, umutungo, cyangwa umutekano, cyangwa w\'abatugana bacu.',
+            'Mu gihe cyo guhindura ubucuruzi, amakuru yimurwa nkumutungo.'
           ]
         },
         {
           icon: FaUserShield,
           title: 'Uburenganzira bwawe',
           content: [
-            'Gufata: Ufite uburenganzira bwo gufata amakuru y\'umuntu dukomeza ku bijyanye nawe.',
-            'Gusana: Urashobora gusaba gusana amakuru atari yo cyangwa atuzuye.',
-            'Gukuraho: Urashobora gusaba gukuraho amakuru yawe y\'umuntu, ku bijyanye n\'ibindi bitandukanye.',
-            'Guhindura: Urashobora gusaba kopi y\'amakuru yawe mu miterere y\'ikoranabuhanga, ikoresha mudasobwa.',
-            'Guhakana: Urashobora guhakana ibindi bikorwa by\'amakuru yawe y\'umuntu.'
+            'Kugenzura: Ufite uburenganzira bwo kugenzura amakuru dufite ajyanye nawe.',
+            'Gukosora: Urashobora gusaba gukosora amakuru atari yo cyangwa atuzuye.',
+            'Gusiba: ushobora gusaba gusiba amakuru yawe cyangwa n\'ibindi bitandukanye bikwerekeye ho.',
+            'Gutwara: Ushobora gusaba kopi y\'amakuru yawe mu miterere y\'ikoranabuhanga, ikoresha mudasobwa.',
+            'Guhakana: Ushobora kwanga ibindi bikorwa ku amakuru yawe.'
           ]
         },
         {
           icon: FaDatabase,
           title: 'Umutekano w\'Amakuru',
           content: [
-            'Dushyira mu cyicaro ibikoresho by\'ikoranabuhanga n\'ibikorwa by\'ubwoba byo gutabara amakuru yawe y\'umuntu.',
-            'Ibyose byoherezwa mu makuru birinzwe biciye ku bikoresho by\'ikoranabuhanga.',
-            'Dukomeza gusuzuma kandi dusubira amakuru yacu y\'umutekano kugira ngo dukemure ibibazo by\'umutekano.',
-            'Gufata amakuru y\'umuntu ni ubwoba ku bantu bafite uburenganzira gusa.',
+            'dukoresha ibikorwa by\'ikoranabuhanaga n\'izindi ngamba zose mu kurinda amakuru yawe.',
+            'ihererekanyanya ryamakuru mu bikorwa bitandukanye bikorwa hifashishizwe uburyo bwabugenewe',
+            'Dukomeza gusuzuma kandi duhindura ibijyanye n\'umutekano kugira ngo dukemure ibibazo biza by\'umutekano.',
+            'kureba no gukoresha amakuru bikorwa nababyemerewe gusa.',
             'Dukomeza amabwiriza yo gukemura ibibazo byose by\'amakuru.'
           ]
         },
         {
           icon: FaCookie,
-          title: 'Amakuki n\'Gukurikira',
+          title: 'Amakuki, gukurikirana',
           content: [
-            'Dukoresha amakuki n\'ibindi bikoresho by\'ikoranabuhanga kugira ngo dunoze ubunararibonye bwawe ku ruganda rwacu.',
-            'Amakuki akomeye akeneye kugira ngo ruganda rukore neza.',
+            'Dukoresha amakuki n\'ibindi bikoresho by\'ikoranabuhanga kugira ngo tunoze serivisi tubaha.',
+            'Amakuki aba akenewe kugira ngo ngo tubahe serivisi inoze.',
             'Amakuki y\'ikoranabuhanga atufasha gusobanura uburyo abakoresha bahurira na serivisi zacu.',
-            'Urashobora gukoresha amakuki yawe biciye ku masuzuma yawe y\'umurongo.',
-            'Gukuraho amakuki atandukanye bishobora gufasha serivisi zacu.'
+            'Urashobora gukoresha amakuki yawe uciye ku masuzuma yawe y\'umurongo.',
+            'Gukuraho amakuki atandukanye bishobora kugira ingaruka kuri serivisi zacu.'
           ]
         },
         {
           icon: FaGavel,
-          title: 'Ubwoba bw\'Amategeko',
+          title: 'Amategeko',
           content: [
-            'Dukoresha amakuru yawe y\'umuntu ku bijyanye n\'ubwoba bw\'ubucuruzi, ubwoba bw\'amasezerano, n\'ubwoba bw\'amategeko.',
-            'Ku bakoresha b\'i Burayi, dukomeza ku mategeko y\'Ubwoba bw\'Amakuru (GDPR).',
-            'Dufata ubwoba bw\'amakuru igihe byatangajwe n\'amategeko.',
-            'Urashobora gukuraho ubwoba bw\'amakuru igihe cyose, nubwo ibi bishobora gufasha serivisi zacu.',
-            'Dukomeza amakuru y\'ubwoba bw\'amakuru n\'ibikorwa by\'ikoranabuhanga nk\'uko byatangajwe n\'amategeko.'
+            'Dukoresha amakuru yawe y\'umuntu ku bijyanye n\'serivisi z\'ubucuruzi, amasezerano, n\'amategeko abigenga. ',
+            'Twubahiriza amategeko n\'amabwiriza byabanyaburayi (GDPR).',
+            'Dufata amakuru igihe byatangajwe n\'amategeko.',
+            'Ushobora gukuraho amakuru igihe cyose, nubwo ibi bishobora kugira ingaruka serivisi zacu.',
+            'Dukomeza amakuru tuknayakoresha mub\'ibikorwa by\'ikoranabuhanga nk\'uko biteganywa n\'amategeko.'
           ]
         }
       ],
       contact: {
         title: 'Twandikire',
-        description: 'Niba ufite ibibazo ku bijyanye na Politiki y\'Ubwoba cyangwa ibikorwa byacu by\'amakuru, twandikire:',
+        description: 'Niba ufite ibibazo ku bijyanye na amakuru yawe, twandikire:',
         email: 'privacy@fixo.rw',
         phone: '(250) 785 450 726',
         address: 'Makuza Peace Plaza, Kigali, Rwanda'
@@ -245,7 +245,7 @@ const PrivacyPolicy = () => {
           </div>
 
           {/* Contact Section */}
-          <div className="mt-16 bg-gradient-to-r from-secondary to-secondaryDark rounded-2xl p-8 text-white text-center">
+          <div className="mt-16 bg-secondary rounded-2xl p-8 text-white text-center">
             <h2 className="text-2xl font-bold mb-4">
               {currentContent.contact.title}
             </h2>
