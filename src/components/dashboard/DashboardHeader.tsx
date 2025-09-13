@@ -7,7 +7,7 @@ import { FiEye, FiEyeOff } from 'react-icons/fi';
 
 interface DashboardHeaderProps {
   sideBarToggle: () => void;
-  profile: any;
+  profile: { balance?: number } | null;
 }
 
 const DashboardHeader = ({ sideBarToggle, profile }: DashboardHeaderProps) => {
@@ -38,6 +38,8 @@ const DashboardHeader = ({ sideBarToggle, profile }: DashboardHeaderProps) => {
     <header className="bg-primary text-white shadow-lg px-4 py-3 sm:p-4 flex items-center justify-between z-10">
       <div className="flex items-center gap-2 sm:gap-4">
         <button
+        type='button'
+        title='Toggle sidebar'
           onClick={sideBarToggle}
           className="md:hidden p-1.5 hover:bg-secondary rounded-lg"
         >
@@ -79,14 +81,14 @@ const DashboardHeader = ({ sideBarToggle, profile }: DashboardHeaderProps) => {
 
           <Link to="balance" className="text-sm sm:text-base">
             {showBalance ? (
-              formatCurrency(profile?.balance)
+              formatCurrency(profile?.balance || 0)
             ) : (
               <span className="text-white">****</span>
             )}
           </Link>
         </div>
 
-        <button className="p-1.5 sm:p-2 hover:bg-secondary rounded-full">
+        <button type='button' title='Notifications' className="p-1.5 sm:p-2 hover:bg-secondary rounded-full">
           <Bell />
         </button>
 
