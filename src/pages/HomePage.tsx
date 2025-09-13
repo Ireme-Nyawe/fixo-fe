@@ -1,6 +1,7 @@
 import Header from '../components/clients/Header';
 import LanguageSelector from '../components/clients/LanguageSelector';
 import HeroSection from '../components/clients/HeroSection';
+import AboutSection from '../components/clients/AboutSection';
 import ServicesSection from '../components/clients/ServicesSection';
 import TestimonialsSection from '../components/clients/TestimonialsSections';
 import Footer from '../components/clients/Footer';
@@ -8,7 +9,7 @@ import ContactsSection from '../components/clients/ContactsSection';
 import SEO from '../components/SEO';
 
 const HomePage = () => {
-  const lang = localStorage.getItem('lang');
+  const lang = localStorage.getItem('lang') || 'en';
 
   return (
     <div>
@@ -27,6 +28,7 @@ const HomePage = () => {
       />
       <Header />
       <HeroSection lang={lang} />
+      <AboutSection lang={lang} />
       <ServicesSection lang={lang} />
       <TestimonialsSection lang={lang} />
       <ContactsSection lang={lang} />

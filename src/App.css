@@ -1,7 +1,48 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 body {
     @apply font-sans;
+}
+
+/* Custom animations for Hero Section */
+@keyframes bounce-gentle {
+  0%, 100% {
+    transform: translateY(0);
   }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(29, 206, 95, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(29, 206, 95, 0.6), 0 0 40px rgba(29, 206, 95, 0.3);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-bounce-gentle {
+  animation: bounce-gentle 2s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
   

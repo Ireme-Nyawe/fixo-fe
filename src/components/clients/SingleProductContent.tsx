@@ -116,7 +116,7 @@ const SingleProductContent = () => {
             <div className="flex gap-4 mt-6">
               <Link
                 className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg transition hover:bg-green-500"
-                to={'tel: +250782986810'}
+                to={'tel: +250785 450 726'}
               >
                 <FaWhatsapp className="mr-2" /> Chat Now
               </Link>

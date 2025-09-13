@@ -3,11 +3,12 @@ import Header from '../components/clients/Header'
 import SingleProductContent from '../components/clients/SingleProductContent'
 
 const SingleProduct = () => {
+  const lang = localStorage.getItem('lang') || 'en';
   return (
     <div>
     <Header />
     <SingleProductContent />
-    <Footer />
+    <Footer lang={lang} />
   </div>
   )
 }
