@@ -85,8 +85,8 @@ const Footer = ({ lang }: any) => {
             </p>
             <p className="text-sm">
               {lang === 'en'
-                ? 'Phone: (250) 782986810'
-                : 'Telefone: (250) 782986810'}
+                ? 'Phone: (250) 785 450 726'
+                : 'Telefone: (250) 785 450 726'}
             </p>
           </address>
         </div>
