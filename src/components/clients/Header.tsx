@@ -1,17 +1,17 @@
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import { Link } from 'react-router-dom';
+import { useState } from 'react';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const lang = localStorage.getItem("lang") || "en";
+  const lang = localStorage.getItem('lang') || 'en';
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
   const handleLanguageSwitch = () => {
-    const newLang = lang === "en" ? "rw" : "en";
-    localStorage.setItem("lang", newLang);
+    const newLang = lang === 'en' ? 'rw' : 'en';
+    localStorage.setItem('lang', newLang);
 
     window.location.reload();
   };
@@ -19,21 +19,21 @@ const Header = () => {
   return (
     <header className="bg-secondary shadow-lg">
       <div className="bg-primary p-2 relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-6">
-          <h1 className="text-center font-medium text-base relative z-10 block md:flex items-center justify-center gap-2">
-            <span className="inline-flex items-center text-white text-sm sm:text-base">
-              {lang === "en"
-                ? "24/7 Tech Support - Call Now"
-                : "Wifuza ubufasha bwihuse waduhamagara"}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <h1 className="text-center font-medium text-sm sm:text-base md:flex md:items-center md:justify-center md:gap-3 relative z-10">
+            <span className="block md:inline text-white text-sm sm:text-base">
+              {lang === 'en'
+                ? '24/7 Tech Support - Call Now'
+                : 'Wifuza ubufasha bwihuse waduhamagara'}
             </span>
 
             <Link
-              to="tel:+250785 450 726"
-              className="text-white inline-flex items-center hover:text-yellow-300 transition-colors duration-300 text-sm sm:text-base"
+              to="tel:+250785450726"
+              className="mt-2 md:mt-0 text-white flex items-center justify-center hover:text-yellow-300 transition-colors duration-300 text-sm sm:text-base"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 mr-1"
+                className="h-5 w-5 mr-1 flex-shrink-0"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -77,7 +77,7 @@ const Header = () => {
                 strokeLinejoin="round"
                 strokeWidth="2"
                 d={
-                  isMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16m-7 6h7"
+                  isMenuOpen ? 'M6 18L18 6M6 6l12 12' : 'M4 6h16M4 12h16m-7 6h7'
                 }
               />
             </svg>
@@ -105,7 +105,7 @@ const Header = () => {
                     d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
                   />
                 </svg>
-                <span>{lang === "en" ? "Home" : "Ahabanza"}</span>
+                <span>{lang === 'en' ? 'Home' : 'Ahabanza'}</span>
               </Link>
             </li>
             <li>
@@ -127,7 +127,7 @@ const Header = () => {
                     d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37.996.608 2.296.07 2.572-1.065z"
                   />
                 </svg>
-                <span>{lang === "en" ? "About Us" : "Abo turi bo"}</span>
+                <span>{lang === 'en' ? 'About Us' : 'Abo turi bo'}</span>
               </Link>
             </li>
             <li>
@@ -149,7 +149,7 @@ const Header = () => {
                     d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
                   />
                 </svg>
-                <span>{lang === "en" ? "Digital Access" : "Ibikoresho"}</span>
+                <span>{lang === 'en' ? 'Digital Access' : 'Ibikoresho'}</span>
               </Link>
             </li>
             <li>
@@ -171,7 +171,7 @@ const Header = () => {
                     d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
                   />
                 </svg>
-                <span>{lang === "en" ? "Contact" : "Twandikire"}</span>
+                <span>{lang === 'en' ? 'Contact' : 'Twandikire'}</span>
               </Link>
             </li>
           </ul>
@@ -197,7 +197,7 @@ const Header = () => {
                     d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
                   />
                 </svg>
-                {lang === "en" ? "Call now" : "Saba ubufasha"}
+                {lang === 'en' ? 'Call now' : 'Saba ubufasha'}
               </div>
             </Link>
 
@@ -208,15 +208,15 @@ const Header = () => {
             >
               <img
                 src={
-                  lang === "en"
-                    ? "https://flagcdn.com/rw.svg"
-                    : "https://flagcdn.com/us.svg"
+                  lang === 'en'
+                    ? 'https://flagcdn.com/rw.svg'
+                    : 'https://flagcdn.com/us.svg'
                 }
-                alt={lang === "en" ? "Kinyarwanda flag" : "English flag"}
+                alt={lang === 'en' ? 'Kinyarwanda flag' : 'English flag'}
                 className="w-5 h-4"
               />
               <span className="font-medium">
-                {lang === "en" ? "Kinyarwanda" : "English"}
+                {lang === 'en' ? 'Kinyarwanda' : 'English'}
               </span>
             </button>
           </div>
@@ -267,7 +267,7 @@ const Header = () => {
                         d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
                       />
                     </svg>
-                    {lang === "en" ? "Home" : "Ahabanza"}
+                    {lang === 'en' ? 'Home' : 'Ahabanza'}
                   </Link>
                 </li>
                 <li>
@@ -289,7 +289,7 @@ const Header = () => {
                         d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37.996.608 2.296.07 2.572-1.065z"
                       />
                     </svg>
-                    {lang === "en" ? "About Us" : "Abo turi bo"}
+                    {lang === 'en' ? 'About Us' : 'Abo turi bo'}
                   </Link>
                 </li>
                 <li>
@@ -311,7 +311,7 @@ const Header = () => {
                         d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
                       />
                     </svg>
-                    {lang === "en" ? "Digital Access" : "Ibikoresho"}
+                    {lang === 'en' ? 'Digital Access' : 'Ibikoresho'}
                   </Link>
                 </li>
                 <li>
@@ -333,7 +333,7 @@ const Header = () => {
                         d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
                       />
                     </svg>
-                    {lang === "en" ? "Contact" : "Twandikire"}
+                    {lang === 'en' ? 'Contact' : 'Twandikire'}
                   </Link>
                 </li>
                 <li>
@@ -355,7 +355,7 @@ const Header = () => {
                         d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
                       />
                     </svg>
-                    {lang === "en" ? "Call now" : "Saba ubufasha"}
+                    {lang === 'en' ? 'Call now' : 'Saba ubufasha'}
                   </Link>
                 </li>
                 <li>
@@ -365,14 +365,14 @@ const Header = () => {
                   >
                     <img
                       src={
-                        lang === "en"
-                          ? "https://flagcdn.com/rw.svg"
-                          : "https://flagcdn.com/us.svg"
+                        lang === 'en'
+                          ? 'https://flagcdn.com/rw.svg'
+                          : 'https://flagcdn.com/us.svg'
                       }
-                      alt={lang === "en" ? "Kinyarwanda flag" : "English flag"}
+                      alt={lang === 'en' ? 'Kinyarwanda flag' : 'English flag'}
                       className="w-5 h-4"
                     />
-                    <span>{lang === "en" ? "Kiny" : "En"}</span>
+                    <span>{lang === 'en' ? 'Kiny' : 'En'}</span>
                   </button>
                 </li>
               </ul>
