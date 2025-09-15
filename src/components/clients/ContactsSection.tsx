@@ -192,7 +192,7 @@ const ContactsSection = ({ lang }: { lang: string }) => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-secondary rounded-xl flex items-center justify-center">
+                  <div className="w-12 h-12 p-4 bg-secondary rounded-xl flex items-center justify-center">
                     <FaMapMarkerAlt className="text-white text-lg" />
                   </div>
                   <div>
@@ -216,7 +216,7 @@ const ContactsSection = ({ lang }: { lang: string }) => {
 
               <div className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center">
+                  <div className="w-12 h-12 bg-secondary rounded-xl flex items-center justify-center">
                     <FaEnvelope className="text-white text-lg" />
                   </div>
                   <div>
@@ -228,7 +228,7 @@ const ContactsSection = ({ lang }: { lang: string }) => {
 
               <div className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center">
+                  <div className="w-12 h-12 bg-secondary rounded-xl flex items-center justify-center">
                     <FaClock className="text-white text-lg" />
                   </div>
                   <div>
@@ -242,7 +242,7 @@ const ContactsSection = ({ lang }: { lang: string }) => {
             {/* Contact Form */}
             <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 bg-secondary rounded-lg flex items-center justify-center">
+                <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center">
                   <FaPaperPlane className="text-white text-lg" />
                 </div>
                 <div>
@@ -328,9 +328,9 @@ const ContactsSection = ({ lang }: { lang: string }) => {
           {/* Right Column - FAQ & Map */}
           <div className="space-y-4">
             {/* FAQ Section */}
-            <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
+            <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100 ">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 bg-primary flex items-center justify-center">
+                <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center">
                   <FaQuestionCircle className="text-white text-lg" />
                 </div>
                 <h2 className="text-xl font-bold text-gray-900">{content.faqTitle}</h2>
@@ -365,7 +365,7 @@ const ContactsSection = ({ lang }: { lang: string }) => {
             {/* Map Section */}
             <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 bg-secondary rounded-lg flex items-center justify-center">
+                <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center">
                   <FaMapMarkerAlt className="text-white text-lg" />
                 </div>
                 <h2 className="text-xl font-bold text-gray-900">{content.findUsTitle}</h2>
