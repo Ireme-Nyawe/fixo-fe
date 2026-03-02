@@ -537,28 +537,37 @@ const SupportPage: React.FC<any> = () => {
   }, [isConnected]);
   
   return (
-    <div className="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 p-2 sm:p-4">
-      <div className="bg-white rounded-lg shadow-lg p-3 sm:p-4 md:p-6 w-full max-w-6xl max-h-screen overflow-auto">
-        <div className="flex justify-between items-center mb-3 sm:mb-6">
-          <h2 className="text-lg sm:text-xl md:text-2xl font-bold">
-            Support Session
-          </h2>
+    <div className="fixed inset-0 w-screen h-screen bg-black z-50 flex flex-col">
+      {/* container with header, video area and footer */}
+      <div className="flex flex-col w-full h-full bg-black">
+        {/* header bar */}
+        <header className="flex justify-between items-center px-4 py-2 bg-primary text-white">
+          <div className="flex items-center space-x-4">
+            <h2 className="text-lg sm:text-xl font-semibold">Support Session</h2>
+            {isConnected && remoteStream && (
+              <span className="text-sm sm:text-base font-medium">
+                {formatTime(seconds)}
+              </span>
+            )}
+            {!isConnected && (
+              <span className="text-sm sm:text-base font-medium">
+                {connectionState}
+              </span>
+            )}
+          </div>
           <button
             onClick={endCall}
-            className="p-1 sm:p-2 rounded-full bg-red-100 text-red-500 hover:bg-red-200"
+            className="p-1 rounded-full hover:bg-primary/70 transition-colors"
           >
-            <X size={16} className="sm:w-5 sm:h-5" />
+            <X size={20} />
           </button>
-        </div>
+        </header>
 
-        <div
-          className={`grid grid-cols-1 ${
-            !userFullScreen && !techFullScreen ? "md:grid-cols-2" : ""
-          } gap-3 sm:gap-6`}
-        >
+        {/* main video grid */}
+        <main className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-0 p-0">
           <div
             ref={userVideoContainerRef}
-            className={`relative bg-gray-800 rounded-lg overflow-hidden aspect-video ${
+            className={`relative bg-black overflow-hidden ${
               userFullScreen ? "col-span-full" : ""
             } ${techFullScreen ? "hidden" : ""}`}
           >
@@ -567,15 +576,13 @@ const SupportPage: React.FC<any> = () => {
               autoPlay
               muted
               playsInline
-              className={`w-full h-full ${
-                userFullScreen ? "object-contain" : "object-cover"
-              }`}
+              className={`w-full h-full object-cover`}
             />
             <div
               className={`absolute ${
                 userFullScreen
-                  ? "top-2 left-1/2 -translate-x-1/2"
-                  : "bottom-2 sm:bottom-4 left-2 sm:left-4"
+                  ? "top-4 left-1/2 -translate-x-1/2"
+                  : "bottom-3 sm:bottom-4 left-3 sm:left-4"
               } bg-black bg-opacity-50 text-white px-2 py-1 sm:px-3 sm:py-1 rounded-full text-xs sm:text-sm`}
             >
               You {isScreenSharing ? "(Screen)" : ""}
@@ -583,19 +590,20 @@ const SupportPage: React.FC<any> = () => {
             {!isScreenSharing && (
               <button
                 onClick={toggleUserFullScreen}
-                className="absolute top-2 sm:top-4 right-2 sm:right-4 bg-black bg-opacity-50 text-white p-1 sm:p-2 rounded-full"
+                className="absolute top-3 sm:top-4 right-3 sm:right-4 bg-black bg-opacity-50 text-white p-1 sm:p-2 rounded-full hover:bg-opacity-70 transition-all"
               >
                 {userFullScreen ? (
-                  <Minimize size={14} className="sm:w-4 sm:h-4" />
+                  <Minimize size={16} className="sm:w-5 sm:h-5" />
                 ) : (
-                  <Maximize size={14} className="sm:w-4 sm:h-4" />
+                  <Maximize size={16} className="sm:w-5 sm:h-5" />
                 )}
               </button>
             )}
           </div>
+
           <div
             ref={techVideoContainerRef}
-            className={`relative bg-gray-800 rounded-lg overflow-hidden aspect-video ${
+            className={`relative bg-black overflow-hidden ${
               techFullScreen ? "col-span-full" : ""
             } ${userFullScreen ? "hidden" : ""}`}
           >
@@ -603,9 +611,7 @@ const SupportPage: React.FC<any> = () => {
               ref={remoteVideoRef}
               autoPlay
               playsInline
-              className={`w-full h-full ${
-                techFullScreen ? "object-contain" : "object-cover"
-              } ${!remoteStream ? "hidden" : ""}`}
+              className={`w-full h-full object-cover ${!remoteStream ? "hidden" : ""}`}
             />
             {(!remoteStream || connectionState !== "Connected") && (
               <div className="w-full h-full flex items-center justify-center text-white text-sm sm:text-base">
@@ -617,32 +623,33 @@ const SupportPage: React.FC<any> = () => {
                 <div
                   className={`absolute ${
                     techFullScreen
-                      ? "top-2 left-1/2 -translate-x-1/2"
-                      : "bottom-2 sm:bottom-4 left-2 sm:left-4"
+                      ? "top-4 left-1/2 -translate-x-1/2"
+                      : "bottom-3 sm:bottom-4 left-3 sm:left-4"
                   } bg-black bg-opacity-50 text-white px-2 py-1 sm:px-3 sm:py-1 rounded-full text-xs sm:text-sm`}
                 >
                   Technician {technician}
                 </div>
                 <button
                   onClick={toggleTechFullScreen}
-                  className="absolute top-2 sm:top-4 right-2 sm:right-4 bg-black bg-opacity-50 text-white p-1 sm:p-2 rounded-full"
+                  className="absolute top-3 sm:top-4 right-3 sm:right-4 bg-black bg-opacity-50 text-white p-1 sm:p-2 rounded-full hover:bg-opacity-70 transition-all"
                 >
                   {techFullScreen ? (
-                    <Minimize size={14} className="sm:w-4 sm:h-4" />
+                    <Minimize size={16} className="sm:w-5 sm:h-5" />
                   ) : (
-                    <Maximize size={14} className="sm:w-4 sm:h-4" />
+                    <Maximize size={16} className="sm:w-5 sm:h-5" />
                   )}
                 </button>
               </>
             )}
           </div>
-        </div>
+        </main>
 
-        <div className="flex justify-center mt-3 sm:mt-6 space-x-2 sm:space-x-4">
+        {/* footer controls */}
+        <footer className="px-4 py-3 bg-primary/90 flex justify-center space-x-4">
           <button
             onClick={toggleMute}
-            className={`p-3 sm:p-4 rounded-full ${
-              isMuted ? "bg-red-500 text-white" : "bg-gray-200 text-gray-700"
+            className={`p-3 sm:p-4 rounded-full transition-colors ${
+              isMuted ? "bg-red-500 text-white" : "bg-secondaryDark text-white"
             }`}
           >
             {isMuted ? (
@@ -653,8 +660,8 @@ const SupportPage: React.FC<any> = () => {
           </button>
           <button
             onClick={toggleVideo}
-            className={`p-3 sm:p-4 rounded-full ${
-              isVideoOff ? "bg-red-500 text-white" : "bg-gray-200 text-gray-700"
+            className={`p-3 sm:p-4 rounded-full transition-colors ${
+              isVideoOff ? "bg-red-500 text-white" : "bg-secondaryDark text-white"
             }`}
           >
             {isVideoOff ? (
@@ -665,59 +672,21 @@ const SupportPage: React.FC<any> = () => {
           </button>
           <button
             onClick={toggleScreenShare}
-            className={`p-3 sm:p-4 rounded-full ${
+            className={`p-3 sm:p-4 rounded-full transition-colors ${
               isScreenSharing
-                ? "bg-blue-500 text-white"
-                : "bg-gray-200 text-gray-700"
+                ? "bg-secondary text-white"
+                : "bg-secondaryDark text-white"
             }`}
           >
             <Monitor size={16} className="sm:w-5 sm:h-5" />
           </button>
           <button
             onClick={endCall}
-            className="p-3 sm:p-4 rounded-full bg-red-500 text-white"
+            className="p-3 sm:p-4 rounded-full bg-red-500 text-white hover:bg-red-600 transition-colors"
           >
             <Phone size={16} className="sm:w-5 sm:h-5" />
           </button>
-        </div>
-        {!isConnected ? (
-          <div className="mt-4 sm:mt-8 text-center">
-            <div className="inline-flex items-center bg-blue-50 px-3 py-2 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl text-blue-600 text-sm sm:text-base">
-              <svg
-                className="animate-spin -ml-1 mr-2 sm:mr-3 h-4 w-4 sm:h-5 sm:w-5 text-blue-600"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                />
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                />
-              </svg>
-            </div>
-          </div>
-        ) : isConnected &&remoteStream  ? (
-          <div className="mt-4 sm:mt-8 text-center">
-            <div className="inline-flex items-center bg-blue-50 px-3 py-2 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl text-blue-600 text-sm sm:text-base">
-              <p className="text-center">{formatTime(seconds)}</p>
-            </div>
-          </div>
-        ) : (
-          <div className="mt-4 sm:mt-8 text-center">
-            <div className="inline-flex items-center bg-blue-50 px-3 py-2 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl text-blue-600 text-sm sm:text-base">
-              <p className="text-center">Resolving stream issues</p>
-            </div>
-          </div>
-        )}
+        </footer>
       </div>
       <RatingModal
         isOpen={isRateModalOpen}
