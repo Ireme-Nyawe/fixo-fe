@@ -98,9 +98,13 @@ const AdminDashboard: React.FC = () => {
   const initializePeerConnection = async () => {
     const configuration = {
       iceServers: [
-        { urls: 'stun:stun.l.google.com:19302' },
-        { urls: 'stun:stun1.l.google.com:19302' }
-      ]
+  { urls: "stun:stun.l.google.com:19302" },
+  {
+    urls: "turn:204.168.178.194:3478",
+    username: "axxetawbrtc",
+    credential: "axxetta00pswdw0c11",
+  },
+]
     };
     
     const pc = new RTCPeerConnection(configuration);
