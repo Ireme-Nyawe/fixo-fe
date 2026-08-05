@@ -40,7 +40,7 @@ const SupportPage: React.FC<any> = () => {
   const techVideoContainerRef = useRef<HTMLDivElement>(null);
   const { techId } = useParams<{ techId: string }>();
   const [seconds, setSeconds] = useState(0);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const intervalRef = useRef<any | null>(null);
 
   useEffect(() => {
     if (connectionState=="connected") {

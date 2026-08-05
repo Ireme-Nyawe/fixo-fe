@@ -50,7 +50,7 @@ const TechnicianCallView: React.FC<TechnicianCallViewProps> = ({
   const userVideoContainerRef = useRef<HTMLDivElement>(null);
   const techVideoContainerRef = useRef<HTMLDivElement>(null);
   const [seconds, setSeconds] = useState(0);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const intervalRef = useRef<any | null>(null);
 
   useEffect(() => {
     if (connectionEstablished) {
