@@ -6,7 +6,7 @@ const TestimonialsSection = ({ lang }: { lang: string }) => {
     {
       id: 1,
       image: Avatar,
-      name: lang === 'en' ? 'Jean Claude Nshimiyimana' : 'Jean Claude Nshimiyimana',
+      name: lang === 'en' ? 'Prefer not to say' : 'yagizwe ibanga',
       location: lang === 'en' ? 'Kigali, Rwanda' : 'Kigali, Rwanda',
       feedback: lang === 'en'
         ? 'The service was outstanding! I would recommend it to anyone looking for professionalism and excellence. The technician was knowledgeable and solved my computer issues quickly.'
@@ -18,7 +18,7 @@ const TestimonialsSection = ({ lang }: { lang: string }) => {
     {
       id: 2,
       image: Avatar,
-      name: lang === 'en' ? 'Kelia Uwase' : 'Kelia Uwase',
+      name: lang === 'en' ? 'Prefer not to say' : 'yagizwe ibanga',
       location: lang === 'en' ? 'Musanze, Rwanda' : 'Musanze, Rwanda',
       feedback: lang === 'en'
         ? 'Very responsive and reliable services. I appreciate their dedication to customer satisfaction. They helped me set up my home network perfectly.'
@@ -30,7 +30,7 @@ const TestimonialsSection = ({ lang }: { lang: string }) => {
     {
       id: 3,
       image: Avatar,
-      name: lang === 'en' ? 'Eric Habimana' : 'Eric Habimana',
+      name: lang === 'en' ? 'Prefer not to say' : 'yagizwe ibanga',
       location: lang === 'en' ? 'Huye, Rwanda' : 'Huye, Rwanda',
       feedback: lang === 'en'
         ? 'Great experience! The team was very helpful, and their services exceeded my expectations. They taught me how to use digital tools effectively.'
@@ -42,7 +42,7 @@ const TestimonialsSection = ({ lang }: { lang: string }) => {
     {
       id: 4,
       image: Avatar,
-      name: lang === 'en' ? 'Marie Claire Mukamana' : 'Marie Claire Mukamana',
+      name: lang === 'en' ? 'Prefer not to say' : 'yagizwe ibanga',
       location: lang === 'en' ? 'Rubavu, Rwanda' : 'Rubavu, Rwanda',
       feedback: lang === 'en'
         ? 'Excellent customer service! They helped me recover my lost data and optimize my computer performance. Highly recommended!'
@@ -54,7 +54,7 @@ const TestimonialsSection = ({ lang }: { lang: string }) => {
     {
       id: 5,
       image: Avatar,
-      name: lang === 'en' ? 'Paul Nkurunziza' : 'Paul Nkurunziza',
+      name: lang === 'en' ? 'Prefer not to say' : 'yagizwe ibanga',
       location: lang === 'en' ? 'Nyagatare, Rwanda' : 'Nyagatare, Rwanda',
       feedback: lang === 'en'
         ? 'Professional and efficient service. They resolved my internet connectivity issues in no time. The support team is amazing!'
@@ -66,7 +66,7 @@ const TestimonialsSection = ({ lang }: { lang: string }) => {
     {
       id: 6,
       image: Avatar,
-      name: lang === 'en' ? 'Grace Uwimana' : 'Grace Uwimana',
+      name: lang === 'en' ? 'Prefer not to say' : 'yagizwe ibanga',
       location: lang === 'en' ? 'Karongi, Rwanda' : 'Karongi, Rwanda',
       feedback: lang === 'en'
         ? 'Outstanding support! They helped me learn online banking and e-government services. Very patient and understanding teachers.'
