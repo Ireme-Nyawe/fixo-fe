@@ -9,6 +9,7 @@ import {
   FaSignOutAlt,
   FaExchangeAlt,
   FaPhone,
+  FaBook,
 } from 'react-icons/fa';
 
 interface DashboardSidebarProps {
@@ -35,6 +36,7 @@ const DashboardSidebar = ({
     { name: 'Chat', icon: <FaComments /> },
     { name: 'Support', icon: <FaComments /> },
     { name: 'Profile', icon: <FaUser /> },
+    { name: 'Resources', icon: <FaBook /> }
   ];
   const adminLinks = [
     { name: 'Dashboard', icon: <FaHome /> },
