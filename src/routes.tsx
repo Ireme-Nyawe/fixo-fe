@@ -30,11 +30,14 @@ import TechnicianDashboard from './pages/dashboard/technician/TechDashboard';
 import Contact from './pages/Contact';
 import CallSessions from './pages/CallSessions';
 import PrivacyPolicy from './pages/PrivacyPolicy';
+import PublicResource from './pages/PublicResource';
+import Resource from './pages/dashboard/Resource';
 
 const AppRouter = () => {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
+      <Route path="/resources" element={< PublicResource/>} />
       <Route path="/login" element={<Login />} />
       <Route path="/services" element={<Services />} />
       <Route path="/products" element={<Products />} />
@@ -50,6 +53,7 @@ const AppRouter = () => {
           <Route element={<AdminRoute />}>
             <Route index={true} element={<Dashboard />} />
             <Route path="products" element={<DashboardProducts />} />
+            <Route path="resources" element={<Resource />} />
             <Route path="products/new" element={<NewProduct />} />
             <Route path="products/edit/:id" element={<EditProduct />} />
             <Route path="categories" element={<Categories />} />
