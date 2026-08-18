@@ -78,3 +78,38 @@ export interface Transaction {
   createdAt: string;
 }
 
+export interface IResourceContent {
+  _id?: string;
+  type: 'article' | 'video' | 'audio' | 'image' | 'pdf';
+  title?: string;
+  order?: number;
+  htmlContent?: string;
+  url?: string;
+  mimeType?: string;
+  fileSize?: number;
+  duration?: number;
+  caption?: string;
+  captionUrl?: string;
+  transcript?: string;
+  altText?: string;
+  createdBy?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface IResource {
+  _id?: string;
+  title: string;
+  description: string;
+  createdBy: string;
+  slug?: string;
+  category?: string;
+  tags?: string[];
+  coverImage?: string;
+  status?: 'draft' | 'published' | 'archived';
+  order?: number;
+  contents?: IResourceContent[];
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
