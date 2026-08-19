@@ -212,186 +212,149 @@ const FixoServicesSection = ({ lang }: { lang: string }) => {
   ];
 
   return (
-    <section
-      className="py-20 bg-gradient-to-br from-gray-50 via-white to-blue-50/30 relative overflow-hidden"
-      id="services"
-    >
-      {/* Background decorative elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 right-20 w-32 h-32 bg-secondary/20 rounded-full animate-float"></div>
-        <div className="absolute top-1/2 right-1/4 w-32 h-32 bg-secondary/20 rounded-full animate-pulse"></div>
-        <div className="absolute bottom-1/3 left-1/4 w-32 h-32 bg-secondary/20 rounded-full animate-float"></div>
-        <div className="absolute top-1/4 left-1/3 w-32 h-32 bg-secondary/20 bg-secondary rounded-full animate-pulse"></div>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
-        {/* How Fixo Works with Partners */}
-        <div className="mb-20">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              {lang === "en" ? "How Fixo Works" : "Fixo Ikora Ite"}
+    <section className="bg-slate-50 border-t border-slate-100" id="services">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-14">
+        <div className="mb-12">
+          <div className="max-w-2xl mb-8">
+            <p className="text-xs font-medium uppercase tracking-wider text-slate-500 mb-2">
+              {lang === "en" ? "How it works" : "Uko bikorwa"}
+            </p>
+            <h2 className="text-2xl md:text-3xl font-semibold tracking-tight text-slate-900">
+              {lang === "en" ? "How Fixo works" : "Fixo ikora ite"}
             </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+            <p className="mt-2 text-sm text-slate-600 leading-relaxed">
               {lang === "en"
-                ? "Our comprehensive partnership model ensures 24/7 technical support and digital access for everyone"
-                : "Uburyo bwacu bwuzuye bwo gufatanya bureba ko hari ubufasha bwa tekinike 24/7 n'ikoranabuhanga ku bantu bose"}
+                ? "Our partnership model keeps technical support and digital access available to everyone, around the clock."
+                : "Uburyo bwacu bwo gufatanya butuma ubufasha bwa tekinike n'ikoranabuhanga biboneka ku bantu bose igihe cyose."}
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {partnershipModel.map((model, index) => (
               <div
                 key={model.id}
-                className="group relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 overflow-hidden border border-gray-100"
+                className="rounded-xl border border-slate-200 bg-white p-6 hover:border-slate-300 transition-colors"
               >
-                <div className="p-8 text-center">
-                  <div
-                    className={`w-16 h-16 bg-secondary/20 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg`}
-                  >
-                    <model.icon className="text-secondary text-2xl" />
-                  </div>
-
-                  <div className="flex items-center justify-center gap-2 mb-4">
-                    <span className="text-3xl font-bold text-gray-400">
-                      0{index + 1}
-                    </span>
-                    <div className="w-8 h-0.5 bg-gray-300"></div>
-                  </div>
-
-                  <h3 className="text-xl font-bold text-gray-900 mb-4">
-                    {model.title}
-                  </h3>
-
-                  <p className="text-gray-600 leading-relaxed">
-                    {model.description}
-                  </p>
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center">
+                    <model.icon className="w-3.5 h-3.5 text-primary" />
+                  </span>
+                  <span className="text-xs font-semibold text-slate-400">
+                    0{index + 1}
+                  </span>
                 </div>
+                <h3 className="text-base font-semibold text-slate-900 mb-2">
+                  {model.title}
+                </h3>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  {model.description}
+                </p>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Part 1: Digital Skills & Assistance */}
-        <div className="mb-20">
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium mb-6">
-              <FaTools className="text-lg" />
-              <span>{lang === "en" ? "Part 1" : "Igice cya mbere"}</span>
+        <div className="mb-12">
+          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
+            <div className="max-w-xl">
+              <p className="text-xs font-medium uppercase tracking-wider text-slate-500 mb-2">
+                {lang === "en" ? "Part 1" : "Igice cya mbere"}
+              </p>
+              <h3 className="text-xl md:text-2xl font-semibold tracking-tight text-slate-900">
+                {lang === "en"
+                  ? "Digital skills & real-time assistance"
+                  : "Ubumenyi bw'ikoranabuhanga n'ubufasha bwihuse"}
+              </h3>
+              <p className="mt-2 text-sm text-slate-600 leading-relaxed">
+                {lang === "en"
+                  ? "Get expert help from our certified technicians through real-time communication and remote assistance."
+                  : "Habwa ubufasha bw'abatekinisiye bacu bemewe mu kanya, ukoresheje iyakure."}
+              </p>
             </div>
 
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              {lang === "en"
-                ? "Digital Skills & Real-Time Assistance"
-                : "ubumenyi n'ubufasha mu ikoranabuhanga"}
-            </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              {lang === "en"
-                ? "Get expert help from our certified technicians through our system real-time communication and remote assistance"
-                : "Bona ubufasha bw'inzobere binyuze muri sisitemu yacu mu itumanaho ryihuse aho uri hose igihe cyose"}
-            </p>
+            <Link
+              to="/direct-support"
+              className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-white hover:bg-primary/90 transition-colors self-start"
+            >
+              <FaPhone className="w-3 h-3" />
+              {lang === "en" ? "Get help now" : "Bona ubufasha ubu"}
+            </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {digitalSkillsServices.map((service) => (
-              <div
+              <article
                 key={service.id}
-                className="group relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden border border-gray-100"
+                className="group flex flex-col rounded-xl border border-slate-200 bg-white overflow-hidden hover:border-slate-300 transition-colors"
               >
-                <div className="relative h-40 overflow-hidden">
+                <div className="h-36 overflow-hidden bg-slate-100">
                   <img
                     src={service.image}
-                    alt={service.title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    alt=""
+                    loading="lazy"
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-
-                  <div className="absolute top-4 right-4">
-                    <div
-                      className={`w-12 h-12 bg-secondary rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}
-                    >
-                      <service.icon className="text-white text-xl" />
-                    </div>
-                  </div>
                 </div>
 
-                <div className="p-6">
-                  <h3 className="text-lg font-bold text-gray-900 mb-3 transition-colors duration-300">
+                <div className="flex flex-col flex-1 p-5">
+                  <service.icon className="w-4 h-4 text-primary mb-2.5" />
+                  <h4 className="text-sm font-semibold text-slate-900 mb-2 leading-snug">
                     {service.title}
-                  </h3>
-
-                  <p className="text-gray-600 text-sm mb-4 leading-relaxed line-clamp-3">
+                  </h4>
+                  <p className="text-sm text-slate-600 leading-relaxed line-clamp-3">
                     {service.description}
                   </p>
 
-                  <div className="space-y-2 mb-4">
-                    {service.features
-                      .slice(0, 2)
-                      .map((feature, featureIndex) => (
-                        <div
-                          key={featureIndex}
-                          className="flex items-center gap-3 text-xs text-gray-500"
-                        >
-                          <span>{feature}</span>
-                        </div>
-                      ))}
-                  </div>
+                  <ul className="mt-3 pt-3 border-t border-slate-100 space-y-1">
+                    {service.features.slice(0, 2).map((feature, index) => (
+                      <li key={index} className="text-xs text-slate-500">
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-              </div>
+              </article>
             ))}
           </div>
-          <p className="text-center m-5 flex justify-center"><Link to="/direct-support">
-            <button className="flex items-center bg-primary text-white hover:text-secondary font-semibold py-3 px-4 transition-all duration-300 text-sm">
-              <FaPhone/> &nbsp; {lang === "en" ? "Get Help Now" : "Bona ubufasha ubu"}
-            </button>
-          </Link></p>
         </div>
 
-        {/* Part 2: Digital Access */}
-        <div className="bg-primary rounded-3xl p-8 md:p-12">
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 bg-white text-secondary px-4 py-2 rounded-full text-sm font-medium mb-6">
-              <FaHandHoldingHeart className="text-lg" />
-              <span>{lang === "en" ? "Part 2" : "Igice cya kabiri"}</span>
-            </div>
-
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 md:p-10">
+          <div className="max-w-2xl mb-8">
+            <p className="text-xs font-medium uppercase tracking-wider text-slate-500 mb-2">
+              {lang === "en" ? "Part 2" : "Igice cya kabiri"}
+            </p>
+            <h3 className="text-xl md:text-2xl font-semibold tracking-tight text-slate-900">
               {lang === "en"
-                ? "Digital Access & Community Support"
-                : "Gufasha abaturage no kubona ibikoresho by'ikoranabuhanga"}
-            </h2>
-            <p className="text-lg text-white max-w-3xl mx-auto">
+                ? "Digital access & community support"
+                : "Gufasha abaturage no kubona ibikoresho"}
+            </h3>
+            <p className="mt-2 text-sm text-slate-600 leading-relaxed">
               {lang === "en"
-                ? "Partnering with government and other institutions to provide devices and internet access at discount or for free"
-                : "Gufatanya na leta n'inzego zitandukanye kugira ngo dutange ibikoresho na interineti ku giciro cyo hasi cyangwa ubuntu"}
+                ? "Partnering with government and other institutions to provide devices and internet access at a discount or for free."
+                : "Gufatanya na leta n'inzego zitandukanye kugira ngo dutange ibikoresho na interineti ku giciro cyo hasi cyangwa ubuntu."}
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {digitalAccessServices.map((service) => (
               <div
                 key={service.id}
-                className="group bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 p-8 text-center border border-gray-100"
+                className="rounded-xl border border-slate-200 bg-slate-50 p-5"
               >
-                <div
-                  className={`w-16 h-16 bg-secondary rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg`}
-                >
-                  <service.icon className="text-white text-2xl" />
-                </div>
-
-                <h3 className="text-xl font-bold text-gray-900 mb-4">
+                <service.icon className="w-4 h-4 text-primary mb-3" />
+                <h4 className="text-sm font-semibold text-slate-900 mb-2">
                   {service.title}
-                </h3>
-
-                <p className="text-gray-600 leading-relaxed">
+                </h4>
+                <p className="text-sm text-slate-600 leading-relaxed">
                   {service.description}
                 </p>
               </div>
             ))}
           </div>
 
-          <div className="text-center mt-12">
-            <h3 className="text-3xl text-secondary font-bold">You Are All Welcomed!</h3>
-          </div>
+          <p className="mt-8 text-center text-sm text-slate-500">
+            {lang === "en" ? "You are all welcomed!" : "Mwese muraje!"}
+          </p>
         </div>
       </div>
     </section>

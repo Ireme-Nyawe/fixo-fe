@@ -34,19 +34,20 @@ export default function RatingModal({ isOpen, onClose, onSubmit, onAskLater }: R
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm" onClick={onClose}></div>
-      <div className="bg-white rounded-lg shadow-2lg w-full max-w-lg mx-4 z-10 p-10">
-        <div className="relative p-6">
+      <div className="fixed inset-0 bg-slate-950/40" onClick={onClose}></div>
+      <div className="relative z-10 w-full max-w-sm mx-4 rounded-2xl border border-slate-200 bg-white p-6">
+        <div className="relative">
           <button 
             onClick={onClose}
-            className="absolute top-4 right-4 text-gray-600 hover:text-gray-900"
+            className="absolute -top-1 -right-1 text-slate-400 hover:text-slate-700"
           >
-            <X size={24} />
+            <X size={18} />
           </button>
           <div className="text-center">
-            <h2 className="text-2xl font-bold mb-6 text-gray-800">Rate Our Support</h2>
+            <h2 className="text-lg font-semibold tracking-tight text-slate-900 mb-1">Rate our support</h2>
+            <p className="text-sm text-slate-600 mb-6">How did the session go?</p>
 
-            <div className="flex justify-center items-center space-x-2 mb-8">
+            <div className="flex justify-center items-center gap-1 mb-6">
               {[1, 2, 3, 4, 5].map((value) => (
                 <button
                   key={value}
@@ -56,14 +57,14 @@ export default function RatingModal({ isOpen, onClose, onSubmit, onAskLater }: R
                   className="p-2 focus:outline-none transition-all duration-200"
                 >
                   <Star 
-                    size={40}
+                    size={30}
                     fill={(hoveredRating !== null ? value <= hoveredRating : value <= (rating || 0)) 
                       ? "#FFC107"
                       : "none"
                     }
                     color={(hoveredRating !== null ? value <= hoveredRating : value <= (rating || 0))
                       ? "#FFC107" 
-                      : "#CBD5E0" 
+                      : "#CBD5E1" 
                     }
                     className="transition-all duration-200"
                   />
@@ -75,17 +76,17 @@ export default function RatingModal({ isOpen, onClose, onSubmit, onAskLater }: R
               <button
                 onClick={handleSubmit}
                 disabled={rating === null}
-                className={`px-6 py-2 rounded-md font-medium transition-colors ${
-                  rating === null 
-                    ? "bg-gray-200 text-gray-500 cursor-not-allowed" 
-                    : "bg-green-500 text-white hover:bg-green-600"
+                className={`rounded-lg px-5 py-2.5 text-sm font-medium transition-colors ${
+                  rating === null
+                    ? "bg-slate-100 text-slate-400 cursor-not-allowed"
+                    : "bg-primary text-white hover:bg-primary/90"
                 }`}
               >
                 Submit
               </button>
               <button
                 onClick={onAskLater}
-                className="px-6 py-2 bg-orange-100 text-orange-700 rounded-md font-medium hover:bg-orange-200 transition-colors"
+                className="rounded-lg border border-slate-300 px-5 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
               >
                 Ask me later
               </button>

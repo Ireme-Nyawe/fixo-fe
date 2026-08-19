@@ -43,7 +43,7 @@ const ContentManager = ({
     { value: 'video', label: 'Video', icon: FaVideo },
     { value: 'audio', label: 'Audio', icon: FaMusic },
     { value: 'image', label: 'Image', icon: FaImage },
-    { value: 'pdf', label: 'PDF', label: 'PDF', icon: FaFilePdf },
+    { value: 'pdf', label: 'PDF', icon: FaFilePdf },
   ];
 
   const resetForm = () => {

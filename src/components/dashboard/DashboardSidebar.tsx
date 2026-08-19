@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import {
   FaHome,
   FaBox,
@@ -10,6 +10,7 @@ import {
   FaExchangeAlt,
   FaPhone,
   FaBook,
+  FaChalkboardTeacher,
 } from 'react-icons/fa';
 
 interface DashboardSidebarProps {
@@ -17,11 +18,17 @@ interface DashboardSidebarProps {
   sideBarToggle: () => void;
 }
 
+interface SidebarLink {
+  name: string;
+  path: string;
+  icon: JSX.Element;
+}
+
 const DashboardSidebar = ({
   isSidebarOpen,
   sideBarToggle,
 }: DashboardSidebarProps) => {
-  const [activeLink, setActiveLink] = useState('Dashboard');
+  const location = useLocation();
   const [userRole, setUserRole] = useState<string | null>(null);
 
   useEffect(() => {
@@ -32,30 +39,48 @@ const DashboardSidebar = ({
     }
   }, []);
 
-  const commonLinks = [
-    { name: 'Chat', icon: <FaComments /> },
-    { name: 'Support', icon: <FaComments /> },
-    { name: 'Profile', icon: <FaUser /> },
-    { name: 'Resources', icon: <FaBook /> }
+  const commonLinks: SidebarLink[] = [
+    { name: 'Chat', path: '/dashboard/chat', icon: <FaComments /> },
+    { name: 'Support', path: '/dashboard/support', icon: <FaComments /> },
+    ...(userRole === 'admin'
+      ? [
+          {
+            name: 'Trainings',
+            path: '/dashboard/trainings',
+            icon: <FaChalkboardTeacher />,
+          },
+        ]
+      : []),
+    { name: 'Profile', path: '/dashboard/profile', icon: <FaUser /> },
+    { name: 'Resources', path: '/dashboard/resources', icon: <FaBook /> },
   ];
-  const adminLinks = [
-    { name: 'Dashboard', icon: <FaHome /> },
-    { name: 'Manage Users', icon: <FaUsers /> },
-    { name: 'Products', icon: <FaBox /> },
-    { name: 'Payments', icon: <FaExchangeAlt /> },
-    { name: 'Call Sessions', icon: <FaPhone /> },
+  const adminLinks: SidebarLink[] = [
+    { name: 'Dashboard', path: '/dashboard', icon: <FaHome /> },
+    { name: 'Manage Users', path: '/dashboard/manage-users', icon: <FaUsers /> },
+    { name: 'Products', path: '/dashboard/products', icon: <FaBox /> },
+    { name: 'Payments', path: '/dashboard/payments', icon: <FaExchangeAlt /> },
+    {
+      name: 'Call Sessions',
+      path: '/dashboard/call-sessions',
+      icon: <FaPhone />,
+    },
   ];
-  const technicianLinks = [
-    { name: 'Tech Dashboard', icon: <FaHome /> },
+  const technicianLinks: SidebarLink[] = [
+    { name: 'Tech Dashboard', path: '/dashboard/tech', icon: <FaHome /> },
   ];
 
-  let visibleLinks: any = [];
+  let visibleLinks: SidebarLink[] = [];
   if (userRole === 'admin') {
     visibleLinks = [...visibleLinks, ...adminLinks];
   } else if (userRole === 'technician') {
     visibleLinks = [...visibleLinks, ...technicianLinks];
   }
   visibleLinks = [...visibleLinks, ...commonLinks];
+
+  const isLinkActive = (link: SidebarLink) => {
+    if (link.path === '/dashboard') return location.pathname === '/dashboard';
+    return location.pathname.startsWith(link.path);
+  };
 
   return (
     <>
@@ -64,20 +89,13 @@ const DashboardSidebar = ({
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
         } md:translate-x-0 transition-transform duration-200 ease-in-out w-64 bg-primary h-full flex flex-col justify-between`}
       >
-        <nav className="p-4 space-y-2">
-          {visibleLinks.map((link: any) => (
+        <nav className="p-4 space-y-2 overflow-y-auto">
+          {visibleLinks.map((link) => (
             <Link
               key={link.name}
-              to={
-                link.name === 'Dashboard'
-                  ? '/dashboard'
-                  : link.name === 'Tech Dashboard'
-                  ? '/dashboard/tech'
-                  : `/dashboard/${link.name.toLowerCase().replace(/\s/g, '-')}`
-              }
-              onClick={() => setActiveLink(link.name)}
+              to={link.path}
               className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-colors ${
-                activeLink === link.name
+                isLinkActive(link)
                   ? 'bg-secondary text-white'
                   : 'hover:bg-secondary/50 text-white/80'
               }`}

@@ -2,8 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+    font-size: 15px;
+}
+
 body {
-    @apply font-sans;
+    @apply font-sans text-slate-700 antialiased;
 }
 
 /* Custom animations for Hero Section */
@@ -46,3 +50,116 @@ body {
   animation: float 3s ease-in-out infinite;
 }
   
+.training-rich-text .ql-container {
+  border-bottom-left-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+.training-rich-text .ql-toolbar {
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+}
+
+.training-rich-text .ql-editor {
+  min-height: 12rem;
+}
+
+.rich-text h2 {
+  font-size: 1.5em;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.rich-text h3 {
+  font-size: 1.25em;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.rich-text p {
+  margin-bottom: 0.5rem;
+}
+
+.rich-text strong {
+  font-weight: 700;
+}
+
+.rich-text em {
+  font-style: italic;
+}
+
+.rich-text u {
+  text-decoration: underline;
+}
+
+.rich-text s {
+  text-decoration: line-through;
+}
+
+.rich-text a {
+  color: #295D42;
+  text-decoration: underline;
+}
+
+.rich-text ol,
+.rich-text ul {
+  padding-left: 1.5em;
+  margin-bottom: 0.5rem;
+}
+
+.rich-text ol {
+  list-style-type: decimal;
+}
+
+.rich-text ul {
+  list-style-type: disc;
+}
+
+.rich-text li {
+  margin-bottom: 0.25rem;
+}
+
+.rich-text blockquote {
+  border-left: 4px solid #e5e7eb;
+  padding-left: 1rem;
+  color: #4b5563;
+  margin-bottom: 0.5rem;
+}
+
+.rich-text .ql-align-center {
+  text-align: center;
+}
+
+.rich-text .ql-align-right {
+  text-align: right;
+}
+
+.rich-text .ql-align-justify {
+  text-align: justify;
+}
+
+.rich-text {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.rich-text img,
+.rich-text video,
+.rich-text iframe {
+  max-width: 100%;
+  height: auto;
+}
+
+.rich-text pre {
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.rich-text table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+}

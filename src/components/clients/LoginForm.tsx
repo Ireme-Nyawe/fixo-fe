@@ -19,7 +19,7 @@ const LoginForm = () => {
     password: Yup.string().required('Password is required'),
   });
 
-  const saveToken = async (token: any) => {
+  const saveToken = async (token: string) => {
     try {
       sessionStorage.setItem('token', token);
     } catch (error) {
@@ -32,12 +32,10 @@ const LoginForm = () => {
       const response = await authService.getProfile();
 
       if (response.status === 200) {
-        const { password, ...profileWithoutSensitiveData } = response.data;
+        const profile = { ...response.data };
+        delete profile.password;
 
-        localStorage.setItem(
-          'profile',
-          JSON.stringify(profileWithoutSensitiveData)
-        );
+        localStorage.setItem('profile', JSON.stringify(profile));
         if (response.data.role === 'admin') {
           navigate('/dashboard');
         } else {
@@ -46,9 +44,11 @@ const LoginForm = () => {
       } else {
         toast.error(response.message || 'Failed to fetch profile');
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error('Failed to get profile:', error);
-      toast.error(error.message);
+      toast.error(
+        error instanceof Error ? error.message : 'Failed to fetch profile'
+      );
     }
   };
 
@@ -78,7 +78,7 @@ const LoginForm = () => {
       }
     },
   });
-  const markUserOnline = async (_id: any) => {
+  const markUserOnline = async (_id: string) => {
     socket.emit('join', _id);
 
     socket.on('receiveMessage', async (data) => {
@@ -91,7 +91,7 @@ const LoginForm = () => {
       socket.off();
     };
   };
-  const handleVerifyOTP = async (e: any) => {
+  const handleVerifyOTP = async (e: React.FormEvent) => {
     e.preventDefault();
     const userId = localStorage.getItem('otpUserId');
 
@@ -112,26 +112,36 @@ const LoginForm = () => {
     }
   };
 
+  const inputClass =
+    'w-full px-3.5 py-2.5 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/15 transition-all';
+
   return (
     <>
       <Toaster richColors position="top-center" />
-      <div className="bg-primary min-h-screen flex items-center justify-center text-white">
-        <div className="w-11/12 max-w-4xl bg-superior shadow-lg rounded-2xl overflow-hidden grid grid-cols-1 md:grid-cols-2">
-          <div className="p-8 flex flex-col justify-center">
-            <Link
-              to="/"
-              className="text-2xl font-bold text-white mb-6 hover:text-white"
-            >
-              Fixo
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4 py-10">
+        <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 rounded-2xl border border-slate-200 bg-white overflow-hidden">
+          <div className="p-8 sm:p-10 flex flex-col justify-center">
+            <Link to="/" className="inline-block mb-8">
+              <img src="/logo.png" alt="Fixo" className="h-7 w-auto" />
             </Link>
+
             {showOTPForm ? (
-              <form onSubmit={handleVerifyOTP} className="space-y-6">
-                <h1 className="text-3xl font-bold mb-4 text-secondary">
-                  OTP Verification
-                </h1>
-                <div className="space-y-2">
-                  <label htmlFor="otp" className="block text-sm font-medium">
-                    Enter OTP
+              <form onSubmit={handleVerifyOTP} className="space-y-5">
+                <div>
+                  <h1 className="text-xl font-semibold tracking-tight text-slate-900">
+                    OTP verification
+                  </h1>
+                  <p className="mt-1.5 text-sm text-slate-600">
+                    Enter the code we sent to your email inbox.
+                  </p>
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="otp"
+                    className="block text-xs font-medium text-slate-600 mb-1.5"
+                  >
+                    One-time code
                   </label>
                   <input
                     type="text"
@@ -139,76 +149,96 @@ const LoginForm = () => {
                     name="otp"
                     value={otp}
                     onChange={(e) => setOtp(e.target.value)}
-                    placeholder="Enter OTP"
-                    className="w-full p-3 rounded-md bg-primary border border-secondary focus:outline-none focus:ring-2 focus:ring-secondary"
+                    placeholder="Enter the code"
+                    className={inputClass}
                     required
                   />
                 </div>
+
                 <button
                   type="submit"
-                  className="w-full py-3 bg-secondary text-primary font-bold rounded-md hover:bg-white hover:text-secondary transition"
+                  className="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-white hover:bg-primary/90 transition-colors"
                 >
                   Verify
                 </button>
               </form>
             ) : (
-              <form onSubmit={formik.handleSubmit} className="space-y-6">
-                <h1 className="text-3xl font-bold mb-4 text-secondary">
-                  Log into your account
-                </h1>
-                <div className="space-y-2">
-                  <label htmlFor="email" className="block text-sm font-medium">
-                    Enter email
+              <form onSubmit={formik.handleSubmit} className="space-y-5">
+                <div>
+                  <h1 className="text-xl font-semibold tracking-tight text-slate-900">
+                    Log into your account
+                  </h1>
+                  <p className="mt-1.5 text-sm text-slate-600">
+                    Welcome back. Enter your details to continue.
+                  </p>
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="email"
+                    className="block text-xs font-medium text-slate-600 mb-1.5"
+                  >
+                    Email
                   </label>
                   <input
                     type="email"
                     id="email"
                     {...formik.getFieldProps('email')}
                     placeholder="you@example.com"
-                    className="w-full p-3 rounded-md bg-primary border border-secondary focus:outline-none focus:ring-2 focus:ring-secondary"
+                    className={inputClass}
                     required
                   />
                   {formik.touched.email && formik.errors.email && (
-                    <p className="text-red-500 text-sm">
+                    <p className="mt-1 text-xs text-red-600">
                       {formik.errors.email}
                     </p>
                   )}
                 </div>
-                <div className="space-y-2">
+
+                <div>
                   <label
                     htmlFor="password"
-                    className="block text-sm font-medium"
+                    className="block text-xs font-medium text-slate-600 mb-1.5"
                   >
-                    Enter password
+                    Password
                   </label>
                   <input
                     type="password"
                     id="password"
                     {...formik.getFieldProps('password')}
                     placeholder="Your password"
-                    className="w-full p-3 rounded-md bg-primary border border-secondary focus:outline-none focus:ring-2 focus:ring-secondary"
+                    className={inputClass}
                     required
                   />
                   {formik.touched.password && formik.errors.password && (
-                    <p className="text-red-500 text-sm">
+                    <p className="mt-1 text-xs text-red-600">
                       {formik.errors.password}
                     </p>
                   )}
                 </div>
+
                 <button
                   type="submit"
                   disabled={formik.isSubmitting}
-                  className="w-full py-3 bg-secondary text-primary font-bold rounded-md hover:bg-white hover:text-secondary transition"
+                  className="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-white hover:bg-primary/90 disabled:opacity-50 transition-colors"
                 >
                   {formik.isSubmitting ? 'Signing in...' : 'Sign in'}
                 </button>
               </form>
             )}
+
+            <Link
+              to="/"
+              className="mt-8 text-xs text-slate-500 hover:text-slate-900 transition-colors"
+            >
+              Back to home
+            </Link>
           </div>
-          <div className="hidden md:block">
+
+          <div className="hidden md:block border-l border-slate-200 bg-slate-100">
             <img
               src={LoginImage}
-              alt="Login illustration"
+              alt=""
               className="h-full w-full object-cover"
             />
           </div>

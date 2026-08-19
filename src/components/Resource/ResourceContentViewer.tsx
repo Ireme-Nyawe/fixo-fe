@@ -1,4 +1,4 @@
-import { IResourceContent } from '../../../types/store';
+import { IResourceContent } from '../../types/store';
 import {
   FaImage,
   FaVideo,
@@ -15,9 +15,9 @@ const ResourceContentViewer = ({ content }: ResourceContentViewerProps) => {
   switch (content.type) {
     case 'article':
       return (
-        <div className="prose prose-sm max-w-none">
+        <div className="rich-text min-w-0 max-w-none">
           <div
-            className="text-gray-700 leading-relaxed"
+            className="text-sm text-slate-700 leading-relaxed"
             dangerouslySetInnerHTML={{ __html: content.htmlContent || '' }}
           />
         </div>
@@ -27,9 +27,9 @@ const ResourceContentViewer = ({ content }: ResourceContentViewerProps) => {
       return (
         <div className="space-y-3">
           {content.title && (
-            <h4 className="font-semibold text-gray-800">{content.title}</h4>
+            <h4 className="text-sm font-semibold text-slate-900">{content.title}</h4>
           )}
-          <div className="relative w-full bg-black rounded-lg overflow-hidden"
+          <div className="relative w-full bg-black rounded-xl overflow-hidden"
             style={{ paddingBottom: '56.25%' }}>
             <video
               src={content.url}
@@ -39,10 +39,10 @@ const ResourceContentViewer = ({ content }: ResourceContentViewerProps) => {
             />
           </div>
           {content.caption && (
-            <p className="text-sm text-gray-600 italic">{content.caption}</p>
+            <p className="text-xs text-slate-500">{content.caption}</p>
           )}
           {content.duration && (
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-slate-500">
               Duration: {Math.floor(content.duration / 60)}:{String(content.duration % 60).padStart(2, '0')}
             </p>
           )}
@@ -53,9 +53,9 @@ const ResourceContentViewer = ({ content }: ResourceContentViewerProps) => {
       return (
         <div className="space-y-3">
           {content.title && (
-            <h4 className="font-semibold text-gray-800">{content.title}</h4>
+            <h4 className="text-sm font-semibold text-slate-900">{content.title}</h4>
           )}
-          <div className="bg-gray-50 rounded-lg p-4">
+          <div className="rounded-xl border border-slate-200 p-4">
             <audio
               src={content.url}
               controls
@@ -64,14 +64,14 @@ const ResourceContentViewer = ({ content }: ResourceContentViewerProps) => {
             />
           </div>
           {content.caption && (
-            <p className="text-sm text-gray-600 italic">{content.caption}</p>
+            <p className="text-xs text-slate-500">{content.caption}</p>
           )}
           {content.transcript && (
             <details className="mt-3">
-              <summary className="cursor-pointer font-medium text-gray-700">
+              <summary className="cursor-pointer text-sm font-medium text-slate-700">
                 Show Transcript
               </summary>
-              <div className="mt-2 p-3 bg-gray-50 rounded-lg text-sm text-gray-700 whitespace-pre-wrap">
+              <div className="mt-2 rounded-lg border border-slate-200 p-3 text-sm text-slate-600 whitespace-pre-wrap break-words">
                 {content.transcript}
               </div>
             </details>
@@ -83,17 +83,17 @@ const ResourceContentViewer = ({ content }: ResourceContentViewerProps) => {
       return (
         <div className="space-y-3">
           {content.title && (
-            <h4 className="font-semibold text-gray-800">{content.title}</h4>
+            <h4 className="text-sm font-semibold text-slate-900">{content.title}</h4>
           )}
-          <div className="rounded-lg overflow-hidden bg-gray-100">
+          <div className="rounded-xl overflow-hidden border border-slate-200 bg-slate-50">
             <img
               src={content.url}
               alt={content.altText || content.title || 'Content image'}
-              className="w-full h-auto max-h-96 object-cover"
+              className="w-full h-auto max-h-96 object-contain"
             />
           </div>
           {content.caption && (
-            <p className="text-sm text-gray-600 italic">{content.caption}</p>
+            <p className="text-xs text-slate-500">{content.caption}</p>
           )}
         </div>
       );
@@ -102,13 +102,13 @@ const ResourceContentViewer = ({ content }: ResourceContentViewerProps) => {
       return (
         <div className="space-y-3">
           {content.title && (
-            <h4 className="font-semibold text-gray-800">{content.title}</h4>
+            <h4 className="text-sm font-semibold text-slate-900">{content.title}</h4>
           )}
-          <div className="bg-gray-50 rounded-lg p-6 flex flex-col items-center gap-4">
-            <FaFilePdf className="w-12 h-12 text-red-500" />
+          <div className="rounded-xl border border-slate-200 p-6 flex flex-col items-center gap-3">
+            <FaFilePdf className="w-8 h-8 text-slate-400" />
             <div className="text-center">
-              <p className="font-medium text-gray-800">PDF Document</p>
-              <p className="text-sm text-gray-600 mt-1">
+              <p className="text-sm font-medium text-slate-900">PDF Document</p>
+              <p className="text-xs text-slate-500 mt-1">
                 {content.fileSize &&
                   `${(content.fileSize / 1024 / 1024).toFixed(2)} MB`}
               </p>
@@ -117,20 +117,20 @@ const ResourceContentViewer = ({ content }: ResourceContentViewerProps) => {
               href={content.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-2 px-6 py-2 bg-primary hover:bg-primary/90 text-white rounded-lg transition-colors"
+              className="mt-1 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary/90 transition-colors"
             >
               Open PDF
             </a>
           </div>
           {content.caption && (
-            <p className="text-sm text-gray-600 italic">{content.caption}</p>
+            <p className="text-xs text-slate-500">{content.caption}</p>
           )}
         </div>
       );
 
     default:
       return (
-        <div className="text-center text-gray-500 py-8">
+        <div className="text-center text-sm text-slate-500 py-8">
           <p>Unsupported content type: {content.type}</p>
         </div>
       );

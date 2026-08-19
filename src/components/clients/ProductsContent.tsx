@@ -2,13 +2,12 @@ import { useEffect, useState } from 'react';
 import { ICategory, IProduct } from '../../types/store';
 import productService from '../../state/features/auth/productSlice';
 import { Link } from 'react-router-dom';
+import { FaBoxOpen, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
-const storeBg = '/store.jpg';
-
-interface ProductsCOntentsProps {
-  lang: any;
+interface ProductsContentProps {
+  lang: string;
 }
-const ProductsContent = ({ lang }: ProductsCOntentsProps) => {
+const ProductsContent = ({ lang }: ProductsContentProps) => {
   const [products, setProducts] = useState<IProduct[]>([]);
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [loading, setLoading] = useState(true);
@@ -98,6 +97,8 @@ const ProductsContent = ({ lang }: ProductsCOntentsProps) => {
     fetchCategoryData();
   }, []);
 
+  const copy = translations[lang === 'en' ? 'en' : 'kin'];
+
   const totalPages = Math.ceil(products.length / itemsPerPage);
   const paginatedProducts = products.slice(
     (currentPage - 1) * itemsPerPage,
@@ -105,38 +106,45 @@ const ProductsContent = ({ lang }: ProductsCOntentsProps) => {
   );
 
   return (
-    <div>
-      <div
-        className="w-full h-[40vh] bg-cover bg-center relative"
-        style={{ backgroundImage: `url(${storeBg})` }}
-      >
-        <div className="flex items-center justify-center h-full bg-black/50">
-          <h1 className="text-[#1DCE5F] text-3xl font-bold">
-            {translations?.[lang === 'en' ? 'en' : 'kin']?.welcome}
+    <div className="bg-white">
+      <section className="border-b border-slate-100 bg-slate-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+          <p className="text-xs font-medium uppercase tracking-wider text-slate-500 mb-2">
+            {copy.welcome}
+          </p>
+          <h1 className="text-2xl md:text-3xl font-semibold tracking-tight text-slate-900">
+            {copy.ourProducts}
           </h1>
+          <p className="mt-2 text-sm text-slate-600 max-w-xl leading-relaxed">
+            {lang === 'en'
+              ? 'Devices and tools offered at accessible prices through our partners.'
+              : "Ibikoresho bitangwa ku giciro cyoroshye binyuze ku bafatanyabikorwa bacu."}
+          </p>
         </div>
-      </div>
+      </section>
 
-      <div className="max-w-6xl mx-auto p-6">
-        <div className="flex w-full p-2 justify-between items-center flex-wrap gap-4">
-          <h2 className="text-[#295D42] text-2xl font-bold">
-            {translations?.[lang === 'en' ? 'en' : 'kin']?.ourProducts}
-          </h2>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
+          <p className="text-xs text-slate-500">
+            {products.length} {lang === 'en' ? 'items' : 'ibikoresho'}
+          </p>
 
-          <div className="flex flex-col text-sm">
-            <label htmlFor="category" className="text-[#329964] font-medium">
-              {translations?.[lang === 'en' ? 'en' : 'kin']?.filterByCategory}
+          <div className="flex items-center gap-2">
+            <label
+              htmlFor="category"
+              className="text-xs font-medium text-slate-600 whitespace-nowrap"
+            >
+              {copy.filterByCategory}
             </label>
             <select
               id="category"
-              className="mt-1 p-2 border border-primary rounded-md focus:outline-none focus:ring-2 focus:ring-primary bg-white"
+              value={selectedCategory}
               onChange={handleCategoryChange}
+              className="px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/15 transition-all"
             >
-              <option value="">
-                {translations?.[lang === 'en' ? 'en' : 'kin']?.allCategories}
-              </option>
+              <option value="">{copy.allCategories}</option>
               {categories.map((category) => (
-                <option key={category._id} value={category._id}>
+                <option key={String(category._id)} value={String(category._id)}>
                   {category.name}
                 </option>
               ))}
@@ -145,42 +153,58 @@ const ProductsContent = ({ lang }: ProductsCOntentsProps) => {
         </div>
 
         {loading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {Array.from({ length: 6 }).map((_, index) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {Array.from({ length: 8 }).map((_, index) => (
               <div
                 key={index}
-                className="bg-gray-200 animate-pulse rounded-lg p-4 border border-gray-300"
+                className="rounded-xl border border-slate-200 overflow-hidden animate-pulse"
               >
-                <div className="w-full h-48 bg-gray-300 rounded-md"></div>
-                <div className="h-5 bg-gray-400 rounded w-3/4 mt-4"></div>
-                <div className="h-4 bg-gray-400 rounded w-1/2 mt-2"></div>
-                <div className="h-4 bg-gray-400 rounded w-1/3 mt-2"></div>
+                <div className="h-40 bg-slate-100" />
+                <div className="p-5 space-y-3">
+                  <div className="h-4 w-3/4 bg-slate-100 rounded" />
+                  <div className="h-3 w-full bg-slate-100 rounded" />
+                  <div className="h-3 w-1/3 bg-slate-100 rounded" />
+                </div>
               </div>
             ))}
           </div>
         ) : paginatedProducts.length > 0 ? (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
               {paginatedProducts.map((product) => (
-                <Link to={`/product/${product._id}`} key={product._id}>
-                  <div className="bg-white shadow-lg rounded-lg p-4 border border-gray-200 hover:shadow-xl transition-shadow duration-300">
-                    <img
-                      src={product.images[0]}
-                      alt={product.name}
-                      className="w-full h-48 object-cover rounded-md"
-                    />
-                    <h3 className="text-lg font-bold text-[#295D42] mt-2">
+                <Link
+                  to={`/product/${product._id}`}
+                  key={String(product._id)}
+                  className="group flex flex-col rounded-xl border border-slate-200 overflow-hidden hover:border-slate-300 transition-colors"
+                >
+                  <div className="h-40 bg-slate-100 overflow-hidden">
+                    {product.images?.[0] ? (
+                      <img
+                        src={product.images[0]}
+                        alt=""
+                        loading="lazy"
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <FaBoxOpen className="w-7 h-7 text-slate-300" />
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex flex-col flex-1 p-5">
+                    <h3 className="text-sm font-semibold text-slate-900 leading-snug line-clamp-2">
                       {product.name}
                     </h3>
-                    <p className="text-gray-600 truncate">
+                    <p className="mt-1.5 text-sm text-slate-600 line-clamp-2 leading-relaxed">
                       {product.description}
                     </p>
-                    <div className="flex justify-between items-center mt-2">
-                      <p className="text-[#329964] font-semibold">
-                        RWF{product.price}
-                      </p>
-                      <span className="text-gray-500 text-sm">
-                        {product.stock} in stock
+                    <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
+                      <span className="text-sm font-semibold text-slate-900">
+                        RWF {product.price?.toLocaleString()}
+                      </span>
+                      <span className="text-xs text-slate-500">
+                        {product.stock} {lang === 'en' ? 'in stock' : 'bihari'}
                       </span>
                     </div>
                   </div>
@@ -189,53 +213,51 @@ const ProductsContent = ({ lang }: ProductsCOntentsProps) => {
             </div>
 
             {totalPages > 1 && (
-              <div className="flex justify-center items-center mt-6 gap-4">
+              <div className="mt-8 flex items-center justify-between gap-4">
                 <button
+                  type="button"
                   disabled={currentPage === 1}
-                  onClick={() =>
-                    setCurrentPage((prev) => Math.max(prev - 1, 1))
-                  }
-                  className={`px-4 py-2 border rounded-md transition-colors duration-200 ${
-                    currentPage === 1
-                      ? 'bg-gray-300 cursor-not-allowed'
-                      : 'bg-[#1DCE5F] text-white hover:bg-[#329964]'
-                  }`}
+                  onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                  className="inline-flex items-center gap-2 rounded-lg border border-slate-300 px-3.5 py-2 text-sm text-slate-700 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                 >
-                  {translations?.[lang === 'en' ? 'en' : 'kin']?.previous}
+                  <FaChevronLeft className="w-3 h-3" />
+                  {copy.previous}
                 </button>
-                <span className="text-gray-700">
-                  {translations?.[lang === 'en' ? 'en' : 'kin']?.page}{' '}
-                  {currentPage}{' '}
-                  {translations?.[lang === 'en' ? 'en' : 'kin']?.of}
-                  {totalPages}
+
+                <span className="text-sm text-slate-500">
+                  {copy.page} {currentPage} {copy.of} {totalPages}
                 </span>
+
                 <button
+                  type="button"
                   disabled={currentPage === totalPages}
                   onClick={() =>
                     setCurrentPage((prev) => Math.min(prev + 1, totalPages))
                   }
-                  className={`px-4 py-2 border rounded-md transition-colors duration-200 ${
-                    currentPage === totalPages
-                      ? 'bg-gray-300 cursor-not-allowed'
-                      : 'bg-[#1DCE5F] text-white hover:bg-[#329964]'
-                  }`}
+                  className="inline-flex items-center gap-2 rounded-lg border border-slate-300 px-3.5 py-2 text-sm text-slate-700 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                 >
-                  {translations?.[lang === 'en' ? 'en' : 'kin']?.next}
+                  {copy.next}
+                  <FaChevronRight className="w-3 h-3" />
                 </button>
               </div>
             )}
           </>
         ) : (
-          <div className="text-center mt-6">
-            <p className="text-gray-600 text-lg">
-              {translations?.[lang === 'en' ? 'en' : 'kin']?.noProducts}
+          <div className="text-center py-16 rounded-xl border border-dashed border-slate-300">
+            <FaBoxOpen className="w-10 h-10 text-slate-300 mx-auto mb-3" />
+            <p className="text-base font-medium text-slate-800">
+              {copy.noProducts}
             </p>
             {selectedCategory && (
               <button
-                onClick={fetchProductData}
-                className="mt-4 px-4 py-2 bg-[#1DCE5F] text-white rounded-md hover:bg-[#329964] transition-colors duration-200"
+                type="button"
+                onClick={() => {
+                  setSelectedCategory('');
+                  fetchProductData();
+                }}
+                className="mt-5 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary/90 transition-colors"
               >
-                {translations?.[lang === 'en' ? 'en' : 'kin']?.loadAllProducts}
+                {copy.loadAllProducts}
               </button>
             )}
           </div>

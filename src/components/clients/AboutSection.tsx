@@ -156,87 +156,78 @@ const AboutSection = ({ lang }: { lang: string }) => {
   const currentContent = content[lang === "rw" ? "rw" : "en"];
 
   return (
-    <section className="py-20 bg-gradient-to-br from-gray-50 via-white to-secondary/5 relative overflow-hidden">
-      {/* Background decorative elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-20 right-10 w-32 h-32 bg-secondary/10 rounded-full animate-float"></div>
-        <div className="absolute bottom-20 left-10 w-24 h-24 bg-primary/10 rounded-full animate-bounce-gentle"></div>
-        <div className="absolute top-1/2 left-1/4 w-16 h-16 bg-secondary/15 rounded-full animate-pulse"></div>
-        <div className="absolute bottom-1/3 right-1/4 w-20 h-20 bg-primary/15 rounded-full animate-float"></div>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 bg-secondary/20 backdrop-blur-sm border border-secondary/30 rounded-full px-6 py-3 mb-6">
-            <FaUsers className="text-secondary text-lg" />
-            <span className="text-secondary font-semibold">
-              {lang === "en" ? "Our Story" : "Inkuru yacu"}
-            </span>
-          </div>
-
-          <h1 className="text-3xl md:text-5xl font-bold text-gray-900 mb-5 leading-tight">
-            {lang === 'en' ? 'Digital Access for All Rwandans' : 'Ikoranabuhanga ku Banyarwanda Bose'}
-          </h1>
-
-          <h3 className="text-xl md:text-2xl text-secondary font-semibold mb-6">
+    <section className="bg-white border-t border-slate-100">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-14">
+        <div className="max-w-2xl mb-10">
+          <p className="text-xs font-medium uppercase tracking-wider text-slate-500 mb-2">
+            {lang === "en" ? "Our story" : "Inkuru yacu"}
+          </p>
+          <h2 className="text-2xl md:text-3xl font-semibold tracking-tight text-slate-900">
+            {lang === "en"
+              ? "Digital access for all Rwandans"
+              : "Ikoranabuhanga ku Banyarwanda bose"}
+          </h2>
+          <p className="mt-2 text-sm font-medium text-primary">
             {currentContent.subtitle}
-          </h3>
-
-          <p className="text-lg text-gray-600 max-w-4xl mx-auto leading-relaxed font-bold">
+          </p>
+          <p className="mt-3 text-sm text-slate-600 leading-relaxed">
             {currentContent.description}
           </p>
         </div>
 
-        {/* Mission & Vision */}
-        <div className="grid md:grid-cols-2 gap-8 mb-16">
-          <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 bg-secondary/20 rounded-xl flex items-center justify-center">
-                <FaRocket className="text-secondary text-xl" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900">
-                {currentContent.mission}
+        <div className="grid md:grid-cols-2 gap-5 mb-12">
+          {[
+            {
+              icon: FaRocket,
+              title: currentContent.mission,
+              text: currentContent.missionText,
+            },
+            {
+              icon: FaGlobe,
+              title: currentContent.vision,
+              text: currentContent.visionText,
+            },
+          ].map((item) => (
+            <div
+              key={item.title}
+              className="rounded-xl border border-slate-200 p-6 hover:border-slate-300 transition-colors"
+            >
+              <item.icon className="w-4 h-4 text-primary mb-3" />
+              <h3 className="text-base font-semibold text-slate-900 mb-2">
+                {item.title}
               </h3>
+              <p className="text-sm text-slate-600 leading-relaxed">
+                {item.text}
+              </p>
             </div>
-            <p className="text-gray-600 leading-relaxed text-justify">
-              {currentContent.missionText}
-            </p>
-          </div>
+          ))}
+        </div>
 
-          <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 bg-secondary/20 rounded-xl flex items-center justify-center">
-                <FaGlobe className="text-secondary text-xl" />
+        <div className="rounded-xl border border-slate-200 bg-slate-50 px-6 py-8 mb-12">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {currentContent.stats.map((stat, index) => (
+              <div key={index}>
+                <p className="text-2xl md:text-3xl font-semibold text-slate-900">
+                  {stat.number}
+                </p>
+                <p className="mt-1 text-xs text-slate-500">{stat.label}</p>
               </div>
-              <h3 className="text-2xl font-bold text-gray-900">
-                {currentContent.vision}
-              </h3>
-            </div>
-            <p className="text-gray-600 leading-relaxed text-justify">
-              {currentContent.visionText}
-            </p>
+            ))}
           </div>
         </div>
 
-        {/* Values */}
-        <div className="mb-16">
-          <h3 className="text-3xl font-bold text-center text-gray-900 mb-12">
-            {lang === "en" ? "Our Core Values" : "Indangagaciro zacu"}
+        <div className="mb-12">
+          <h3 className="text-lg font-semibold text-slate-900 mb-5">
+            {lang === "en" ? "Our core values" : "Indangagaciro zacu"}
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {currentContent.values.map((value, index) => (
-              <div
-                key={index}
-                className="group bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100"
-              >
-                <div className="w-16 h-16 bg-gradient-to-br from-secondary/20 to-secondary/10 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                  <value.icon className="text-secondary text-2xl" />
-                </div>
-                <h4 className="text-xl font-bold text-gray-900 mb-3">
+              <div key={index} className="border-t border-slate-200 pt-4">
+                <value.icon className="w-4 h-4 text-primary mb-2.5" />
+                <h4 className="text-sm font-semibold text-slate-900 mb-1.5">
                   {value.title}
                 </h4>
-                <p className="text-gray-600 text-sm leading-relaxed text-justify">
+                <p className="text-sm text-slate-600 leading-relaxed">
                   {value.description}
                 </p>
               </div>
@@ -244,43 +235,21 @@ const AboutSection = ({ lang }: { lang: string }) => {
           </div>
         </div>
 
-        {/* Stats */}
-        <div className="bg-primary rounded-2xl p-8 mb-16 text-white">
-          <h3 className="text-3xl font-bold text-center mb-8">
-            {lang === "en" ? "Quarter expected impact" : "ibyo twiteze mu gihembwe"}
-          </h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {currentContent.stats.map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className="text-4xl md:text-5xl font-bold mb-2">
-                  {stat.number}
-                </div>
-                <div className="text-lg font-medium opacity-90">
-                  {stat.label}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Why Choose Fixo */}
         <div>
-          <h3 className="text-3xl font-bold text-center text-gray-900 mb-12">
+          <h3 className="text-lg font-semibold text-slate-900 mb-5">
             {currentContent.teamTitle}
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {currentContent.teamFeatures.map((feature, index) => (
               <div
                 key={index}
-                className="group bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100"
+                className="rounded-xl border border-slate-200 p-5 hover:border-slate-300 transition-colors"
               >
-                <div className="w-16 h-16 bg-secondary/20 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                  <feature.icon className="text-secondary text-2xl" />
-                </div>
-                <h4 className="text-xl font-bold text-gray-900 mb-3">
+                <feature.icon className="w-4 h-4 text-primary mb-2.5" />
+                <h4 className="text-sm font-semibold text-slate-900 mb-1.5">
                   {feature.title}
                 </h4>
-                <p className="text-gray-600 text-sm leading-relaxed text-justify">
+                <p className="text-sm text-slate-600 leading-relaxed">
                   {feature.description}
                 </p>
               </div>

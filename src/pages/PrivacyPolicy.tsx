@@ -185,93 +185,101 @@ const PrivacyPolicy = () => {
   const currentContent = content[lang === 'rw' ? 'rw' : 'en'];
 
   return (
-    <div>
+    <div className="flex flex-col min-h-screen bg-white">
       <Header />
-      
-      {/* Hero Section */}
-      <section className="py-20 bg-gradient-to-br from-gray-50 via-white to-primary/5 relative overflow-hidden">
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-20 right-10 w-24 h-24 bg-secondary/10 rounded-full animate-float"></div>
-          <div className="absolute bottom-20 left-10 w-32 h-32 bg-primary/10 rounded-full animate-bounce-gentle"></div>
-        </div>
 
-        <div className="max-w-4xl mx-auto px-6 relative z-10 text-center">
-          <div className="inline-flex items-center gap-2 bg-secondary/20 backdrop-blur-sm border border-secondary/30 rounded-full px-6 py-3 mb-6">
-            <FaShieldAlt className="text-secondary text-lg" />
-            <span className="text-secondary font-semibold">
-              {lang === 'en' ? 'Privacy & Security' : 'Ubwoba n\'Umutekano'}
-            </span>
+      <main className="flex-1">
+        <section className="border-b border-slate-100 bg-slate-50">
+          <div className="max-w-3xl mx-auto px-4 sm:px-6 py-12">
+            <p className="text-xs font-medium uppercase tracking-wider text-slate-500 mb-2">
+              {lang === 'en' ? 'Privacy & security' : "Ibanga n'umutekano"}
+            </p>
+            <h1 className="text-2xl md:text-3xl font-semibold tracking-tight text-slate-900">
+              {currentContent.title}
+            </h1>
+            <p className="mt-2 text-sm text-slate-600 leading-relaxed">
+              {currentContent.subtitle}
+            </p>
+            <p className="mt-3 text-xs text-slate-500">
+              {currentContent.lastUpdated}
+            </p>
           </div>
-          
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            {currentContent.title}
-          </h1>
-          
-          <p className="text-lg text-gray-600 mb-4">
-            {currentContent.subtitle}
-          </p>
-          
-          <p className="text-sm text-gray-500">
-            {currentContent.lastUpdated}
-          </p>
-        </div>
-      </section>
+        </section>
 
-      {/* Content Section */}
-      <section className="py-16 bg-white">
-        <div className="max-w-4xl mx-auto px-6">
-          <div className="space-y-12">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 py-10">
+          <div className="space-y-8">
             {currentContent.sections.map((section, index) => (
-              <div key={index} className="bg-gray-50 rounded-2xl p-8 border border-gray-100">
-                <div className="flex items-start gap-4 mb-6">
-                  <div className="w-12 h-12 bg-gradient-to-r from-secondary to-secondaryDark rounded-xl flex items-center justify-center flex-shrink-0">
-                    <section.icon className="text-white text-xl" />
-                  </div>
-                  <div>
-                    <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                      {section.title}
-                    </h2>
-                    <div className="space-y-4">
-                      {section.content.map((paragraph, pIndex) => (
-                        <p key={pIndex} className="text-gray-600 leading-relaxed">
-                          {paragraph}
-                        </p>
-                      ))}
-                    </div>
-                  </div>
+              <section key={index}>
+                <div className="flex items-center gap-2.5 mb-3">
+                  <span className="w-7 h-7 rounded-lg bg-slate-100 flex items-center justify-center flex-shrink-0">
+                    <section.icon className="w-3.5 h-3.5 text-primary" />
+                  </span>
+                  <h2 className="text-base font-semibold text-slate-900">
+                    {section.title}
+                  </h2>
                 </div>
-              </div>
+                <div className="space-y-3 sm:pl-10">
+                  {section.content.map((paragraph, pIndex) => (
+                    <p
+                      key={pIndex}
+                      className="text-sm text-slate-600 leading-relaxed"
+                    >
+                      {paragraph}
+                    </p>
+                  ))}
+                </div>
+              </section>
             ))}
           </div>
 
-          {/* Contact Section */}
-          <div className="mt-16 bg-secondary rounded-2xl p-8 text-white text-center">
-            <h2 className="text-2xl font-bold mb-4">
+          <div className="mt-12 rounded-xl border border-slate-200 p-6">
+            <h2 className="text-base font-semibold text-slate-900">
               {currentContent.contact.title}
             </h2>
-            <p className="text-lg mb-6 opacity-90">
+            <p className="mt-1.5 text-sm text-slate-600 leading-relaxed">
               {currentContent.contact.description}
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
-              <div>
-                <FaEnvelope className="text-2xl mb-2 mx-auto" />
-                <p className="font-semibold">Email</p>
-                <p className="opacity-90">{currentContent.contact.email}</p>
-              </div>
-              <div>
-                <FaPhone className="text-2xl mb-2 mx-auto" />
-                <p className="font-semibold">{lang === 'en' ? 'Phone' : 'Telefone'}</p>
-                <p className="opacity-90">{currentContent.contact.phone}</p>
-              </div>
-              <div>
-                <FaMapMarkerAlt className="text-2xl mb-2 mx-auto" />
-                <p className="font-semibold">{lang === 'en' ? 'Address' : 'Aho Turi'}</p>
-                <p className="opacity-90">{currentContent.contact.address}</p>
-              </div>
+
+            <div className="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {[
+                {
+                  icon: FaEnvelope,
+                  label: 'Email',
+                  value: currentContent.contact.email,
+                  href: `mailto:${currentContent.contact.email}`,
+                },
+                {
+                  icon: FaPhone,
+                  label: lang === 'en' ? 'Phone' : 'Telefone',
+                  value: currentContent.contact.phone,
+                  href: 'tel:+250785450726',
+                },
+                {
+                  icon: FaMapMarkerAlt,
+                  label: lang === 'en' ? 'Address' : 'Aho turi',
+                  value: currentContent.contact.address,
+                  href: null,
+                },
+              ].map((item) => (
+                <div key={item.label}>
+                  <item.icon className="w-3.5 h-3.5 text-primary mb-2" />
+                  <p className="text-xs text-slate-500">{item.label}</p>
+                  {item.href ? (
+                    <a
+                      href={item.href}
+                      className="text-sm text-slate-900 hover:text-primary transition-colors"
+                    >
+                      {item.value}
+                    </a>
+                  ) : (
+                    <p className="text-sm text-slate-900">{item.value}</p>
+                  )}
+                </div>
+              ))}
             </div>
           </div>
         </div>
-      </section>
+      </main>
 
       <Footer lang={lang} />
     </div>

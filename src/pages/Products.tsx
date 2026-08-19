@@ -1,12 +1,12 @@
 import Footer from '../components/clients/Footer';
 import Header from '../components/clients/Header';
 import ProductsContent from '../components/clients/ProductsContent';
-import SEO from '../components/SEO'; 
+import SEO from '../components/SEO';
 const Products = () => {
   const lang = localStorage.getItem('lang') || 'en';
 
   return (
-    <div>
+    <div className="bg-white">
       <SEO
         title="Fixo Products | Buy and Access On-Demand Tech Support Tools in Rwanda"
         description="Explore Fixo's range of tech support products and digital services. Buy essential tools to fix your phone, PC, or access e-government platforms with ease."
@@ -22,7 +22,7 @@ const Products = () => {
       />
       <Header />
       <ProductsContent lang={lang} />
-      <Footer lang={lang}/>
+      <Footer lang={lang} />
     </div>
   );
 };

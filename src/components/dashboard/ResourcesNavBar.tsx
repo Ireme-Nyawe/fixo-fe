@@ -1,4 +1,4 @@
-import { FaPlusSquare, FaList, FaBook } from 'react-icons/fa';
+import { FaList, FaBook } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
 const ResourcesNavBar = () => {

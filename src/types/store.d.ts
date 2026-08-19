@@ -113,3 +113,31 @@ export interface IResource {
   updatedAt?: Date;
 }
 
+
+export interface ITraining {
+  _id?: string;
+  title: string;
+  description?: string;
+  category: string;
+  coverImage?: string;
+  location: string;
+  directions: string;
+  startTime: string | Date;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface IPagination {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+}
+
+export interface ITrainingStats {
+  total: number;
+  upcoming: number;
+  past: number;
+}

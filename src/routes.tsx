@@ -31,13 +31,18 @@ import Contact from './pages/Contact';
 import CallSessions from './pages/CallSessions';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import PublicResource from './pages/PublicResource';
+import PublicResourceDetail from './pages/PublicResourceDetail';
+import PublicTrainings from './pages/PublicTrainings';
 import Resource from './pages/dashboard/Resource';
+import Trainings from './pages/dashboard/admin/Trainings';
 
 const AppRouter = () => {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
-      <Route path="/resources" element={< PublicResource/>} />
+      <Route path="/resources" element={<PublicResource />} />
+      <Route path="/resources/:id" element={<PublicResourceDetail />} />
+      <Route path="/trainings" element={<PublicTrainings />} />
       <Route path="/login" element={<Login />} />
       <Route path="/services" element={<Services />} />
       <Route path="/products" element={<Products />} />
@@ -67,6 +72,7 @@ const AppRouter = () => {
             <Route path="manage-users/new" element={<NewUser />} />
             <Route path="payments" element={<Payments />} />
             <Route path="withdrawals" element={<TechniciansWithdrawals />} />
+            <Route path="trainings" element={<Trainings />} />
           </Route>
 
           <Route element={<TechnicianRoute />}>

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { IProduct } from '../../types/store';
 import productService from '../../state/features/auth/productSlice';
 import { useParams, Link } from 'react-router-dom';
-import { FaWhatsapp } from 'react-icons/fa';
+import { FaWhatsapp, FaBoxOpen, FaArrowLeft } from 'react-icons/fa';
 import SEO from '../SEO';
 
 const SingleProductContent = () => {
@@ -44,7 +44,19 @@ const SingleProductContent = () => {
 
   if (!productData && !loading) {
     return (
-      <p className="text-center text-red-500 text-lg">Product not found.</p>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-20 text-center">
+        <FaBoxOpen className="w-10 h-10 text-slate-300 mx-auto mb-3" />
+        <p className="text-base font-medium text-slate-800">
+          {lang === 'en' ? 'Product not found' : 'Igicuruzwa ntikibonetse'}
+        </p>
+        <Link
+          to="/products"
+          className="mt-5 inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary/90 transition-colors"
+        >
+          <FaArrowLeft className="w-3 h-3" />
+          {lang === 'en' ? 'Back to products' : 'Subira ku bicuruzwa'}
+        </Link>
+      </div>
     );
   }
 
@@ -54,113 +66,142 @@ const SingleProductContent = () => {
   return (
     <>
       <SEO
-        title={`${productData?.name} | KicksideShop`}
-        description={`Buy ${productData?.name} on KicksideShop. ${
+        title={`${productData?.name || 'Product'} | Fixo`}
+        description={
           productData?.description?.slice(0, 160) ||
-          'Explore high-quality products at affordable prices in Rwanda.'
-        }`}
-        keywords={`${productData?.name}, buy ${productData?.name} in Rwanda, KicksideShop, online shopping Rwanda, affordable products Rwanda, ${productData?.category}, e-commerce Rwanda`}
-        ogTitle={`${productData?.name} | KicksideShop`}
-        ogDescription={`Shop ${productData?.name} with fast delivery and mobile payments. Available now on KicksideShop.`}
-        ogImage={mainImage || 'https://kicksideshop.rw/og/default-product.jpg'}
-        ogUrl={`https://kicksideshop.rw/product/${productData?._id}`}
+          'Devices and tools offered at accessible prices through Fixo.'
+        }
+        ogTitle={`${productData?.name || 'Product'} | Fixo`}
+        ogImage={mainImage || '/logo.png'}
         ogType="product"
-        twitterCard="summary_large_image"
-        twitterCreator="@kicksidetech"
-        canonicalUrl={`https://kicksideshop.rw/product/${productData?._id}`}
+        canonicalUrl={`https://fixo.rw/product/${productData?._id}`}
       />
 
-      <div className="max-w-6xl mx-auto p-6">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
-          <div className="md:col-span-2 flex md:flex-col gap-2 overflow-x-auto md:overflow-visible">
-            {productImages.map((img, index) => (
-              <img
-                key={index}
-                src={img}
-                alt={`Thumbnail ${index}`}
-                className={`w-20 h-20 md:w-full md:h-24 rounded-lg cursor-pointer border-2 transition duration-300 ${
-                  mainImage === img
-                    ? 'border-blue-500 shadow-md'
-                    : 'border-gray-300'
-                }`}
-                onClick={() => setMainImage(img)}
-              />
-            ))}
-          </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+        <Link
+          to="/products"
+          className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-900 transition-colors mb-6"
+        >
+          <FaArrowLeft className="w-3 h-3" />
+          {lang === 'en' ? 'All products' : 'Ibicuruzwa byose'}
+        </Link>
 
-          <div className="md:col-span-5 flex justify-center items-center">
-            {loading ? (
-              <div className="w-full max-w-lg h-64 bg-gray-300 animate-pulse rounded-lg"></div>
-            ) : (
-              <img
-                src={mainImage || ''}
-                alt="Main Product"
-                className="w-full max-w-lg rounded-lg shadow-lg transition hover:scale-105 duration-300"
-              />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+          <div className="flex flex-col-reverse sm:flex-row gap-3">
+            {productImages.length > 1 && (
+              <div className="flex sm:flex-col gap-2 overflow-x-auto">
+                {productImages.map((img, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    onClick={() => setMainImage(img)}
+                    className={`w-16 h-16 rounded-lg overflow-hidden border flex-shrink-0 transition-colors ${
+                      mainImage === img
+                        ? 'border-primary'
+                        : 'border-slate-200 hover:border-slate-300'
+                    }`}
+                  >
+                    <img
+                      src={img}
+                      alt=""
+                      className="w-full h-full object-cover"
+                    />
+                  </button>
+                ))}
+              </div>
             )}
-          </div>
 
-          <div className="md:col-span-5">
-            <h1 className="text-3xl font-bold text-gray-800">
-              {productData?.name}
-            </h1>
-            <p className="text-xl font-semibold text-gray-600 mt-3">
-              RWF {productData?.price.toFixed(2)}
-            </p>
-            <p className="text-sm text-white bg-secondary inline p-1 rounded">
-              {productData?.category?.name}
-            </p>
-            <hr className="my-4" />
-            <p className="text-gray-700 text-lg">{productData?.description}</p>
-
-            <div className="flex gap-4 mt-6">
-              <Link
-                className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg transition hover:bg-green-500"
-                to={'tel: +250785 450 726'}
-              >
-                <FaWhatsapp className="mr-2" /> Chat Now
-              </Link>
+            <div className="flex-1 rounded-xl border border-slate-200 bg-slate-50 overflow-hidden">
+              {loading ? (
+                <div className="w-full h-80 animate-pulse bg-slate-100" />
+              ) : (
+                <img
+                  src={mainImage || ''}
+                  alt={productData?.name || ''}
+                  className="w-full h-80 object-contain"
+                />
+              )}
             </div>
           </div>
-        </div>
 
-        <div className="mt-10">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">
-            {lang === 'en' ? 'Related products' : 'Ibindi bijyanye'}
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {filteredProducts.map((product) => (
-              <Link
-                key={product._id}
-                to={`/product/${product._id}`}
-                className="block bg-white shadow-lg rounded-lg p-4 hover:shadow-xl transition transform hover:scale-105 duration-300"
-              >
-                <img
-                  src={product.images[0] || ''}
-                  alt={product.name}
-                  className="w-full h-40 object-cover rounded-md mb-3"
-                />
-                <h3 className="text-lg font-semibold text-gray-800">
-                  {product.name}
-                </h3>
-                <p className="text-gray-600 flex justify-between text-sm">
-                  RWF {product.price.toFixed(2)}
-                  <span className="text-xs text-gray-500">
-                    {product.stock} In Stock
-                  </span>
-                </p>
-              </Link>
-            ))}
-          </div>
-          <div className="text-center mt-6">
+          <div>
+            {productData?.category?.name && (
+              <p className="text-xs text-slate-500 mb-1.5">
+                {productData.category.name}
+              </p>
+            )}
+            <h1 className="text-2xl md:text-3xl font-semibold tracking-tight text-slate-900">
+              {productData?.name}
+            </h1>
+
+            <div className="mt-4 flex items-center gap-4">
+              <span className="text-xl font-semibold text-slate-900">
+                RWF {productData?.price?.toLocaleString()}
+              </span>
+              <span className="text-xs text-slate-500">
+                {productData?.stock} {lang === 'en' ? 'in stock' : 'bihari'}
+              </span>
+            </div>
+
+            <p className="mt-4 pt-4 border-t border-slate-100 text-sm text-slate-600 leading-relaxed">
+              {productData?.description}
+            </p>
+
             <Link
-              to="/products"
-              className="bg-primary text-white px-6 py-2 rounded-lg inline-block hover:bg-secondary transition"
+              className="mt-6 inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-white hover:bg-primary/90 transition-colors"
+              to="tel:+250785450726"
             >
-              {lang === 'en' ? 'View All Products' : 'Reba ibicuruzwa byose'}
+              <FaWhatsapp className="w-4 h-4" />
+              {lang === 'en' ? 'Chat now' : 'Tuvugishe'}
             </Link>
           </div>
         </div>
+
+        {filteredProducts.length > 0 && (
+          <div className="mt-14 pt-8 border-t border-slate-100">
+            <h2 className="text-lg font-semibold text-slate-900 mb-5">
+              {lang === 'en' ? 'Related products' : 'Ibindi bijyanye'}
+            </h2>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+              {filteredProducts.map((product) => (
+                <Link
+                  key={String(product._id)}
+                  to={`/product/${product._id}`}
+                  className="group flex flex-col rounded-xl border border-slate-200 overflow-hidden hover:border-slate-300 transition-colors"
+                >
+                  <div className="h-36 bg-slate-100 overflow-hidden">
+                    {product.images?.[0] ? (
+                      <img
+                        src={product.images[0]}
+                        alt=""
+                        loading="lazy"
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <FaBoxOpen className="w-6 h-6 text-slate-300" />
+                      </div>
+                    )}
+                  </div>
+                  <div className="p-5">
+                    <h3 className="text-sm font-semibold text-slate-900 line-clamp-2">
+                      {product.name}
+                    </h3>
+                    <div className="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between">
+                      <span className="text-sm font-semibold text-slate-900">
+                        RWF {product.price?.toLocaleString()}
+                      </span>
+                      <span className="text-xs text-slate-500">
+                        {product.stock} {lang === 'en' ? 'in stock' : 'bihari'}
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </>
   );

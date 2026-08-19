@@ -536,32 +536,29 @@ const SupportPage: React.FC<any> = () => {
   
   return (
     <div className="fixed inset-0 w-screen h-screen bg-black z-50 flex flex-col">
-      {/* container with header, video area and footer */}
       <div className="flex flex-col w-full h-full bg-black">
-        {/* header bar */}
-        <header className="flex justify-between items-center px-4 py-2 bg-primary text-white">
+        <header className="flex justify-between items-center px-4 py-3 bg-black/80 backdrop-blur border-b border-white/10 text-white">
           <div className="flex items-center space-x-4">
-            <h2 className="text-lg sm:text-xl font-semibold">Support Session</h2>
+            <h2 className="text-sm font-semibold tracking-tight">Support session</h2>
             {isConnected && remoteStream && (
-              <span className="text-sm sm:text-base font-medium">
+              <span className="rounded-full bg-white/10 px-2.5 py-1 text-xs font-medium tabular-nums">
                 {formatTime(seconds)}
               </span>
             )}
             {!isConnected && (
-              <span className="text-sm sm:text-base font-medium">
+              <span className="rounded-full bg-white/10 px-2.5 py-1 text-xs font-medium">
                 {connectionState}
               </span>
             )}
           </div>
           <button
             onClick={endCall}
-            className="p-1 rounded-full hover:bg-primary/70 transition-colors"
+            className="p-2 rounded-lg text-white/70 hover:bg-white/10 hover:text-white transition-colors"
           >
             <X size={20} />
           </button>
         </header>
 
-        {/* main video grid */}
         <main className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-0 p-0">
           <div
             ref={userVideoContainerRef}
@@ -581,14 +578,14 @@ const SupportPage: React.FC<any> = () => {
                 userFullScreen
                   ? "top-4 left-1/2 -translate-x-1/2"
                   : "bottom-3 sm:bottom-4 left-3 sm:left-4"
-              } bg-black bg-opacity-50 text-white px-2 py-1 sm:px-3 sm:py-1 rounded-full text-xs sm:text-sm`}
+              } bg-black/60 backdrop-blur text-white px-2.5 py-1 rounded-full text-xs`}
             >
               You {isScreenSharing ? "(Screen)" : ""}
             </div>
             {!isScreenSharing && (
               <button
                 onClick={toggleUserFullScreen}
-                className="absolute top-3 sm:top-4 right-3 sm:right-4 bg-black bg-opacity-50 text-white p-1 sm:p-2 rounded-full hover:bg-opacity-70 transition-all"
+                className="absolute top-3 sm:top-4 right-3 sm:right-4 bg-black/60 backdrop-blur text-white p-2 rounded-lg hover:bg-black/80 transition-colors"
               >
                 {userFullScreen ? (
                   <Minimize size={16} className="sm:w-5 sm:h-5" />
@@ -612,7 +609,7 @@ const SupportPage: React.FC<any> = () => {
               className={`w-full h-full object-cover ${!remoteStream ? "hidden" : ""}`}
             />
             {(!remoteStream || connectionState !== "Connected") && (
-              <div className="w-full h-full flex items-center justify-center text-white text-sm sm:text-base">
+              <div className="w-full h-full flex items-center justify-center text-sm text-white/60">
                 {connectionState}
               </div>
             )}
@@ -623,13 +620,13 @@ const SupportPage: React.FC<any> = () => {
                     techFullScreen
                       ? "top-4 left-1/2 -translate-x-1/2"
                       : "bottom-3 sm:bottom-4 left-3 sm:left-4"
-                  } bg-black bg-opacity-50 text-white px-2 py-1 sm:px-3 sm:py-1 rounded-full text-xs sm:text-sm`}
+                  } bg-black/60 backdrop-blur text-white px-2.5 py-1 rounded-full text-xs`}
                 >
                   Technician {technician}
                 </div>
                 <button
                   onClick={toggleTechFullScreen}
-                  className="absolute top-3 sm:top-4 right-3 sm:right-4 bg-black bg-opacity-50 text-white p-1 sm:p-2 rounded-full hover:bg-opacity-70 transition-all"
+                  className="absolute top-3 sm:top-4 right-3 sm:right-4 bg-black/60 backdrop-blur text-white p-2 rounded-lg hover:bg-black/80 transition-colors"
                 >
                   {techFullScreen ? (
                     <Minimize size={16} className="sm:w-5 sm:h-5" />
@@ -642,12 +639,13 @@ const SupportPage: React.FC<any> = () => {
           </div>
         </main>
 
-        {/* footer controls */}
-        <footer className="px-4 py-3 bg-primary/90 flex justify-center space-x-4">
+        <footer className="px-4 py-4 bg-black/80 backdrop-blur border-t border-white/10 flex justify-center gap-3">
           <button
             onClick={toggleMute}
-            className={`p-3 sm:p-4 rounded-full transition-colors ${
-              isMuted ? "bg-red-500 text-white" : "bg-secondaryDark text-white"
+            className={`p-3 rounded-full transition-colors ${
+              isMuted
+                ? "bg-red-500 text-white hover:bg-red-600"
+                : "bg-white/10 text-white hover:bg-white/20"
             }`}
           >
             {isMuted ? (
@@ -658,8 +656,10 @@ const SupportPage: React.FC<any> = () => {
           </button>
           <button
             onClick={toggleVideo}
-            className={`p-3 sm:p-4 rounded-full transition-colors ${
-              isVideoOff ? "bg-red-500 text-white" : "bg-secondaryDark text-white"
+            className={`p-3 rounded-full transition-colors ${
+              isVideoOff
+                ? "bg-red-500 text-white hover:bg-red-600"
+                : "bg-white/10 text-white hover:bg-white/20"
             }`}
           >
             {isVideoOff ? (
@@ -670,17 +670,17 @@ const SupportPage: React.FC<any> = () => {
           </button>
           <button
             onClick={toggleScreenShare}
-            className={`p-3 sm:p-4 rounded-full transition-colors ${
+            className={`p-3 rounded-full transition-colors ${
               isScreenSharing
-                ? "bg-secondary text-white"
-                : "bg-secondaryDark text-white"
+                ? "bg-primary text-white hover:bg-primary/90"
+                : "bg-white/10 text-white hover:bg-white/20"
             }`}
           >
             <Monitor size={16} className="sm:w-5 sm:h-5" />
           </button>
           <button
             onClick={endCall}
-            className="p-3 sm:p-4 rounded-full bg-red-500 text-white hover:bg-red-600 transition-colors"
+            className="p-3 rounded-full bg-red-500 text-white hover:bg-red-600 transition-colors"
           >
             <Phone size={16} className="sm:w-5 sm:h-5" />
           </button>
