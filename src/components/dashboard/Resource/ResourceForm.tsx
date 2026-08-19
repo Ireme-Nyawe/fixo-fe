@@ -37,6 +37,15 @@ const getUserIdFromLocalStorage = (): string => {
   return '';
 };
 
+const getCreatedById = (
+  value: string | { _id?: string } | undefined,
+  fallback: string
+): string => {
+  if (typeof value === 'string') return value;
+  if (value && typeof value === 'object' && value._id) return value._id;
+  return fallback;
+};
+
 const ResourceForm = ({ 
   initialData, 
   onSubmit, 
@@ -49,7 +58,7 @@ const ResourceForm = ({
   const [formData, setFormData] = useState<IResource>({
     title: initialData?.title || '',
     description: initialData?.description || '',
-    createdBy: initialData?.createdBy || userId,
+    createdBy: getCreatedById(initialData?.createdBy, userId),
     slug: initialData?.slug || '',
     category: initialData?.category || '',
     tags: initialData?.tags || [],
@@ -361,7 +370,7 @@ const ResourceForm = ({
         <button
           type="submit"
           disabled={isLoading || isUploadingCover}
-          className="px-6 py-2.5 bg-primary hover:bg-primary/90 text-white rounded-lg flex items-center gap-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="px-6 py-2.5 bg-primary hover:bg-primary/90 text-white rounded-lg flex items-center gap-2 transition-colors shadow-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-primary"
         >
           <FaSave className="w-5 h-5" />
           {isLoading ? 'Saving...' : initialData?._id ? 'Update' : 'Create'}

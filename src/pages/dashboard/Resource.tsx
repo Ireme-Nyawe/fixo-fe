@@ -142,13 +142,24 @@ const Resource = () => {
     setIsLoading(true);
     try {
       const response = await updateResource(selectedResource._id, data);
-      const updatedResource = response?.data || response;
+      const updatedResource =
+        response?.data?.resource ||
+        response?.data ||
+        response?.resource ||
+        response;
 
-      if (updatedResource && (updatedResource._id || updatedResource.title)) {
+      if (response && (!response.status || Number(response.status) < 400)) {
         toast.success('Resource updated successfully!');
+        const resourceWithUpdates = {
+          ...selectedResource,
+          ...data,
+          ...(updatedResource?._id || updatedResource?.title
+            ? updatedResource
+            : {}),
+        };
         setResources((prev) =>
           prev.map((r) =>
-            r._id === selectedResource._id ? updatedResource : r
+            r._id === selectedResource._id ? resourceWithUpdates : r
           )
         );
         setViewMode('list');
