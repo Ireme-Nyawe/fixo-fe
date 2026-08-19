@@ -10,6 +10,7 @@ import {
   FaFilePdf,
   FaFileAlt,
 } from 'react-icons/fa';
+import RichTextEditor from '../../../components/Admin/Trainings/RichTextEditor';
 import { toast } from 'sonner';
 import { uploadToCloudinary } from '../../../helpers/clouadinary';
 
@@ -107,10 +108,10 @@ const ContentManager = ({
     }
 
     if (
-      ['video', 'audio', 'image', 'pdf'].includes(formData.type) &&
+      ['video', 'audio', 'image', 'pdf'].includes(formData.type as string) &&
       !formData.url?.trim()
     ) {
-      toast.error(`Please upload a file for ${formData.type}`);
+      toast.error(`Please upload a file or provide an external URL for ${formData.type}`);
       return;
     }
 
@@ -216,27 +217,33 @@ const ContentManager = ({
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   HTML Content <span className="text-red-500">*</span>
                 </label>
-                <textarea
+                <RichTextEditor
                   value={formData.htmlContent || ''}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      htmlContent: e.target.value,
-                    }))
+                  onChange={(value) =>
+                    setFormData((prev) => ({ ...prev, htmlContent: value }))
                   }
-                  rows={6}
-                  className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all font-mono text-sm"
                   placeholder="Enter HTML content..."
                 />
               </div>
             )}
 
-            {/* File Upload */}
+            {/* File Upload or URL for non-article types */}
             {formData.type !== 'article' && (
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Upload File <span className="text-red-500">*</span>
+                  File or URL <span className="text-gray-500 text-xs">(upload a file or paste an external URL)</span>
                 </label>
+
+                <input
+                  type="text"
+                  value={formData.url || ''}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, url: e.target.value }))
+                  }
+                  placeholder="https://... (optional if you upload a file)"
+                  className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all mb-3"
+                />
+
                 <input
                   type="file"
                   onChange={handleFileUpload}
@@ -263,14 +270,29 @@ const ContentManager = ({
                 >
                   {isUploading
                     ? 'Uploading...'
-                    : formData.url
+                    : formData.url && formData.mimeType
                       ? 'File uploaded - Click to change'
                       : 'Click to upload file'}
                 </label>
+
                 {formData.url && (
-                  <p className="text-sm text-green-600 mt-2">
-                    ✓ File uploaded successfully
-                  </p>
+                  <div className="flex items-center justify-between mt-2">
+                    <p className="text-sm text-green-600">✓ URL set</p>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          url: undefined,
+                          mimeType: undefined,
+                          fileSize: undefined,
+                        }))
+                      }
+                      className="text-sm text-red-500 hover:underline"
+                    >
+                      Remove
+                    </button>
+                  </div>
                 )}
               </div>
             )}

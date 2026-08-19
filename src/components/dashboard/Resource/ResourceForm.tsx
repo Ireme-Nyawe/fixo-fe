@@ -245,7 +245,7 @@ const ResourceForm = ({
             value={formData.category}
             onChange={handleChange}
             className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
-            placeholder="e.g., React, Python, Web Design"
+            placeholder="e.g. SW Installation, Diagnosis, Literacy, Troubleshooting"
           />
         </div>
 
