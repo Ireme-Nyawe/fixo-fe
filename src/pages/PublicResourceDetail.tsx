@@ -1,7 +1,18 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { Toaster } from 'sonner';
-import { FaArrowLeft, FaBook, FaRegClock, FaLayerGroup } from 'react-icons/fa';
+import { Toaster, toast } from 'sonner';
+import {
+  FaArrowLeft,
+  FaBook,
+  FaRegClock,
+  FaLayerGroup,
+  FaShareAlt,
+  FaLink,
+  FaEnvelope,
+  FaFacebook,
+  FaWhatsapp,
+} from 'react-icons/fa';
+import { FaXTwitter } from 'react-icons/fa6';
 import { IResource } from '../types/store';
 import Header from '../components/clients/Header';
 import Footer from '../components/clients/Footer';
@@ -16,6 +27,7 @@ const PublicResourceDetail = () => {
   const [resource, setResource] = useState<IResource | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const [isShareOpen, setIsShareOpen] = useState(false);
 
   const lang = localStorage.getItem('lang') || 'en';
   const t = (en: string, rw: string) => (lang === 'en' ? en : rw);
@@ -61,6 +73,37 @@ const PublicResourceDetail = () => {
       {t('All resources', 'Amasomo yose')}
     </Link>
   );
+
+  const resourceUrl = window.location.href;
+  const shareText = resource?.title || 'Fixo resource';
+
+  const copyResourceLink = async () => {
+    try {
+      await navigator.clipboard.writeText(resourceUrl);
+      toast.success(t('Link copied', 'Linki yakoporowe'));
+    } catch {
+      const textArea = document.createElement('textarea');
+      textArea.value = resourceUrl;
+      textArea.style.position = 'fixed';
+      textArea.style.opacity = '0';
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      toast.success(t('Link copied', 'Linki yakoporowe'));
+    }
+  };
+
+  const shareResource = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: shareText, text: shareText, url: resourceUrl });
+        setIsShareOpen(false);
+      } catch {
+        // Ignore cancellation from the native share dialog.
+      }
+    }
+  };
 
   return (
     <div className="flex flex-col min-h-screen bg-white">
@@ -151,6 +194,91 @@ const PublicResourceDetail = () => {
                       ))}
                     </span>
                   )}
+                  <div className="relative ml-auto">
+                    <button
+                      type="button"
+                      onClick={() => setIsShareOpen((isOpen) => !isOpen)}
+                      aria-expanded={isShareOpen}
+                      aria-haspopup="menu"
+                      className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-medium text-slate-600 hover:border-slate-300 hover:text-slate-900 transition-colors"
+                    >
+                      <FaShareAlt className="w-3 h-3" />
+                      {t('Share', 'Sangiza')}
+                    </button>
+
+                    {isShareOpen && (
+                      <div
+                        role="menu"
+                        className="absolute right-0 z-20 mt-2 w-52 rounded-xl border border-slate-200 bg-white p-1.5 text-sm shadow-lg"
+                      >
+                        {typeof navigator !== 'undefined' && 'share' in navigator && (
+                          <button
+                            type="button"
+                            role="menuitem"
+                            onClick={shareResource}
+                            className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-slate-700 hover:bg-slate-50"
+                          >
+                            <FaShareAlt className="w-3.5 h-3.5 text-primary" />
+                            {t('Share from device', 'Sangiza ukoresheje telefone')}
+                          </button>
+                        )}
+                        <button
+                          type="button"
+                          role="menuitem"
+                          onClick={async () => {
+                            await copyResourceLink();
+                            setIsShareOpen(false);
+                          }}
+                          className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-slate-700 hover:bg-slate-50"
+                        >
+                          <FaLink className="w-3.5 h-3.5 text-slate-500" />
+                          {t('Copy link', 'Koporora linki')}
+                        </button>
+                        <a
+                          href={`mailto:?subject=${encodeURIComponent(shareText)}&body=${encodeURIComponent(resourceUrl)}`}
+                          role="menuitem"
+                          onClick={() => setIsShareOpen(false)}
+                          className="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-700 hover:bg-slate-50"
+                        >
+                          <FaEnvelope className="w-3.5 h-3.5 text-slate-500" />
+                          {t('Email', 'Imeli')}
+                        </a>
+                        <a
+                          href={`https://wa.me/?text=${encodeURIComponent(`${shareText} ${resourceUrl}`)}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          role="menuitem"
+                          onClick={() => setIsShareOpen(false)}
+                          className="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-700 hover:bg-slate-50"
+                        >
+                          <FaWhatsapp className="w-3.5 h-3.5 text-green-600" />
+                          WhatsApp
+                        </a>
+                        <a
+                          href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(resourceUrl)}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          role="menuitem"
+                          onClick={() => setIsShareOpen(false)}
+                          className="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-700 hover:bg-slate-50"
+                        >
+                          <FaFacebook className="w-3.5 h-3.5 text-blue-600" />
+                          Facebook
+                        </a>
+                        <a
+                          href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(resourceUrl)}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          role="menuitem"
+                          onClick={() => setIsShareOpen(false)}
+                          className="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-700 hover:bg-slate-50"
+                        >
+                          <FaXTwitter className="w-3.5 h-3.5 text-slate-700" />
+                          X
+                        </a>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </header>
 
